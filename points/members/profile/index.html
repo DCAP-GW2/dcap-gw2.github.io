@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Member Profile | DCAP Points</title>
+  <meta name="description" content="Explore public current-season and all-time DCAP Points contributions, role totals and event-type totals.">
+  <meta name="theme-color" content="#0B1020">
+  <link rel="icon" type="image/png" href="../../../assets/brand/dcap-emblem.png">
+  <link rel="stylesheet" href="../../../css/style.css">
+  <link rel="stylesheet" href="../../../css/points.css">
+  <script src="../../../js/main.js" defer></script>
+  <script type="module" src="../../../js/points/member-profile.js"></script>
+</head>
+<body class="points-page points-profile-page" id="top">
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header" data-header>
+    <div class="container header-inner">
+      <a class="brand" href="../../../" aria-label="DCAP home">
+        <img src="../../../assets/brand/dcap-logo-horizontal.png" width="2172" height="724" alt="DCAP — Guild Wars 2 Community">
+      </a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">
+        <span class="sr-only">Open navigation</span>
+        <span class="menu-line" aria-hidden="true"></span><span class="menu-line" aria-hidden="true"></span><span class="menu-line" aria-hidden="true"></span>
+      </button>
+      <nav class="primary-nav" id="primary-navigation" aria-label="Primary navigation">
+        <ul>
+          <li><a href="../../../">Home</a></li>
+          <li><a href="../../../#events">Events</a></li>
+          <li><a class="is-active" href="../../" aria-current="true">Points</a></li>
+          <li><a href="../../../#resources">Resources</a></li>
+          <li><a href="../../../#about">About</a></li>
+        </ul>
+        <a class="button button-small button-secondary" href="https://discord.gg/A2TQJNvNqa" target="_blank" rel="noopener noreferrer">Join Discord<span class="sr-only"> (opens in a new tab)</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" tabindex="-1" data-points-member-profile>
+    <section class="points-hero points-profile-hero" aria-labelledby="points-title">
+      <div class="container points-hero-inner">
+        <a class="points-profile-back" href="../">← Back to Members</a>
+        <p class="eyebrow">DCAP Points</p>
+        <h1 id="points-title">Member Profile</h1>
+        <div class="points-season-meta" data-member-meta hidden>
+          <p class="points-season" data-points-season></p>
+          <p data-points-period></p>
+          <p>Rule <span data-points-rule-version></span></p>
+        </div>
+      </div>
+    </section>
+
+    <div class="container points-content">
+      <nav class="points-nav" aria-label="Points navigation">
+        <ul>
+          <li><a href="../../">Overview</a></li>
+          <li><a href="../../leaderboard/">Leaderboard</a></li>
+          <li><a href="../" aria-current="true">Members</a></li>
+          <li><span>Statistics <small>Coming soon</small></span></li>
+          <li><span>How Points Work <small>Coming soon</small></span></li>
+          <li><span>Rewards <small>Coming soon</small></span></li>
+        </ul>
+      </nav>
+
+      <div class="points-profile-results" data-member-results>
+        <div class="points-profile-state points-panel glass-panel" data-member-state>
+          <p data-member-message>Live member profile data requires JavaScript.</p>
+          <noscript><p>Enable JavaScript to load live member profile data.</p></noscript>
+          <p class="points-member-links" data-member-links><a href="../../">Points Overview</a><a href="../../leaderboard/">Leaderboard</a><a href="https://dcap-points-community.to-nepherez.chatgpt.site/">Current full DCAP Points site <span aria-hidden="true">↗</span></a></p>
+        </div>
+        <div data-profile-content hidden>
+          <section class="points-profile-section" aria-labelledby="current-title">
+            <h2 id="current-title">Current Season</h2>
+            <p class="points-profile-note" data-current-empty hidden>No points recorded in the current season.</p>
+            <dl class="points-kpi-grid points-profile-summary">
+              <div class="points-kpi-card"><dt>Current Rank</dt><dd data-member-currentRank></dd></div>
+              <div class="points-kpi-card"><dt>Current Points</dt><dd data-member-currentPoints></dd></div>
+              <div class="points-kpi-card"><dt>Active Days</dt><dd data-member-activeDays></dd></div>
+              <div class="points-kpi-card"><dt>Role Diversity</dt><dd data-member-roleDiversity></dd></div>
+            </dl>
+          </section>
+          <section class="points-profile-section" aria-labelledby="all-time-title">
+            <h2 id="all-time-title">All Time</h2>
+            <p class="points-profile-note" data-all-time-empty hidden>No all-time points recorded.</p>
+            <dl class="points-profile-breakdown">
+              <div class="points-kpi-card"><dt>All-Time Rank</dt><dd data-member-allTimeRank></dd></div>
+              <div class="points-kpi-card"><dt>All-Time Points</dt><dd data-member-allTimePoints></dd></div>
+            </dl>
+          </section>
+          <section class="points-profile-section" aria-labelledby="roles-title">
+            <h2 id="roles-title">Role Breakdown</h2>
+            <div class="points-panel glass-panel">
+              <table class="points-table points-profile-role-table">
+                <caption class="sr-only">Current-season points by role</caption>
+                <thead><tr><th scope="col">Role</th><th scope="col">Points</th></tr></thead>
+                <tbody data-member-roles></tbody>
+              </table>
+            </div>
+          </section>
+          <section class="points-profile-section" aria-labelledby="type-title">
+            <h2 id="type-title">Contribution Type</h2>
+            <p class="points-profile-note">Current-season points by event type.</p>
+            <dl class="points-profile-breakdown">
+              <div class="points-kpi-card"><dt>Triple Trouble Points</dt><dd data-member-ttPoints></dd></div>
+              <div class="points-kpi-card"><dt>Other Event Points</dt><dd data-member-otherPoints></dd></div>
+            </dl>
+          </section>
+        </div>
+      </div>
+
+      <aside class="points-status" aria-labelledby="data-status-title">
+        <div class="points-status-copy">
+          <span class="points-status-dot" aria-hidden="true"></span>
+          <div><h2 id="data-status-title">Data status</h2><div role="status" aria-atomic="true"><p data-points-status>Waiting for live member data.</p><p data-points-updated></p></div></div>
+        </div>
+        <p><a href="https://dcap-points-community.to-nepherez.chatgpt.site/">Visit the full DCAP Points site <span aria-hidden="true">↗</span></a></p>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand"><img src="../../../assets/brand/dcap-logo-horizontal.png" width="2172" height="724" alt="DCAP — Guild Wars 2 Community" loading="lazy"><p>Play together. Learn together.<br>Build the community together.</p></div>
+      <nav class="footer-nav" aria-label="Footer navigation"><h2>Navigate</h2><ul><li><a href="../../../">Home</a></li><li><a href="../../../#events">Events</a></li><li><a href="../../">Points</a></li><li><a href="../../../#resources">Resources</a></li><li><a href="https://discord.gg/A2TQJNvNqa" target="_blank" rel="noopener noreferrer">Discord<span class="sr-only"> (opens in a new tab)</span></a></li></ul></nav>
+      <div class="footer-note"><h2>Community first</h2><p>DCAP is a player-run Guild Wars 2 community and is not affiliated with ArenaNet or NCSOFT.</p></div>
+    </div>
+    <div class="container footer-bottom"><p>© DCAP Community</p><a href="#top">Back to top <span aria-hidden="true">↑</span></a></div>
+  </footer>
+</body>
+</html>
