@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>DCAP Points | Season Overview</title>
-  <meta name="description" content="Participation, contribution and community recognition. Explore the static Season 0 reference preview of DCAP Points.">
+  <meta name="description" content="Participation, contribution and community recognition. Explore the DCAP Points season overview and community contributions.">
   <meta name="theme-color" content="#0B1020">
   <link rel="canonical" href="https://dcap-gw2.github.io/points/">
   <link rel="icon" type="image/png" href="../assets/brand/dcap-emblem.png">
@@ -67,10 +67,10 @@
       <section class="points-overview" aria-labelledby="overview-title">
         <div class="points-section-heading">
           <div><p class="eyebrow">The season at a glance</p><h2 id="overview-title">Season overview</h2></div>
-          <p class="points-reference-label">Static reference snapshot</p>
+          <p class="points-reference-label" data-points-label>Static reference snapshot</p>
         </div>
         <!-- The reference snapshot lives in HTML only, remaining readable without JavaScript.
-             Future validated rendering should replace these data-points-* targets. -->
+             Only a fully validated public payload replaces these data-points-* targets. -->
         <dl class="points-kpi-grid">
           <div class="points-kpi-card points-kpi-card-total">
             <dt>Total Points</dt><dd data-points-total>697</dd>
@@ -95,7 +95,7 @@
             <p id="contributors-note">A preview from the reference snapshot.</p>
           </div>
           <table class="points-table" aria-describedby="contributors-note">
-            <caption class="sr-only">Top four contributors, ranked by points</caption>
+            <caption class="sr-only" data-points-caption>Top four contributors, ranked by points</caption>
             <thead><tr><th scope="col">Rank</th><th scope="col">Contributor</th><th scope="col">Points</th></tr></thead>
             <tbody data-points-leaderboard>
               <tr><td><span class="points-rank points-rank-first">1</span></td><th scope="row">Lucy</th><td>102</td></tr>
@@ -117,8 +117,8 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19h16M6 15v-4m6 4V5m6 10V8"/></svg>
             </span>
             <h3>More of the story, soon.</h3>
-            <p>Live season activity will appear here once the DCAP Points data connection is enabled.</p>
-            <span class="points-state-label">Not connected</span>
+            <p>A detailed activity preview is coming in a future update.</p>
+            <span class="points-state-label">Coming soon</span>
           </div>
         </section>
       </div>
@@ -126,9 +126,9 @@
       <aside class="points-status" aria-labelledby="data-status-title">
         <div class="points-status-copy">
           <span class="points-status-dot" aria-hidden="true"></span>
-          <div><h2 id="data-status-title">Data status</h2><p data-points-status>Static migration preview</p></div>
+          <div><h2 id="data-status-title">Data status</h2><div role="status" aria-live="polite" aria-atomic="true"><p data-points-status>Showing the migration reference snapshot. Enable JavaScript to check for live data.</p><p data-points-updated></p></div></div>
         </div>
-        <p>This preview does not update live. <a href="https://dcap-points-community.to-nepherez.chatgpt.site/">Visit the live DCAP Points site <span aria-hidden="true">↗</span></a></p>
+        <p><a href="https://dcap-points-community.to-nepherez.chatgpt.site/">Visit the full DCAP Points site <span aria-hidden="true">↗</span></a></p>
       </aside>
     </div>
   </main>

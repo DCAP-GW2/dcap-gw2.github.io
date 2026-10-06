@@ -1,16 +1,80 @@
 import { getPointsData } from './api.js';
-import './validation.js';
 
-/** Keep the static reference markup intact until validated rendering is available. */
-function renderDataStatus(root, result) {
-  root.dataset.pointsState = result.state;
-  root.querySelector('[data-points-status]').textContent = 'Static migration preview';
+const numberFormat = new Intl.NumberFormat('en-NZ');
+const dateFormat = new Intl.DateTimeFormat('en-NZ', {
+  day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Pacific/Auckland',
+});
+const updatedFormat = new Intl.DateTimeFormat('en-NZ', {
+  day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit',
+  hour12: true, timeZone: 'Pacific/Auckland',
+});
+
+function setText(root, selector, value) {
+  root.querySelector(selector).textContent = value;
 }
 
-/** Reuse the canonical rule value rather than maintaining a second snapshot. */
-function renderSeasonMetadata(root) {
-  root.querySelector('[data-points-rule-reference]').textContent =
-    root.querySelector('[data-points-rule-version]').textContent;
+function renderDataStatus(root, result) {
+  root.dataset.pointsState = result.state;
+  const status = result.data
+    ? (result.state === 'fallback' ? 'Showing the most recently available data.' : 'Live data')
+    : 'Live data is temporarily unavailable. Showing the migration reference snapshot.';
+  setText(root, '[data-points-status]', status);
+  setText(root, '[data-points-label]', result.data
+    ? (result.state === 'fallback' ? 'Most recently available data' : 'Live season overview')
+    : 'Static reference snapshot');
+  const updated = root.querySelector('[data-points-updated]');
+  updated.replaceChildren();
+  if (result.data) {
+    const timestamp = result.data.meta.sourceUpdatedAt;
+    const time = document.createElement('time');
+    time.dateTime = timestamp;
+    time.textContent = updatedFormat.format(new Date(timestamp));
+    updated.append('Last updated ', time, ' (Auckland)');
+  }
+}
+
+function renderDashboard(root, data) {
+  const { meta, members } = data;
+  setText(root, '[data-points-season]', `Season ${meta.currentSeason}`);
+  setText(root, '[data-points-season-label]', meta.seasonLabel);
+  setText(root, '[data-points-rule-version]', meta.ruleVersion);
+  setText(root, '[data-points-rule-reference]', meta.ruleVersion);
+  setText(root, '[data-points-total]', numberFormat.format(meta.totalPoints));
+  setText(root, '[data-points-contributors]', numberFormat.format(meta.uniqueContributors));
+  setText(root, '[data-points-active-days]', numberFormat.format(meta.activeDays));
+  const period = root.querySelector('[data-points-period]');
+  const dates = [meta.periodStart, meta.periodEnd].map(value => {
+    const time = document.createElement('time');
+    time.dateTime = value;
+    time.textContent = dateFormat.format(new Date(value));
+    return time;
+  });
+  period.replaceChildren(dates[0], ' – ', dates[1]);
+
+  const contributors = members.filter(member => member.currentPoints > 0)
+    .sort((a, b) => a.currentRank - b.currentRank).slice(0, 5);
+  const rows = document.createDocumentFragment();
+  for (const member of contributors) {
+    const row = document.createElement('tr');
+    const rankCell = document.createElement('td');
+    const rank = document.createElement('span');
+    rank.className = `points-rank${member.currentRank === 1 ? ' points-rank-first' : ''}`;
+    rank.textContent = numberFormat.format(member.currentRank);
+    rankCell.append(rank);
+    const name = document.createElement('th');
+    name.scope = 'row';
+    // Display names are authoritative public text. IDs never enter the DOM.
+    name.textContent = member.displayName;
+    const points = document.createElement('td');
+    points.textContent = numberFormat.format(member.currentPoints);
+    row.append(rankCell, name, points);
+    rows.append(row);
+  }
+  root.querySelector('[data-points-leaderboard]').replaceChildren(rows);
+  setText(root, '#contributors-note', contributors.length
+    ? 'Current season contributions. Tied ranks are shared.'
+    : 'No contributions have been recorded for this season yet.');
+  setText(root, '[data-points-caption]', `Top ${contributors.length} current contributors, using published ranks`);
 }
 
 /** Supplement the shared menu without changing homepage behaviour. */
@@ -42,9 +106,13 @@ function enhanceNavigation() {
 async function initialiseDashboard() {
   const root = document.querySelector('[data-points-dashboard]');
   if (!root) return;
-  renderSeasonMetadata(root);
+  setText(root, '[data-points-rule-reference]', root.querySelector('[data-points-rule-version]').textContent);
   enhanceNavigation();
-  renderDataStatus(root, await getPointsData());
+  setText(root, '[data-points-status]', 'Checking for live data. Showing the migration reference snapshot.');
+  // Keep the honest HTML snapshot visible throughout loading and on failure.
+  const result = await getPointsData();
+  if (result.data) renderDashboard(root, result.data);
+  renderDataStatus(root, result);
 }
 
 initialiseDashboard();
