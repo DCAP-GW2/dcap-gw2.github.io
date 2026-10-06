@@ -56,12 +56,18 @@
 .points-empty-state p { max-width: 34ch; margin: 0 0 20px; color: var(--muted); font-size: .95rem; }
 .points-state-label { padding: 4px 10px; border: 1px solid var(--border); border-radius: 6px; color: var(--muted); font-size: .8rem; }
 .points-status { display: flex; justify-content: space-between; align-items: center; gap: 20px 32px; margin-top: 26px; padding: 20px 24px; border: 1px solid var(--border); border-radius: 12px; background: rgba(17,24,39,.65); }
-.points-status-copy { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
-.points-status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
+.points-status-copy { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.points-status-dot { flex-shrink: 0; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
 .points-status h2 { color: var(--muted); font-size: .8rem; font-weight: 600; letter-spacing: 0; }
 .points-status p { margin: 4px 0 0; font-size: .85rem; }
 .points-status > p { max-width: 56ch; color: var(--muted); }
 .points-status a { color: var(--cyan); text-underline-offset: 4px; }
+.points-status [data-points-updated] { color: var(--muted); }
+.points-status [data-points-updated]:empty { display: none; }
+[data-points-state="live"] .points-status-dot,
+[data-points-state="cached"] .points-status-dot { background: var(--cyan); }
+.points-table tbody th { overflow-wrap: anywhere; }
+.points-kpi-card dd { overflow-wrap: anywhere; }
 .points-page .footer-bottom { color: var(--muted); }
 
 @media (max-width: 960px) {
