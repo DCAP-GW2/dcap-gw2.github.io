@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DCAP Points | Season Overview</title>
+  <meta name="description" content="Participation, contribution and community recognition. Explore the static Season 0 reference preview of DCAP Points.">
+  <meta name="theme-color" content="#0B1020">
+  <link rel="canonical" href="https://dcap-gw2.github.io/points/">
+  <link rel="icon" type="image/png" href="../assets/brand/dcap-emblem.png">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/points.css">
+  <script src="../js/main.js" defer></script>
+  <script type="module" src="../js/points/dashboard.js"></script>
+</head>
+<body class="points-page" id="top">
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header" data-header>
+    <div class="container header-inner">
+      <a class="brand" href="../" aria-label="DCAP home">
+        <img src="../assets/brand/dcap-logo-horizontal.png" width="2172" height="724" alt="DCAP — Guild Wars 2 Community">
+      </a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">
+        <span class="sr-only">Open navigation</span>
+        <span class="menu-line" aria-hidden="true"></span><span class="menu-line" aria-hidden="true"></span><span class="menu-line" aria-hidden="true"></span>
+      </button>
+      <nav class="primary-nav" id="primary-navigation" aria-label="Primary navigation">
+        <ul>
+          <li><a href="../">Home</a></li>
+          <li><a href="../#events">Events</a></li>
+          <li><a class="is-active" href="./" aria-current="page">Points</a></li>
+          <li><a href="../#resources">Resources</a></li>
+          <li><a href="../#about">About</a></li>
+        </ul>
+        <a class="button button-small button-secondary" href="https://discord.gg/A2TQJNvNqa" target="_blank" rel="noopener noreferrer">Join Discord<span class="sr-only"> (opens in a new tab)</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" tabindex="-1" data-points-dashboard>
+    <section class="points-hero" aria-labelledby="points-title">
+      <div class="container points-hero-inner">
+        <p class="eyebrow">Your community. Your contribution.</p>
+        <h1 id="points-title">DCAP <span>Points</span></h1>
+        <p class="points-intro">Participation, contribution and community recognition.</p>
+        <div class="points-season-meta">
+          <p class="points-season"><span data-points-season>Season 0</span> <span aria-hidden="true">—</span> <span data-points-season-label>Test Run</span></p>
+          <p data-points-period><time datetime="2026-09-11">11</time>–<time datetime="2026-09-23">23 Sep 2026</time></p>
+          <a href="#points-rule">Rule <span data-points-rule-reference>version</span> <span aria-hidden="true">↓</span></a>
+        </div>
+      </div>
+    </section>
+
+    <div class="container points-content">
+      <nav class="points-nav" aria-label="Points navigation">
+        <ul>
+          <li><a href="./" aria-current="page">Overview</a></li>
+          <li><span>Leaderboard <small>Coming soon</small></span></li>
+          <li><span>Members <small>Coming soon</small></span></li>
+          <li><span>Statistics <small>Coming soon</small></span></li>
+          <li><span>How Points Work <small>Coming soon</small></span></li>
+          <li><span>Rewards <small>Coming soon</small></span></li>
+        </ul>
+      </nav>
+
+      <section class="points-overview" aria-labelledby="overview-title">
+        <div class="points-section-heading">
+          <div><p class="eyebrow">The season at a glance</p><h2 id="overview-title">Season overview</h2></div>
+          <p class="points-reference-label">Static reference snapshot</p>
+        </div>
+        <!-- The reference snapshot lives in HTML only, remaining readable without JavaScript.
+             Future validated rendering should replace these data-points-* targets. -->
+        <dl class="points-kpi-grid">
+          <div class="points-kpi-card points-kpi-card-total">
+            <dt>Total Points</dt><dd data-points-total>697</dd>
+          </div>
+          <div class="points-kpi-card">
+            <dt>Contributors</dt><dd data-points-contributors>28</dd>
+          </div>
+          <div class="points-kpi-card">
+            <dt>Active Days</dt><dd data-points-active-days>13</dd>
+          </div>
+          <div class="points-kpi-card" id="points-rule">
+            <dt>Rule Version</dt><dd data-points-rule-version>v1.1</dd>
+          </div>
+        </dl>
+      </section>
+
+      <div class="points-dashboard-grid">
+        <section class="points-panel glass-panel" aria-labelledby="contributors-title">
+          <div class="points-panel-heading">
+            <p class="eyebrow">Community contributions</p>
+            <h2 id="contributors-title">Top Contributors</h2>
+            <p id="contributors-note">A preview from the reference snapshot.</p>
+          </div>
+          <table class="points-table" aria-describedby="contributors-note">
+            <caption class="sr-only">Top four contributors, ranked by points</caption>
+            <thead><tr><th scope="col">Rank</th><th scope="col">Contributor</th><th scope="col">Points</th></tr></thead>
+            <tbody data-points-leaderboard>
+              <tr><td><span class="points-rank points-rank-first">1</span></td><th scope="row">Lucy</th><td>102</td></tr>
+              <tr><td><span class="points-rank">2</span></td><th scope="row">Excru</th><td>82</td></tr>
+              <tr><td><span class="points-rank">3</span></td><th scope="row">Kendubi</th><td>61</td></tr>
+              <tr><td><span class="points-rank">4</span></td><th scope="row">Khral</th><td>56</td></tr>
+            </tbody>
+          </table>
+          <p class="points-panel-footnote">Full leaderboard coming soon.</p>
+        </section>
+
+        <section class="points-panel glass-panel" aria-labelledby="activity-title">
+          <div class="points-panel-heading">
+            <p class="eyebrow">Around the community</p>
+            <h2 id="activity-title">Recent Activity</h2>
+          </div>
+          <div class="points-empty-state" data-points-activity>
+            <span class="points-activity-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19h16M6 15v-4m6 4V5m6 10V8"/></svg>
+            </span>
+            <h3>More of the story, soon.</h3>
+            <p>Live season activity will appear here once the DCAP Points data connection is enabled.</p>
+            <span class="points-state-label">Not connected</span>
+          </div>
+        </section>
+      </div>
+
+      <aside class="points-status" aria-labelledby="data-status-title">
+        <div class="points-status-copy">
+          <span class="points-status-dot" aria-hidden="true"></span>
+          <div><h2 id="data-status-title">Data status</h2><p data-points-status>Static migration preview</p></div>
+        </div>
+        <p>This preview does not update live. <a href="https://dcap-points-community.to-nepherez.chatgpt.site/">Visit the live DCAP Points site <span aria-hidden="true">↗</span></a></p>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand"><img src="../assets/brand/dcap-logo-horizontal.png" width="2172" height="724" alt="DCAP — Guild Wars 2 Community" loading="lazy"><p>Play together. Learn together.<br>Build the community together.</p></div>
+      <nav class="footer-nav" aria-label="Footer navigation"><h2>Navigate</h2><ul><li><a href="../">Home</a></li><li><a href="../#events">Events</a></li><li><a href="./" aria-current="page">Points</a></li><li><a href="../#resources">Resources</a></li><li><a href="https://discord.gg/A2TQJNvNqa" target="_blank" rel="noopener noreferrer">Discord<span class="sr-only"> (opens in a new tab)</span></a></li></ul></nav>
+      <div class="footer-note"><h2>Community first</h2><p>DCAP is a player-run Guild Wars 2 community and is not affiliated with ArenaNet or NCSOFT.</p></div>
+    </div>
+    <div class="container footer-bottom"><p>© DCAP Community</p><a href="#top">Back to top <span aria-hidden="true">↑</span></a></div>
+  </footer>
+</body>
+</html>
