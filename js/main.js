@@ -17,6 +17,24 @@ menuButton.addEventListener('click', () => {
   document.body.classList.toggle('menu-open', !isOpen);
 });
 
+// Points pages already provide their own menu focus handling.
+if (!document.body.classList.contains('points-page')) {
+  document.body.classList.add('home-navigation-ready');
+  document.addEventListener('keydown', (event) => {
+    if (menuButton.getAttribute('aria-expanded') !== 'true') return;
+    if (event.key === 'Escape') menuButton.focus();
+    if (event.key !== 'Tab') return;
+    const lastLink = navigation.querySelector('a:last-child.button');
+    if (event.shiftKey && document.activeElement === menuButton) {
+      event.preventDefault();
+      lastLink.focus();
+    } else if (!event.shiftKey && document.activeElement === lastLink) {
+      event.preventDefault();
+      menuButton.focus();
+    }
+  }, { capture: true });
+}
+
 navigation.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
 document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeMenu(); });
 window.addEventListener('resize', () => { if (window.innerWidth > 960) closeMenu(); });
