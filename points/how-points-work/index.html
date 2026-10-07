@@ -3,17 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Members | DCAP Points</title>
-  <meta name="description" content="Browse the public DCAP Points member directory and explore current-season and all-time member profiles.">
+  <title>How Points Work | DCAP Points</title>
+  <meta name="description" content="Read the current published DCAP Points rules, scoring matrix and rule notes.">
   <meta name="theme-color" content="#0B1020">
-  <link rel="canonical" href="https://dcap-gw2.github.io/points/members/">
+  <link rel="canonical" href="https://dcap-gw2.github.io/points/how-points-work/">
   <link rel="icon" type="image/png" href="../../assets/brand/dcap-emblem.png">
   <link rel="stylesheet" href="../../css/style.css">
   <link rel="stylesheet" href="../../css/points.css">
   <script src="../../js/main.js" defer></script>
-  <script type="module" src="../../js/points/members.js"></script>
+  <script type="module" src="../../js/points/how-points-work.js"></script>
 </head>
-<body class="points-page points-members-page" id="top">
+<body class="points-page points-rules-page" id="top">
   <a class="skip-link" href="#main-content">Skip to main content</a>
 
   <header class="site-header" data-header>
@@ -38,13 +38,13 @@
     </div>
   </header>
 
-  <main id="main-content" tabindex="-1" data-points-members>
-    <section class="points-hero points-members-hero" aria-labelledby="points-title">
+  <main id="main-content" tabindex="-1" data-points-rules>
+    <section class="points-hero points-rules-hero" aria-labelledby="points-title">
       <div class="container points-hero-inner">
         <p class="eyebrow">DCAP Points</p>
-        <h1 id="points-title">Members</h1>
-        <p class="points-intro">Explore the community, one contribution at a time.</p>
-        <div class="points-season-meta" data-member-meta hidden>
+        <h1 id="points-title">How Points Work</h1>
+        <p class="points-intro">DCAP Points recognise contributions across published roles and event types.</p>
+        <div class="points-season-meta" data-rules-meta hidden>
           <p class="points-season" data-points-season></p>
           <p data-points-period></p>
           <p>Rule <span data-points-rule-version></span></p>
@@ -57,39 +57,45 @@
         <ul>
           <li><a href="../">Overview</a></li>
           <li><a href="../leaderboard/">Leaderboard</a></li>
-          <li><a href="./" aria-current="page">Members</a></li>
+          <li><a href="../members/">Members</a></li>
           <li><a href="../statistics/">Statistics</a></li>
-          <li><a href="../how-points-work/">How Points Work</a></li>
+          <li><a href="./" aria-current="page">How Points Work</a></li>
           <li><a href="../rewards/">Rewards</a></li>
         </ul>
       </nav>
 
-      <section class="points-members-directory" aria-labelledby="directory-title">
-        <div class="points-section-heading"><div><p class="eyebrow">Our public Points community</p><h2 id="directory-title">Member directory</h2></div></div>
-        <dl class="points-members-summary" data-members-summary hidden>
-          <div class="points-kpi-card"><dt>Public Members</dt><dd data-member-total></dd></div>
-          <div class="points-kpi-card"><dt>Current Contributors</dt><dd data-member-contributors></dd></div>
-          <div class="points-kpi-card"><dt>All-Time Ranked Members</dt><dd data-member-ranked></dd></div>
-        </dl>
-        <div class="points-member-search" data-member-search hidden>
-          <label for="member-search">Search members</label>
-          <input id="member-search" type="search" placeholder="Search members" autocomplete="off" aria-controls="member-grid">
-          <p class="points-members-count" role="status" aria-atomic="true" data-member-count></p>
+      <div class="points-rules-results" data-rules-results>
+        <div class="points-rules-state points-panel glass-panel" data-rules-state>
+          <p data-rules-message>Live rules require JavaScript.</p>
+          <noscript><p>Enable JavaScript to load live rules.</p></noscript>
+          <p class="points-member-links" data-rules-links><a href="../">Points Overview</a><a href="../statistics/">Statistics</a><a href="https://dcap-points-community.to-nepherez.chatgpt.site/">Current full DCAP Points site <span aria-hidden="true">↗</span></a></p>
         </div>
-        <div data-member-results>
-        <div class="points-members-state points-panel glass-panel" data-member-state>
-          <p data-member-message>Live member data requires JavaScript.</p>
-          <noscript><p>Enable JavaScript to load live member data.</p></noscript>
-          <p class="points-member-links" data-member-links><a href="../">Points Overview</a><a href="../leaderboard/">Leaderboard</a><a href="https://dcap-points-community.to-nepherez.chatgpt.site/">Current full DCAP Points site <span aria-hidden="true">↗</span></a></p>
+        <div data-rules-content hidden>
+          <section class="points-panel glass-panel" aria-labelledby="matrix-title">
+            <div class="points-panel-heading points-rules-summary">
+              <h2 id="matrix-title">Published Scoring Matrix</h2>
+              <p>The table below reflects the current public rule version. Values are shown as published.</p>
+              <p id="rules-scroll-note">Scroll horizontally to view all roles.</p>
+            </div>
+            <div class="points-rules-matrix-wrap" tabindex="0" role="region" aria-labelledby="matrix-title" aria-describedby="rules-scroll-note">
+              <table class="points-rules-table">
+                <caption class="sr-only">Published Points values by event type and role</caption>
+                <thead><tr data-rules-columns></tr></thead>
+                <tbody data-rules-rows></tbody>
+              </table>
+            </div>
+          </section>
+          <section class="points-rules-note points-panel glass-panel" aria-labelledby="note-title">
+            <h2 id="note-title">Published Note</h2>
+            <p data-rules-note></p>
+          </section>
         </div>
-          <ul class="points-member-grid" id="member-grid" hidden></ul>
-        </div>
-      </section>
+      </div>
 
       <aside class="points-status" aria-labelledby="data-status-title">
         <div class="points-status-copy">
           <span class="points-status-dot" aria-hidden="true"></span>
-          <div><h2 id="data-status-title">Data status</h2><div role="status" aria-atomic="true"><p data-points-status>Waiting for live member data.</p><p data-points-updated></p></div></div>
+          <div><h2 id="data-status-title">Data status</h2><div role="status" aria-atomic="true"><p data-points-status>Waiting for live rules.</p><p data-points-updated></p></div></div>
         </div>
         <p><a href="https://dcap-points-community.to-nepherez.chatgpt.site/">Visit the full DCAP Points site <span aria-hidden="true">↗</span></a></p>
       </aside>
