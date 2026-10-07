@@ -2,7 +2,7 @@
 
 This repository hosts the public homepage for the DCAP Guild Wars 2 community. The production site is available at **[https://dcap-gw2.github.io/](https://dcap-gw2.github.io/)**.
 
-The site is a static, dependency-free GitHub Pages project. It does not contain or deploy the separate DCAP Points application.
+The site is a static, dependency-free GitHub Pages project. It includes the DCAP Points application at `points/`.
 
 ## File structure
 
@@ -21,7 +21,7 @@ The site is a static, dependency-free GitHub Pages project. It does not contain 
 
 - **Homepage wording:** edit the relevant headings, paragraphs or event entries in `index.html`.
 - **Navigation and buttons:** update `href` values in `index.html`. Items marked “Coming soon” are intentionally plain text rather than links. Replace them with links only when a confirmed destination is available.
-- **DCAP Points:** the production Points URL is `https://dcap-points-community.to-nepherez.chatgpt.site/`. Keep the homepage decoupled from the Points API.
+- **DCAP Points:** the public entry point is `points/` on this site. The previous standalone site is retained only in Points recovery links; it has not been retired or redirected. Keep the homepage decoupled from the Points API.
 - **Brand artwork:** original supplied assets live in `assets/brand/` and `assets/images/`. Preserve these source files rather than recreating or overwriting them.
 - **Visual styling:** colours, spacing, breakpoints and component styles are maintained in `css/style.css`.
 

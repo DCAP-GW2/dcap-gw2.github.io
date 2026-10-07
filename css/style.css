@@ -210,3 +210,16 @@ a.card-action:hover { text-decoration: underline; text-underline-offset: 4px; }
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
   .reveal { opacity: 1; transform: none; }
 }
+
+/* Keep homepage content and navigation usable when JavaScript is unavailable. */
+body:not(.points-page):not(.home-navigation-ready) .reveal { opacity: 1; transform: none; }
+@media (max-width: 960px) {
+  body:not(.points-page):not(.home-navigation-ready) .site-header { position: static; }
+  body:not(.points-page):not(.home-navigation-ready) .header-inner { flex-wrap: wrap; padding-top: 16px; }
+  body:not(.points-page):not(.home-navigation-ready) .menu-toggle { display: none; }
+  body:not(.points-page):not(.home-navigation-ready) .primary-nav { position: static; display: flex; flex-direction: column; width: 100%; max-height: none; }
+}
+
+/* Let enlarged homepage text shrink its grid tracks before wrapping. */
+.hero-grid > *, .events-layout > *, .points-feature > * { min-width: 0; }
+.points-details > * { min-width: 0; overflow-wrap: anywhere; }

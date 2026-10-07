@@ -276,3 +276,8 @@
   /* Let every column scroll fully into view on narrow screens, including at 200% text. */
   .points-rules-table tr > :first-child { position: static; min-width: 7rem; max-width: 9rem; }
 }
+
+/* Keep the Overview contributor table contained with enlarged text. */
+[data-points-dashboard] .points-table { table-layout: fixed; }
+[data-points-dashboard] .points-table th, [data-points-dashboard] .points-table td { overflow-wrap: anywhere; }
+[data-points-dashboard] { overflow-wrap: anywhere; }
