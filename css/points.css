@@ -194,3 +194,48 @@
   .points-member-card, .points-members-state, .points-profile-state { padding: 20px 18px; }
   .points-profile-summary, .points-profile-breakdown { grid-template-columns: 1fr; }
 }
+
+/* Statistics: exact aggregate tables with supplemental, non-interactive graphics. */
+.points-statistics-page [hidden] { display: none !important; }
+.points-statistics-page main { overflow-wrap: anywhere; }
+.points-statistics-hero h1 { overflow-wrap: anywhere; }
+.points-statistics-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.points-statistics-state { min-height: 16rem; margin-top: 34px; padding: 28px; color: var(--muted); }
+.points-stat-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: start; }
+.points-stat-daily { margin-top: 24px; }
+.points-stat-table { table-layout: fixed; }
+.points-stat-table th, .points-stat-table td { overflow-wrap: anywhere; vertical-align: top; }
+.points-stat-table th:first-child, .points-stat-table td:first-child { width: 52%; }
+.points-stat-table th:nth-child(n+2), .points-stat-table td:nth-child(n+2) { text-align: right; font-variant-numeric: tabular-nums; }
+.points-stat-table tbody td:nth-child(2) { color: var(--cyan); font-weight: 750; }
+.points-stat-table tbody td:last-child { color: var(--muted); font-weight: 400; }
+.points-stat-table tbody tr:last-child > * { border-bottom: 0; }
+.points-stat-bar-track { display: block; height: 6px; margin-top: 12px; border-radius: 3px; background: rgba(125,211,252,.12); }
+.points-stat-bar-fill { display: block; height: 100%; border-radius: inherit; background: var(--cyan); }
+.points-daily-chart { margin: 0 28px 24px; }
+.points-daily-chart svg { width: 100%; height: auto; }
+.points-daily-scale, .points-daily-dates { color: var(--muted); font-size: .8rem; font-variant-numeric: tabular-nums; }
+.points-daily-scale { margin: 0 0 12px; }
+.points-daily-dates { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 24px; margin-top: 8px; }
+.points-daily-grid { fill: none; stroke: var(--border); }
+.points-daily-line { fill: none; stroke: var(--cyan); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.points-daily-point { fill: var(--cyan); }
+.points-daily-table th:first-child { width: 65%; }
+.points-daily-table tbody td:last-child { color: var(--cyan); font-weight: 750; }
+@media (max-width: 960px) {
+  .points-stat-grid { grid-template-columns: 1fr; }
+  /* Match other Points pages when either navigation script is unavailable. */
+  .points-statistics-page:not(.points-navigation-ready) .site-header { position: static; }
+  .points-statistics-page:not(.points-navigation-ready) main { padding-top: 0; }
+  .points-statistics-page:not(.points-navigation-ready) .header-inner { flex-wrap: wrap; padding-top: 16px; }
+  .points-statistics-page:not(.points-navigation-ready) .menu-toggle { display: none; }
+  .points-statistics-page:not(.points-navigation-ready) .primary-nav { position: static; display: flex; flex-direction: column; width: 100%; max-height: none; }
+}
+@media (max-width: 640px) {
+  .points-statistics-hero h1 { font-size: clamp(2.1rem, 9vw, 3.4rem); }
+  .points-statistics-summary { grid-template-columns: 1fr; }
+  .points-statistics-state { padding: 20px 18px; }
+  .points-stat-table th:first-child, .points-stat-table td:first-child { width: 48%; }
+  .points-daily-table th:first-child { width: 65%; }
+  .points-daily-chart { margin-inline: 18px; }
+}
