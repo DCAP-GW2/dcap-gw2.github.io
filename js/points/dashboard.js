@@ -17,11 +17,15 @@ function renderDataStatus(root, result) {
   root.dataset.pointsState = result.state;
   const status = result.data
     ? (result.state === 'fallback' ? 'Showing the most recently available data.' : 'Live data')
-    : 'Live data is temporarily unavailable. Showing the migration reference snapshot.';
+    : 'Points data is temporarily unavailable. Please try again later.';
   setText(root, '[data-points-status]', status);
   setText(root, '[data-points-label]', result.data
     ? (result.state === 'fallback' ? 'Most recently available data' : 'Live season overview')
-    : 'Static reference snapshot');
+    : 'Data unavailable');
+  if (!result.data) {
+    setText(root, '#contributors-note', 'Contributor data is temporarily unavailable.');
+    setText(root, '[data-points-caption]', 'Contributor data unavailable');
+  }
   const updated = root.querySelector('[data-points-updated]');
   updated.replaceChildren();
   if (result.data) {
@@ -35,6 +39,7 @@ function renderDataStatus(root, result) {
 
 function renderDashboard(root, data) {
   const { meta, members } = data;
+  root.querySelector('[data-points-season-separator]').hidden = false;
   setText(root, '[data-points-season]', `Season ${meta.currentSeason}`);
   setText(root, '[data-points-season-label]', meta.seasonLabel);
   setText(root, '[data-points-rule-version]', meta.ruleVersion);
@@ -108,8 +113,7 @@ async function initialiseDashboard() {
   if (!root) return;
   setText(root, '[data-points-rule-reference]', root.querySelector('[data-points-rule-version]').textContent);
   enhanceNavigation();
-  setText(root, '[data-points-status]', 'Checking for live data. Showing the migration reference snapshot.');
-  // Keep the honest HTML snapshot visible throughout loading and on failure.
+  // Keep neutral HTML placeholders until the shared API returns validated data.
   const result = await getPointsData();
   if (result.data) renderDashboard(root, result.data);
   renderDataStatus(root, result);

@@ -10,6 +10,7 @@
   <link rel="icon" type="image/png" href="../assets/brand/dcap-emblem.png">
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/points.css">
+  <noscript><style>.points-loading-copy { display: none; }</style></noscript>
   <script src="../js/main.js" defer></script>
   <script type="module" src="../js/points/dashboard.js"></script>
 </head>
@@ -45,9 +46,9 @@
         <h1 id="points-title">DCAP <span>Points</span></h1>
         <p class="points-intro">Participation, contribution and community recognition.</p>
         <div class="points-season-meta">
-          <p class="points-season"><span data-points-season>Season 0</span> <span aria-hidden="true">—</span> <span data-points-season-label>Test Run</span></p>
-          <p data-points-period><time datetime="2026-09-11">11</time>–<time datetime="2026-09-23">23 Sep 2026</time></p>
-          <a href="#points-rule">Rule <span data-points-rule-reference>version</span> <span aria-hidden="true">↓</span></a>
+          <p class="points-season"><span data-points-season>—</span> <span data-points-season-separator aria-hidden="true" hidden>—</span> <span data-points-season-label></span></p>
+          <p data-points-period>—</p>
+          <a href="#points-rule">Rule <span data-points-rule-reference>—</span> <span aria-hidden="true">↓</span></a>
         </div>
       </div>
     </section>
@@ -67,22 +68,22 @@
       <section class="points-overview" aria-labelledby="overview-title">
         <div class="points-section-heading">
           <div><p class="eyebrow">The season at a glance</p><h2 id="overview-title">Season overview</h2></div>
-          <p class="points-reference-label" data-points-label>Static reference snapshot</p>
+          <p class="points-reference-label points-loading-copy" data-points-label>Loading live data…</p>
         </div>
-        <!-- The reference snapshot lives in HTML only, remaining readable without JavaScript.
-             Only a fully validated public payload replaces these data-points-* targets. -->
+        <noscript><p>Points data is unavailable without JavaScript. Enable JavaScript to load current season data and contributors.</p></noscript>
+        <!-- Only validated public data replaces these neutral placeholders. -->
         <dl class="points-kpi-grid">
           <div class="points-kpi-card points-kpi-card-total">
-            <dt>Total Points</dt><dd data-points-total>697</dd>
+            <dt>Total Points</dt><dd data-points-total>—</dd>
           </div>
           <div class="points-kpi-card">
-            <dt>Contributors</dt><dd data-points-contributors>28</dd>
+            <dt>Contributors</dt><dd data-points-contributors>—</dd>
           </div>
           <div class="points-kpi-card">
-            <dt>Active Days</dt><dd data-points-active-days>13</dd>
+            <dt>Active Days</dt><dd data-points-active-days>—</dd>
           </div>
           <div class="points-kpi-card" id="points-rule">
-            <dt>Rule Version</dt><dd data-points-rule-version>v1.1</dd>
+            <dt>Rule Version</dt><dd data-points-rule-version>—</dd>
           </div>
         </dl>
       </section>
@@ -92,16 +93,13 @@
           <div class="points-panel-heading">
             <p class="eyebrow">Community contributions</p>
             <h2 id="contributors-title">Top Contributors</h2>
-            <p id="contributors-note">A preview from the reference snapshot.</p>
+            <p id="contributors-note" class="points-loading-copy">Loading contributors…</p>
           </div>
           <table class="points-table" aria-describedby="contributors-note">
-            <caption class="sr-only" data-points-caption>Top four contributors, ranked by points</caption>
+            <caption class="sr-only" data-points-caption>Current season contributors</caption>
             <thead><tr><th scope="col">Rank</th><th scope="col">Contributor</th><th scope="col">Points</th></tr></thead>
             <tbody data-points-leaderboard>
-              <tr><td><span class="points-rank points-rank-first">1</span></td><th scope="row">Lucy</th><td>102</td></tr>
-              <tr><td><span class="points-rank">2</span></td><th scope="row">Excru</th><td>82</td></tr>
-              <tr><td><span class="points-rank">3</span></td><th scope="row">Kendubi</th><td>61</td></tr>
-              <tr><td><span class="points-rank">4</span></td><th scope="row">Khral</th><td>56</td></tr>
+              <tr class="points-contributors-placeholder"><td colspan="3">—</td></tr>
             </tbody>
           </table>
           <p class="points-panel-footnote"><a href="./leaderboard/">View the full leaderboard <span aria-hidden="true">→</span></a></p>
@@ -125,7 +123,7 @@
       <aside class="points-status" aria-labelledby="data-status-title">
         <div class="points-status-copy">
           <span class="points-status-dot" aria-hidden="true"></span>
-          <div><h2 id="data-status-title">Data status</h2><div role="status" aria-live="polite" aria-atomic="true"><p data-points-status>Showing the migration reference snapshot. Enable JavaScript to check for live data.</p><p data-points-updated></p></div></div>
+          <div><h2 id="data-status-title">Data status</h2><div role="status" aria-live="polite" aria-atomic="true"><p data-points-status class="points-loading-copy">Loading live data…</p><p data-points-updated></p></div></div>
         </div>
       </aside>
     </div>

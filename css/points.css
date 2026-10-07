@@ -281,3 +281,11 @@
 [data-points-dashboard] .points-table { table-layout: fixed; }
 [data-points-dashboard] .points-table th, [data-points-dashboard] .points-table td { overflow-wrap: anywhere; }
 [data-points-dashboard] { overflow-wrap: anywhere; }
+
+/* Overview placeholders retain the KPI cards and reserve the contributor preview. */
+[data-points-dashboard] .points-contributors-placeholder td {
+  height: 305px;
+  text-align: center;
+  color: var(--muted);
+  font-weight: 400;
+}
