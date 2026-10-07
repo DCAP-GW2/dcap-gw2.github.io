@@ -239,3 +239,40 @@
   .points-daily-table th:first-child { width: 65%; }
   .points-daily-chart { margin-inline: 18px; }
 }
+/* Published rules and rewards reuse the Points shell and shared data status. */
+:is(.points-rules-page, .points-rewards-page) [hidden] { display: none !important; }
+:is(.points-rules-page, .points-rewards-page) main { overflow-wrap: anywhere; }
+:is(.points-rules-hero, .points-rewards-hero) h1 { overflow-wrap: anywhere; }
+:is(.points-rules-hero, .points-rewards-hero) .points-season-meta > p { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+.points-rules-results, .points-rewards-results { padding-top: 34px; }
+.points-rules-state, .points-rewards-state { padding: 28px; color: var(--muted); }
+.points-rules-matrix-wrap { max-width: 100%; overflow-x: auto; border-radius: 0 0 var(--radius) var(--radius); }
+.points-rules-matrix-wrap:focus-visible { outline-offset: -3px; }
+.points-rules-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: .95rem; }
+.points-rules-table th, .points-rules-table td { min-width: 8rem; max-width: 16rem; padding: 16px 20px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; overflow-wrap: anywhere; white-space: pre-wrap; }
+.points-rules-table thead th { color: var(--muted); background: var(--bg-secondary); font-size: .85rem; font-weight: 650; }
+.points-rules-table tr > :first-child { position: sticky; left: 0; z-index: 1; min-width: 9rem; background: var(--bg-secondary); border-right: 1px solid var(--border); }
+.points-rules-table tbody th { font-weight: 650; }
+.points-rules-table td { color: var(--cyan); }
+.points-rules-table tbody tr:last-child > * { border-bottom: 0; }
+.points-rules-note, .points-rewards-status-card { margin-top: 24px; padding: 28px; }
+.points-rules-note h2, .points-rewards-status-card h2, .points-rewards-info h2 { font-size: 1.4rem; letter-spacing: -.025em; }
+.points-rules-note p { margin-bottom: 0; white-space: pre-wrap; }
+.points-rewards-status-card { margin-top: 0; border-color: rgba(125,211,252,.3); }
+.points-rewards-status-text { margin: 20px 0 0; color: var(--cyan); font-size: clamp(1.2rem, 2.4vw, 1.6rem); line-height: 1.5; white-space: pre-wrap; }
+.points-rewards-info { max-width: 65ch; padding: 28px 0 0; }
+.points-rewards-info p { margin-bottom: 0; color: var(--muted); }
+@media (max-width: 960px) {
+  :is(.points-rules-page, .points-rewards-page):not(.points-navigation-ready) .site-header { position: static; }
+  :is(.points-rules-page, .points-rewards-page):not(.points-navigation-ready) main { padding-top: 0; }
+  :is(.points-rules-page, .points-rewards-page):not(.points-navigation-ready) .header-inner { flex-wrap: wrap; padding-top: 16px; }
+  :is(.points-rules-page, .points-rewards-page):not(.points-navigation-ready) .menu-toggle { display: none; }
+  :is(.points-rules-page, .points-rewards-page):not(.points-navigation-ready) .primary-nav { position: static; display: flex; flex-direction: column; width: 100%; max-height: none; }
+}
+@media (max-width: 640px) {
+  :is(.points-rules-hero, .points-rewards-hero) h1 { font-size: clamp(2.1rem, 9vw, 3.4rem); }
+  .points-rules-state, .points-rewards-state, .points-rules-note, .points-rewards-status-card { padding: 20px 18px; }
+  .points-rules-table th, .points-rules-table td { padding: 14px; }
+  /* Let every column scroll fully into view on narrow screens, including at 200% text. */
+  .points-rules-table tr > :first-child { position: static; min-width: 7rem; max-width: 9rem; }
+}
