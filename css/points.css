@@ -202,7 +202,19 @@
 .points-statistics-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .points-statistics-state { min-height: 16rem; margin-top: 34px; padding: 28px; color: var(--muted); }
 .points-stat-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: start; }
+.points-stat-column { display: grid; gap: 24px; min-width: 0; align-content: start; }
 .points-stat-daily { margin-top: 24px; }
+.points-recent-list { margin: 0; padding: 0; list-style: none; }
+.points-recent-entry { display: flex; align-items: start; justify-content: space-between; gap: 12px 20px; min-width: 0; padding: 16px 28px; border-top: 1px solid var(--border); overflow-wrap: anywhere; }
+.points-recent-details { min-width: 0; }
+.points-recent-heading { display: flex; flex-wrap: wrap; gap: 4px 14px; color: var(--muted); font-size: .84rem; }
+.points-recent-heading a { color: var(--cyan); font-weight: 650; text-underline-offset: 4px; }
+.points-recent-event { margin: 5px 0 0; font-weight: 700; }
+.points-recent-role { margin: 2px 0 0; color: var(--muted); font-size: .88rem; }
+.points-recent-points { flex: none; color: var(--cyan); font-weight: 750; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.points-recent-controls { padding: 12px 28px 18px; border-top: 1px solid var(--border); }
+.points-recent-controls button { min-height: 44px; padding: 8px 14px; border: 1px solid rgba(125,211,252,.4); border-radius: 9px; color: var(--cyan); background: rgba(125,211,252,.08); font: inherit; font-weight: 700; cursor: pointer; }
+.points-recent-controls button:hover { background: rgba(125,211,252,.15); }
 .points-stat-table { table-layout: fixed; }
 .points-stat-table th, .points-stat-table td { overflow-wrap: anywhere; vertical-align: top; }
 .points-stat-table th:first-child, .points-stat-table td:first-child { width: 52%; }
@@ -238,6 +250,8 @@
   .points-stat-table th:first-child, .points-stat-table td:first-child { width: 48%; }
   .points-daily-table th:first-child { width: 65%; }
   .points-daily-chart { margin-inline: 18px; }
+  .points-recent-entry { flex-direction: column; padding-inline: 18px; }
+  .points-recent-controls { padding-inline: 18px; }
 }
 /* Published rules and rewards reuse the Points shell and shared data status. */
 :is(.points-rules-page, .points-rewards-page) [hidden] { display: none !important; }

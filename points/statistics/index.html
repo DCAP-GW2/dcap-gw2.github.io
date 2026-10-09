@@ -81,15 +81,22 @@
           </section>
 
           <div class="points-stat-grid">
-            <section class="points-stat-section points-panel glass-panel" aria-labelledby="role-title">
-              <div class="points-panel-heading"><h2 id="role-title">Role Contributions</h2><p id="role-note">Points by published role. Shares show each role’s portion of total season Points.</p></div>
-              <p class="points-panel-footnote" data-role-empty hidden>No role contribution data is available yet.</p>
-              <table class="points-table points-stat-table" data-role-table aria-describedby="role-note">
-                <caption class="sr-only">Role Contributions: published Points and share of season total</caption>
-                <thead><tr><th scope="col">Role</th><th scope="col">Points</th><th scope="col">Share</th></tr></thead>
-                <tbody data-role-rows></tbody>
-              </table>
-            </section>
+            <div class="points-stat-column">
+              <section class="points-stat-section points-panel glass-panel" aria-labelledby="recent-points-title">
+                <div class="points-panel-heading"><h2 id="recent-points-title">Recent Points</h2><p>Latest current-season contributions across the community.</p></div>
+                <p class="points-panel-footnote" data-recent-points-message hidden></p>
+                <ol class="points-recent-list" data-recent-points-list aria-label="Recent community Points contributions" hidden></ol>
+              </section>
+              <section class="points-stat-section points-panel glass-panel" aria-labelledby="role-title">
+                <div class="points-panel-heading"><h2 id="role-title">Role Contributions</h2><p id="role-note">Points by published role. Shares show each role’s portion of total season Points.</p></div>
+                <p class="points-panel-footnote" data-role-empty hidden>No role contribution data is available yet.</p>
+                <table class="points-table points-stat-table" data-role-table aria-describedby="role-note">
+                  <caption class="sr-only">Role Contributions: published Points and share of season total</caption>
+                  <thead><tr><th scope="col">Role</th><th scope="col">Points</th><th scope="col">Share</th></tr></thead>
+                  <tbody data-role-rows></tbody>
+                </table>
+              </section>
+            </div>
             <section class="points-stat-section points-panel glass-panel" aria-labelledby="event-title">
               <div class="points-panel-heading"><h2 id="event-title">Event Contributions</h2><p id="event-note">Points by published event or category. Shares show each category’s portion of total season Points.</p></div>
               <p class="points-panel-footnote" data-event-empty hidden>No event contribution data is available yet.</p>

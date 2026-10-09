@@ -1,4 +1,5 @@
 import { getPointsData } from './api.js';
+import { communityRecentContributions, renderRecentContributions } from './recent-contributions.js';
 
 const numberFormat = new Intl.NumberFormat('en-NZ', { maximumSignificantDigits: 21 });
 const shareFormat = new Intl.NumberFormat('en-NZ', { style: 'percent', maximumFractionDigits: 1 });
@@ -86,6 +87,21 @@ function renderContributions(root, key, items, total) {
   root.querySelector(`[data-${key}-rows]`).replaceChildren(rows);
   root.querySelector(`[data-${key}-table]`).hidden = !items.length;
   root.querySelector(`[data-${key}-empty]`).hidden = Boolean(items.length);
+}
+
+function renderRecentPoints(root, members) {
+  const records = communityRecentContributions(members);
+  const list = root.querySelector('[data-recent-points-list]');
+  const message = root.querySelector('[data-recent-points-message]');
+  list.hidden = !records?.length;
+  message.hidden = Boolean(records?.length);
+  if (records?.length) {
+    renderRecentContributions(list, records, new URL('../members/profile/', window.location.href));
+  } else {
+    list.replaceChildren();
+    message.textContent = records === null ? 'Recent contribution detail is unavailable.'
+      : 'No contributions have been recorded for this season yet.';
+  }
 }
 
 function svgElement(name, attributes) {
@@ -195,8 +211,9 @@ async function initialiseStatistics() {
       renderUnavailableState(root);
       return;
     }
-    const { meta, roleTotals, eventTotals, dailyTotals } = result.data;
+    const { meta, members, roleTotals, eventTotals, dailyTotals } = result.data;
     renderMetadata(root, meta);
+    renderRecentPoints(root, members);
     renderContributions(root, 'role', roleTotals, meta.totalPoints);
     renderContributions(root, 'event', eventTotals, meta.totalPoints);
     renderDailyTotals(root, dailyTotals);

@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "meta": {
+    "feedStatus": "live",
+    "seasonLabel": "Example Season",
+    "ruleVersion": "example-v1",
+    "rewardsStatus": "Available",
+    "currentSeason": 3,
+    "totalPoints": 15,
+    "uniqueContributors": 1,
+    "activeDays": 1,
+    "periodStart": "2026-10-01",
+    "periodEnd": "2026-10-08",
+    "sourceUpdatedAt": "2026-10-08T12:00:00Z"
+  },
+  "members": [{
+    "id": "public-a",
+    "displayName": "Example Member",
+    "allTimePoints": 15,
+    "allTimeRank": 1,
+    "currentPoints": 15,
+    "currentRank": 1,
+    "activeDays": 1,
+    "roleDiversity": 1,
+    "commander": 15,
+    "blocker": 0,
+    "mapSpammer": 0,
+    "defenseSetup": 0,
+    "taxi": 0,
+    "student": 0,
+    "ttPoints": 15,
+    "otherPoints": 0,
+    "recentContributions": [{
+      "eventDate": "2026-10-08",
+      "eventType": "Triple Trouble",
+      "role": "Commander",
+      "points": 5
+    }]
+  }],
+  "roleTotals": [{ "label": "Commander", "value": 15 }],
+  "eventTotals": [{ "label": "Triple Trouble", "value": 15 }],
+  "dailyTotals": [{ "date": "2026-10-08", "points": 15 }],
+  "rules": {
+    "version": "example-v1",
+    "note": "Example fixture only",
+    "roles": ["Commander"],
+    "eventTypes": [{ "eventType": "Triple Trouble", "values": { "Commander": "5" } }]
+  }
+}
