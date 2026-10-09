@@ -1,4 +1,5 @@
 import { getPointsData } from './api.js';
+import { memberNameNode } from './member-link.js';
 
 const numberFormat = new Intl.NumberFormat('en-NZ');
 const dateFormat = new Intl.DateTimeFormat('en-NZ', {
@@ -68,8 +69,7 @@ function renderDashboard(root, data) {
     rankCell.append(rank);
     const name = document.createElement('th');
     name.scope = 'row';
-    // Display names are authoritative public text. IDs never enter the DOM.
-    name.textContent = member.displayName;
+    name.append(memberNameNode(member, './members/profile/'));
     const points = document.createElement('td');
     points.textContent = numberFormat.format(member.currentPoints);
     row.append(rankCell, name, points);

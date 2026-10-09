@@ -1,4 +1,5 @@
 import { getPointsData } from './api.js';
+import { memberNameNode } from './member-link.js';
 
 const numberFormat = new Intl.NumberFormat('en-NZ');
 const nameOrder = new Intl.Collator('en-NZ');
@@ -93,8 +94,7 @@ function renderView(root, view, members) {
     rankCell.append(rank);
     const name = document.createElement('th');
     name.scope = 'row';
-    // Only the public display name enters the DOM. Never copy member IDs.
-    name.textContent = member.displayName;
+    name.append(memberNameNode(member, '../members/profile/'));
     const points = document.createElement('td');
     points.textContent = numberFormat.format(member[definition.points]);
     row.append(rankCell, name, points);
