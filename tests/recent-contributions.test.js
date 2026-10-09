@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { validatePointsData } from '../js/points/validation.js';
-import { communityRecentContributions, memberRecentContributions } from '../js/points/recent-contributions.js';
+import { communityRecentContributions, memberRecentContributions, memberRecentView } from '../js/points/recent-contributions.js';
 
 const fixture = JSON.parse(readFileSync(new URL('./fixtures/points-v1.json', import.meta.url)));
 const payload = () => structuredClone(fixture);
@@ -21,6 +21,19 @@ test('optional v1 history distinguishes missing, empty, and populated detail', (
   assert.equal(memberRecentContributions(data.members[0]), null);
   data.members[0].recentContributions = [];
   assert.deepEqual(memberRecentContributions(data.members[0]), []);
+});
+
+test('profile view starts at five, expands to at most ten, and hides unnecessary controls', () => {
+  for (const count of [0, 1, 5, 6, 10, 12]) {
+    const records = Array.from({ length: count }, (_, index) => index);
+    const collapsed = memberRecentView(records, false);
+    const expanded = memberRecentView(records, true);
+    assert.deepEqual(collapsed.visible, records.slice(0, 5));
+    assert.deepEqual(expanded.visible, records.slice(0, 10));
+    assert.equal(collapsed.showToggle, count > 5);
+    assert.equal(collapsed.label, 'Show more');
+    assert.equal(expanded.label, 'Show less');
+  }
 });
 
 test('rejects excess, malformed, out-of-season, and ascending history', () => {

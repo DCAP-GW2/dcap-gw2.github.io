@@ -21,6 +21,14 @@ export function memberRecentContributions(member) {
   return member.recentContributions.map((contribution, index) => ({ member, contribution, index }));
 }
 
+export function memberRecentView(records, expanded) {
+  return {
+    visible: records.slice(0, expanded ? 10 : 5),
+    showToggle: records.length > 5,
+    label: expanded ? 'Show less' : 'Show more',
+  };
+}
+
 /** Render validated public fields only. Never interpret feed text as markup. */
 export function renderRecentContributions(list, records, profileBaseUrl = null) {
   const items = document.createDocumentFragment();

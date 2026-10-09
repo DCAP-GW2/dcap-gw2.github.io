@@ -1,5 +1,5 @@
 import { getPointsData } from './api.js';
-import { memberRecentContributions, renderRecentContributions } from './recent-contributions.js';
+import { memberRecentContributions, memberRecentView, renderRecentContributions } from './recent-contributions.js';
 
 const numberFormat = new Intl.NumberFormat('en-NZ');
 // Date-only metadata denotes calendar days, not instants in the visitor's zone.
@@ -79,7 +79,7 @@ function renderMemberRecent(root, member) {
   const toggle = root.querySelector('[data-member-recent-toggle]');
   list.hidden = !records?.length;
   message.hidden = Boolean(records?.length);
-  controls.hidden = !records || records.length <= 5;
+  controls.hidden = !records || !memberRecentView(records, false).showToggle;
   if (!records?.length) {
     list.replaceChildren();
     message.textContent = records === null ? 'Recent contribution detail is unavailable.'
@@ -88,8 +88,9 @@ function renderMemberRecent(root, member) {
   }
   let expanded = false;
   function update() {
-    renderRecentContributions(list, records.slice(0, expanded ? 10 : 5));
-    toggle.textContent = expanded ? 'Show less' : 'Show 10';
+    const view = memberRecentView(records, expanded);
+    renderRecentContributions(list, view.visible);
+    toggle.textContent = view.label;
     toggle.setAttribute('aria-expanded', String(expanded));
   }
   toggle.addEventListener('click', () => {
