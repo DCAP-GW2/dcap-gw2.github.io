@@ -1,4 +1,5 @@
 import { getPointsData } from './api.js';
+import { memberProfileUrl } from './member-link.js';
 
 const numberFormat = new Intl.NumberFormat('en-NZ');
 const nameOrder = new Intl.Collator('en-NZ');
@@ -96,17 +97,18 @@ function renderDirectory(root, members, total) {
       group.append(term, value);
       stats.append(group);
     }
-    const link = document.createElement('a');
-    // The feed's opaque public ID is used only in the local profile URL.
-    const url = new URL('./profile/', window.location.href);
-    url.searchParams.set('member', member.id);
-    link.href = url.href;
-    link.append('View profile');
-    const context = document.createElement('span');
-    context.className = 'sr-only';
-    context.textContent = ` for ${member.displayName}`;
-    link.append(context);
-    card.append(name, stats, link);
+    card.append(name, stats);
+    const href = memberProfileUrl(member, './profile/');
+    if (href) {
+      const link = document.createElement('a');
+      link.href = href;
+      link.append('View profile');
+      const context = document.createElement('span');
+      context.className = 'sr-only';
+      context.textContent = ` for ${member.displayName}`;
+      link.append(context);
+      card.append(link);
+    }
     cards.append(card);
   }
   grid.replaceChildren(cards);

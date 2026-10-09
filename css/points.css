@@ -46,6 +46,9 @@
 .points-table th:last-child, .points-table td:last-child { padding-right: 28px; text-align: right; font-variant-numeric: tabular-nums; }
 .points-table tbody th { font-weight: 650; }
 .points-table tbody td:last-child { color: var(--cyan); font-weight: 750; }
+.points-table .points-member-profile-link { color: var(--text); text-decoration: underline; text-decoration-color: var(--cyan); text-underline-offset: 4px; overflow-wrap: anywhere; }
+.points-table .points-member-profile-link:hover { color: var(--cyan); }
+.points-table .points-member-profile-link:focus-visible { border-radius: 2px; }
 .points-rank { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; color: var(--muted); background: rgba(255,255,255,.04); font-size: .85rem; }
 .points-rank-first { color: #fbbf24; background: rgba(245,158,11,.1); }
 .points-panel-footnote { margin: 0; padding: 18px 28px; color: var(--muted); font-size: .85rem; }
