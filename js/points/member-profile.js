@@ -1,4 +1,5 @@
 import { getPointsData } from './api.js';
+import { memberRecentContributions, renderRecentContributions } from './recent-contributions.js';
 
 const numberFormat = new Intl.NumberFormat('en-NZ');
 // Date-only metadata denotes calendar days, not instants in the visitor's zone.
@@ -70,6 +71,34 @@ function enhanceNavigation() {
   });
 }
 
+function renderMemberRecent(root, member) {
+  const records = memberRecentContributions(member);
+  const list = root.querySelector('[data-member-recent-list]');
+  const message = root.querySelector('[data-member-recent-message]');
+  const controls = root.querySelector('[data-member-recent-controls]');
+  const toggle = root.querySelector('[data-member-recent-toggle]');
+  list.hidden = !records?.length;
+  message.hidden = Boolean(records?.length);
+  controls.hidden = !records || records.length <= 5;
+  if (!records?.length) {
+    list.replaceChildren();
+    message.textContent = records === null ? 'Recent contribution detail is unavailable.'
+      : 'No contributions have been recorded for this season yet.';
+    return;
+  }
+  let expanded = false;
+  function update() {
+    renderRecentContributions(list, records.slice(0, expanded ? 10 : 5));
+    toggle.textContent = expanded ? 'Show less' : 'Show 10';
+    toggle.setAttribute('aria-expanded', String(expanded));
+  }
+  toggle.addEventListener('click', () => {
+    expanded = !expanded;
+    update();
+  });
+  update();
+}
+
 function renderProfile(root, member) {
   setText(root, '#points-title', member.displayName);
   document.title = `${member.displayName} | DCAP Points`;
@@ -96,6 +125,7 @@ function renderProfile(root, member) {
     rows.append(row);
   }
   root.querySelector('[data-member-roles]').replaceChildren(rows);
+  renderMemberRecent(root, member);
   root.querySelector('[data-member-state]').hidden = true;
   root.querySelector('[data-profile-content]').hidden = false;
 }

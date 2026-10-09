@@ -21,6 +21,22 @@ function validDate(value) {
 }
 const calendarDay = value => new Date(value).toISOString().slice(0, 10);
 const reject = reason => ({ valid: false, reason });
+const contributionFields = ['eventDate', 'eventType', 'role', 'points'];
+
+function validRecentContributions(entries, periodStart, periodEnd) {
+  if (!Array.isArray(entries) || entries.length > 10) return false;
+  let previousDate = null;
+  for (const entry of entries) {
+    if (!plainObject(entry) || Object.keys(entry).length !== contributionFields.length ||
+        !contributionFields.every(key => Object.hasOwn(entry, key)) ||
+        !/^\d{4}-\d{2}-\d{2}$/.test(entry.eventDate) || !validDate(entry.eventDate) ||
+        entry.eventDate < periodStart || entry.eventDate > periodEnd ||
+        !nonblank(entry.eventType) || !nonblank(entry.role) || !nonnegative(entry.points) ||
+        (previousDate !== null && entry.eventDate > previousDate)) return false;
+    previousDate = entry.eventDate;
+  }
+  return true;
+}
 
 function validTotals(items, total) {
   const labels = new Set();
@@ -75,6 +91,9 @@ export function validatePointsData(payload) {
     if (member.allTimePoints < member.currentPoints ||
         !sameTotal(roleFields.reduce((total, key) => total + member[key], 0), member.currentPoints) ||
         !sameTotal(member.ttPoints + member.otherPoints, member.currentPoints)) return reject('member-totals');
+    if (Object.hasOwn(member, 'recentContributions') &&
+        !validRecentContributions(member.recentContributions,
+          calendarDay(meta.periodStart), calendarDay(meta.periodEnd))) return reject('recent-contributions');
   }
   if (!sameTotal(sum(members, 'currentPoints'), meta.totalPoints) ||
       members.filter(member => member.currentPoints > 0).length !== meta.uniqueContributors) {
