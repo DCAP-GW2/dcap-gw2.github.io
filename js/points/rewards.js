@@ -1,4 +1,4 @@
-import { maybeRenderV2 } from './v2/page.js';
+import { maybeRenderV2 } from './preview.js';
 import { getPointsData } from './api.js';
 
 const numberFormat = new Intl.NumberFormat('en-NZ', { maximumSignificantDigits: 21 });

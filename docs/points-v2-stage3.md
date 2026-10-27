@@ -32,3 +32,7 @@ Local Chromium checks covered every Points page in synthetic v2 mode at 320, 390
 5. Review the secondary Version 4 deployment transition and production trigger/deployment inventory. Obtain explicit final production approval for the exact artifacts and publication window. Switch only through that separately authorized process; retain v1 for rollback.
 
 This branch does not execute any of those production steps. Its synthetic one-member fixture verifies contract handling and UI mechanics; final multi-member identity and historical reconciliation checks remain production gates.
+
+## Subsequent Stage 4C update
+
+The original Stage 3 evidence above is retained as a historical checkpoint. [Stage 4C architecture and compatibility](points-v2-stage4c.md) and the [updated production handoff](points-v2-production-handoff.md) supersede its current release-readiness discussion. DEV.1 remains intact; DEV.2 adds a separate inactive fictional preview.

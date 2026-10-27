@@ -1,4 +1,4 @@
-import { maybeRenderV2 } from './v2/page.js';
+import { maybeRenderV2 } from './preview.js';
 import { getPointsData } from './api.js';
 import { communityRecentContributions, renderRecentContributions } from './recent-contributions.js';
 

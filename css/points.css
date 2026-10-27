@@ -319,3 +319,20 @@
   color: var(--muted);
   font-weight: 400;
 }
+
+/* DEV.2 tables carry dates/events as row headers, rather than the v1 rank column. */
+.points-dev2-content .points-v2-table { table-layout: auto; }
+.points-dev2-content .points-v2-table :is(th, td) {
+  min-width: 8rem;
+  padding-inline: 1rem;
+  overflow-wrap: anywhere;
+  vertical-align: top;
+}
+.points-dev2-content .points-v2-table :is(th, td):first-child {
+  width: auto;
+  min-width: 12rem;
+}
+.points-dev2-content .points-v2-table-scroll:focus-visible {
+  outline: 3px solid #fbbf24;
+  outline-offset: 3px;
+}
