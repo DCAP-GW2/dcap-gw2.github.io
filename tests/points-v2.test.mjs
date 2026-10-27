@@ -88,6 +88,22 @@ test('local preview gate, historical cycle ranking, and opaque recent history', 
   assert.equal(fixture.population.missingPublicIdCount, 1);
 });
 
+test('historical cycle ranks use competition ties with stable public-ID ordering', () => {
+  const data = {
+    members: ['m-0000000000000003', 'm-0000000000000002', 'm-0000000000000001']
+      .map(id => ({ id, displayName: 'Fictional' })),
+    awards: [
+      { memberId: 'm-0000000000000003', cycleId: 7, points: 2 },
+      { memberId: 'm-0000000000000002', cycleId: 7, points: 5 },
+      { memberId: 'm-0000000000000001', cycleId: 7, points: 5 },
+    ],
+  };
+  assert.deepEqual(cycleRanking(data, 7).map(row => [row.id, row.partialRank]), [
+    ['m-0000000000000001', 1], ['m-0000000000000002', 1], ['m-0000000000000003', 3],
+  ]);
+  assert.deepEqual(cycleRanking(data, 8), []);
+});
+
 test('v2 cache is isolated, fresh for 60 seconds, and rejects corrupted or v1 records', async () => {
   const store = storage(); let now = 1_000; let requests = 0;
   const loader = createV2Loader({ storage: store, now: () => now, fetcher: async () => { requests++; return response(fixture); } });
