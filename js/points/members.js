@@ -1,3 +1,4 @@
+import { maybeRenderV2 } from './v2/page.js';
 import { getPointsData } from './api.js';
 import { memberProfileUrl } from './member-link.js';
 
@@ -126,6 +127,7 @@ function renderDirectory(root, members, total) {
 async function initialiseMembers() {
   const root = document.querySelector('[data-points-members]');
   if (!root) return;
+  if (await maybeRenderV2(root, 'members')) return;
   enhanceNavigation();
   const results = root.querySelector('[data-member-results]');
   results.setAttribute('aria-busy', 'true');

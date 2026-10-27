@@ -1,3 +1,4 @@
+import { maybeRenderV2 } from './v2/page.js';
 import { getPointsData } from './api.js';
 import { memberNameNode } from './member-link.js';
 
@@ -142,6 +143,7 @@ function enhanceNavigation() {
 async function initialiseLeaderboard() {
   const root = document.querySelector('[data-points-full-leaderboard]');
   if (!root) return;
+  if (await maybeRenderV2(root, 'leaderboard')) return;
   enhanceNavigation();
   const results = root.querySelector('#leaderboard-results');
   results.setAttribute('aria-busy', 'true');

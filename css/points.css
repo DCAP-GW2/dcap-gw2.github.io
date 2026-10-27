@@ -72,6 +72,19 @@
 .points-table tbody th { overflow-wrap: anywhere; }
 .points-kpi-card dd { overflow-wrap: anywhere; }
 .points-page .footer-bottom { color: var(--muted); }
+.points-v2-content { min-width: 0; }
+.points-v2-warning { margin: 28px 0 12px; padding: 16px 20px; border: 2px solid #fbbf24; border-radius: 10px; color: #fff0c1; background: #493314; font-weight: 750; }
+.points-v2-meta { color: var(--muted); overflow-wrap: anywhere; }
+.points-v2-section { margin: 34px 0; min-width: 0; }
+.points-v2-section h2 { margin-bottom: 18px; }
+.points-v2-section p { max-width: 80ch; }
+.points-v2-table-scroll { max-width: 100%; overflow-x: auto; }
+.points-v2-table { min-width: 520px; }
+.points-v2-table caption { text-align: left; padding: 10px 0; color: var(--muted); }
+.points-v2-content input[type="search"] { display: block; width: min(100%, 28rem); min-height: 44px; margin: 18px 0; padding: 10px; color: var(--text); background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; }
+.points-v2-content button { min-height: 44px; margin: 8px 8px 8px 0; padding: 10px 16px; color: var(--text); background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; }
+.points-v2-content button[aria-pressed="true"] { border-color: var(--cyan); color: var(--cyan); }
+.points-v2-content :is(a, button, input):focus-visible { outline: 3px solid #fbbf24; outline-offset: 3px; }
 
 /* Full leaderboard: presentation only; shared Points data and cache stay unchanged. */
 .points-nav a:not([aria-current]) { border-color: transparent; background: transparent; color: var(--muted); }

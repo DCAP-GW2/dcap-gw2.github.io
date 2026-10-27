@@ -1,3 +1,4 @@
+import { maybeRenderV2 } from './v2/page.js';
 import { getPointsData } from './api.js';
 import { memberRecentContributions, memberRecentView, renderRecentContributions } from './recent-contributions.js';
 
@@ -134,6 +135,7 @@ function renderProfile(root, member) {
 async function initialiseProfile() {
   const root = document.querySelector('[data-points-member-profile]');
   if (!root) return;
+  if (await maybeRenderV2(root, 'profile')) return;
   enhanceNavigation();
   const requestedId = new URLSearchParams(window.location.search).get('member');
   const results = root.querySelector('[data-member-results]');

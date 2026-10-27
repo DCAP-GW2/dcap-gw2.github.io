@@ -1,3 +1,4 @@
+import { maybeRenderV2 } from './v2/page.js';
 import { getPointsData } from './api.js';
 
 const numberFormat = new Intl.NumberFormat('en-NZ', { maximumSignificantDigits: 21 });
@@ -86,6 +87,7 @@ function enhanceNavigation() {
 async function initialiseRewards() {
   const root = document.querySelector('[data-points-rewards]');
   if (!root) return;
+  if (await maybeRenderV2(root, 'rewards')) return;
   const results = root.querySelector('[data-rewards-results]');
   try {
     enhanceNavigation();
