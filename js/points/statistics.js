@@ -1,3 +1,4 @@
+import { maybeRenderV2 } from './preview.js';
 import { getPointsData } from './api.js';
 import { communityRecentContributions, renderRecentContributions } from './recent-contributions.js';
 
@@ -199,6 +200,7 @@ function enhanceNavigation() {
 async function initialiseStatistics() {
   const root = document.querySelector('[data-points-statistics]');
   if (!root) return;
+  if (await maybeRenderV2(root, 'statistics')) return;
   const results = root.querySelector('[data-statistics-results]');
   try {
     enhanceNavigation();

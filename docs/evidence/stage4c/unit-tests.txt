@@ -1,0 +1,52 @@
+
+> test
+> node --test tests/*.test.js tests/*.test.mjs
+
+✔ overview and leaderboard links use the same member profile route (1.04261ms)
+✔ opaque IDs survive URL encoding regardless of display name or past identity (0.29597ms)
+✔ missing or blank IDs do not produce profile links (0.129042ms)
+✔ DEV.2 reviewed fictional complete schema, semantics and immutable binding (17.292748ms)
+✔ DEV.2 reviewed fictional incomplete schema, semantics and immutable binding (6.55158ms)
+✔ DEV.2 reviewed fictional missing schema, semantics and immutable binding (6.347367ms)
+✔ DEV.2 reviewed fictional pending schema, semantics and immutable binding (5.474058ms)
+✔ DEV.2 reviewed fictional ties schema, semantics and immutable binding (4.288425ms)
+✔ DEV.2 dispatch keeps v1 default, exact versions and loopback-only activation (2.566796ms)
+✔ DEV.2 strict shape rejects private fields, malformed dates, types, versions and bounds (84.270243ms)
+✔ DEV.2 validates arithmetic, all aggregate grains, IDs, member references and order (47.436834ms)
+✔ DEV.2 requires exact exception provenance and never creates a universal Other Commander rule (26.076001ms)
+✔ DEV.2 rejects duplicate source tuples and all three non-stacking violations (19.507912ms)
+✔ DEV.2 checksum awaits WebCrypto, preserves canonical array order, and fails without crypto (5.119121ms)
+✔ DEV.2 namespaces and cache admission isolate v1, DEV.1, invalid and future-dated caches (28.33171ms)
+✔ DEV.2 expired matching data falls back; different revision or same revision/different hash cannot promote (35.18555ms)
+✔ DEV.2 in-memory pin rejects mid-session revision changes without explicit expected pin (17.360049ms)
+✔ DEV.2 invalid, HTTP, UTF-8, bounded streaming and storage failures are safe (10.648291ms)
+✔ DEV.2 concurrent loads share a bounded request; timeout aborts and suppresses late promotion (10.831844ms)
+✔ DEV.2 invalid navigation context never silently selects a different fixture or revision (0.395177ms)
+✔ DEV.2 partially specified expected binding cannot admit a feed (0.519803ms)
+✔ DEV.2 executable schema equals accepted JSON Schema (0.959487ms)
+✔ accepted synthetic fixture regenerates, validates, and reconciles numerical totals (13.29131ms)
+✔ strict contract rejects wrong versions, missing fields, private fields, and malformed dates (17.330625ms)
+✔ rejects duplicates, bad references, wrong aggregates, hashes and oversized payloads (21.192406ms)
+✔ rules include 24 numeric definitions, pending Other Commander, and distinct roles (0.366775ms)
+✔ local preview gate, historical cycle ranking, and opaque recent history (0.617939ms)
+✔ historical cycle ranks use competition ties with stable public-ID ordering (1.015069ms)
+✔ v2 cache is isolated, fresh for 60 seconds, and rejects corrupted or v1 records (47.012974ms)
+✔ invalid responses, HTTP failures, and timeout cannot replace last-known-good (23.26026ms)
+✔ malformed, oversized, network and storage failures remain unavailable or use memory (9.967819ms)
+DCAP Points: refresh unavailable; retaining available data.
+DCAP Points: refresh unavailable; retaining available data.
+DCAP Points: refresh unavailable; retaining available data.
+✔ optional v1 history distinguishes missing, empty, and populated detail (3.260713ms)
+✔ profile view starts at five, expands to at most ten, and hides unnecessary controls (0.313396ms)
+✔ rejects excess, malformed, out-of-season, and ascending history (0.535556ms)
+✔ identical-looking entries remain separate and capped lists do not replace aggregate checks (0.241169ms)
+✔ global latest ten use public member IDs and preserve same-day feed order (0.379875ms)
+✔ API retains v1 cache and last-known-good behaviour for optional detail (5.989114ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 701.219534

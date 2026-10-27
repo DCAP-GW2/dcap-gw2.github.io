@@ -1,3 +1,4 @@
+import { maybeRenderV2 } from './preview.js';
 import { getPointsData } from './api.js';
 
 const numberFormat = new Intl.NumberFormat('en-NZ', { maximumSignificantDigits: 21 });
@@ -114,6 +115,7 @@ function enhanceNavigation() {
 async function initialiseRules() {
   const root = document.querySelector('[data-points-rules]');
   if (!root) return;
+  if (await maybeRenderV2(root, 'rules')) return;
   const results = root.querySelector('[data-rules-results]');
   try {
     enhanceNavigation();
