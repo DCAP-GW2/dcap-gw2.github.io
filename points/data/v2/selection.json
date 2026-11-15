@@ -1,0 +1,11 @@
+{
+  "contractVersion": "2.0.0-public-candidate.1",
+  "revision": "r000",
+  "path": "/points/data/v2/releases/r000.json",
+  "sha256": "2059ca41cdfda3577de6a77f8ecc5fe6ad25cd715777ac71c81da70a7f162c73",
+  "lastKnownGood": {
+    "revision": "r000",
+    "path": "/points/data/v2/releases/r000.json",
+    "sha256": "2059ca41cdfda3577de6a77f8ecc5fe6ad25cd715777ac71c81da70a7f162c73"
+  }
+}
