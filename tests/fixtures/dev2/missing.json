@@ -1,0 +1,906 @@
+{
+  "schemaVersion": 2,
+  "contractVersion": "2.0.0-dev.2",
+  "source": {
+    "kind": "PINNED_HISTORICAL_SNAPSHOT",
+    "timeZone": "Pacific/Auckland",
+    "updatedAt": null,
+    "observedAt": "2026-10-27T05:42:58.102Z",
+    "latestEventDate": "2026-10-28"
+  },
+  "migration": {
+    "revision": "dev-ratified-cd49cef54d404456bd04ddfb",
+    "activeMigrationRevision": null,
+    "engineVersion": "2B.1.0",
+    "mappingVersion": "stage2a-confirmed-plus-explicit-note-parser-1",
+    "ruleVersion": "DCAP Points v2.0",
+    "productionEffectiveDate": null,
+    "decisionVersion": "4B.1.0"
+  },
+  "publication": {
+    "status": "INACTIVE_PRIVATE_DEV",
+    "previewOnly": true,
+    "approvedForProduction": false
+  },
+  "validation": {
+    "status": "VERIFIED_PRIVATE_PREVIEW",
+    "identityStatus": "PRESERVED_OBSERVED_IDS",
+    "generatedAt": "2026-10-27T05:42:58.102Z",
+    "hashAlgorithm": "SHA-256",
+    "contentHash": "08bd7704f5e05a544c423f42c59ccc6b539c9c61ffe04d537c063a2ace0405ec"
+  },
+  "population": {
+    "sourceCount": 19,
+    "originalPoints": 53,
+    "awardCandidateCount": 17,
+    "unresolvedCount": 0,
+    "canonicalMemberCount": 4,
+    "observedPublicIdCount": 3,
+    "missingPublicIdCount": 1,
+    "candidatePoints": 49,
+    "totalMeaning": "RECONCILED_HISTORICAL_NUMERICAL_AWARDS",
+    "periodStart": "2026-10-10",
+    "periodEnd": "2026-10-28",
+    "currentCycleId": null,
+    "approvedRuleCount": 15,
+    "approvedRulePoints": 43,
+    "ratifiedExceptionCount": 2,
+    "ratifiedExceptionPoints": 6,
+    "confirmedIneligibleCount": 2,
+    "suppressedCount": 0,
+    "projectedAwardCount": 16,
+    "projectedPoints": 46,
+    "withheldAwardCount": 1,
+    "withheldPoints": 3
+  },
+  "completeness": {
+    "historicalDecisions": "COMPLETE",
+    "numericalReconciliation": "VERIFIED",
+    "publicIdentity": "LIMITED",
+    "sourceFreshness": "PINNED_NOT_CURRENT",
+    "publication": "INACTIVE",
+    "sourceCoverage": "PINNED_HISTORICAL"
+  },
+  "rules": [
+    {
+      "id": "V2-01",
+      "version": "DCAP Points v2.0",
+      "eventId": "triple-trouble",
+      "roleId": "taxi",
+      "eventLabel": "Triple Trouble",
+      "roleLabel": "Taxi",
+      "points": 3,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-02",
+      "version": "DCAP Points v2.0",
+      "eventId": "triple-trouble",
+      "roleId": "map-spammer",
+      "eventLabel": "Triple Trouble",
+      "roleLabel": "Map Spammer",
+      "points": 5,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-03",
+      "version": "DCAP Points v2.0",
+      "eventId": "triple-trouble",
+      "roleId": "blocker",
+      "eventLabel": "Triple Trouble",
+      "roleLabel": "Blocker",
+      "points": 3,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-04",
+      "version": "DCAP Points v2.0",
+      "eventId": "triple-trouble",
+      "roleId": "setup",
+      "eventLabel": "Triple Trouble",
+      "roleLabel": "Setup",
+      "points": 3,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-05",
+      "version": "DCAP Points v2.0",
+      "eventId": "triple-trouble",
+      "roleId": "commander",
+      "eventLabel": "Triple Trouble",
+      "roleLabel": "Commander",
+      "points": 3,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-06",
+      "version": "DCAP Points v2.0",
+      "eventId": "dbs",
+      "roleId": "derv-escort",
+      "eventLabel": "DBS",
+      "roleLabel": "Derv Escort",
+      "points": 2,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-07",
+      "version": "DCAP Points v2.0",
+      "eventId": "dbs",
+      "roleId": "doordash-feed",
+      "eventLabel": "DBS",
+      "roleLabel": "Doordash / Feed",
+      "points": 2,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-08",
+      "version": "DCAP Points v2.0",
+      "eventId": "bfla",
+      "roleId": "commander",
+      "eventLabel": "BFLA",
+      "roleLabel": "Commander",
+      "points": 3,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": "BFLA"
+    },
+    {
+      "id": "V2-09",
+      "version": "DCAP Points v2.0",
+      "eventId": "bfla",
+      "roleId": "sub-lane-lead",
+      "eventLabel": "BFLA",
+      "roleLabel": "Sub/Lane Lead",
+      "points": 2,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": "BFLA"
+    },
+    {
+      "id": "V2-10",
+      "version": "DCAP Points v2.0",
+      "eventId": "twisted-marionette",
+      "roleId": "commander",
+      "eventLabel": "Twisted Marionette",
+      "roleLabel": "Commander",
+      "points": 4,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-11",
+      "version": "DCAP Points v2.0",
+      "eventId": "dragonstorm",
+      "roleId": "commander",
+      "eventLabel": "Dragonstorm",
+      "roleLabel": "Commander",
+      "points": 2,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-12",
+      "version": "DCAP Points v2.0",
+      "eventId": "dragons-stand",
+      "roleId": "commander",
+      "eventLabel": "Dragon's Stand",
+      "roleLabel": "Commander",
+      "points": 3,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-13",
+      "version": "DCAP Points v2.0",
+      "eventId": "wvw",
+      "roleId": "commander",
+      "eventLabel": "WvW",
+      "roleLabel": "Commander",
+      "points": 5,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-14",
+      "version": "DCAP Points v2.0",
+      "eventId": "gyala-delve",
+      "roleId": "commander",
+      "eventLabel": "Gyala Delve",
+      "roleLabel": "Commander",
+      "points": 5,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-15",
+      "version": "DCAP Points v2.0",
+      "eventId": "gyala-delve",
+      "roleId": "map-spammer",
+      "eventLabel": "Gyala Delve",
+      "roleLabel": "Map Spammer",
+      "points": 5,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-16",
+      "version": "DCAP Points v2.0",
+      "eventId": "guild-missions",
+      "roleId": "commander",
+      "eventLabel": "Guild Missions",
+      "roleLabel": "Commander",
+      "points": 5,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-17",
+      "version": "DCAP Points v2.0",
+      "eventId": "aetherblade-assault",
+      "roleId": "commander",
+      "eventLabel": "Aetherblade Assault",
+      "roleLabel": "Commander",
+      "points": 2,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-18",
+      "version": "DCAP Points v2.0",
+      "eventId": "dragons-end",
+      "roleId": "commander",
+      "eventLabel": "Dragon's End",
+      "roleLabel": "Commander",
+      "points": 5,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": "Dragon's End"
+    },
+    {
+      "id": "V2-19",
+      "version": "DCAP Points v2.0",
+      "eventId": "dragons-end",
+      "roleId": "sub-lane-lead",
+      "eventLabel": "Dragon's End",
+      "roleLabel": "Sub/Lane Lead",
+      "points": 3,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": "Dragon's End"
+    },
+    {
+      "id": "V2-20",
+      "version": "DCAP Points v2.0",
+      "eventId": "cm-convergence",
+      "roleId": "commander",
+      "eventLabel": "CM Convergence",
+      "roleLabel": "Commander",
+      "points": 5,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": "CM Convergence"
+    },
+    {
+      "id": "V2-21",
+      "version": "DCAP Points v2.0",
+      "eventId": "cm-convergence",
+      "roleId": "sub-lane-lead",
+      "eventLabel": "CM Convergence",
+      "roleLabel": "Sub/Lane Lead",
+      "points": 2,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": "CM Convergence"
+    },
+    {
+      "id": "V2-22",
+      "version": "DCAP Points v2.0",
+      "eventId": "defense-of-amnytas",
+      "roleId": "commander",
+      "eventLabel": "Defense of Amnytas",
+      "roleLabel": "Commander",
+      "points": 4,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-23",
+      "version": "DCAP Points v2.0",
+      "eventId": "secrets-of-the-weald",
+      "roleId": "commander",
+      "eventLabel": "Secrets of the Weald",
+      "roleLabel": "Commander",
+      "points": 4,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-24",
+      "version": "DCAP Points v2.0",
+      "eventId": "all-events",
+      "roleId": "student",
+      "eventLabel": "All events",
+      "roleLabel": "Student",
+      "points": 2,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-25",
+      "version": "DCAP Points v2.0",
+      "eventId": "actual-event-retained",
+      "roleId": "other-commander",
+      "eventLabel": "Actual event retained",
+      "roleLabel": "Other Commander",
+      "points": null,
+      "status": "PENDING",
+      "nonStackingGroup": null
+    }
+  ],
+  "events": [
+    {
+      "id": "aetherblade-assault",
+      "label": "Aetherblade Assault",
+      "eligibility": "RULE_VALIDATED"
+    },
+    {
+      "id": "bfla",
+      "label": "BFLA",
+      "eligibility": "RULE_VALIDATED"
+    },
+    {
+      "id": "cm-convergence",
+      "label": "CM Convergence",
+      "eligibility": "RULE_VALIDATED"
+    },
+    {
+      "id": "dbs",
+      "label": "DBS",
+      "eligibility": "RULE_VALIDATED"
+    },
+    {
+      "id": "defense-of-amnytas",
+      "label": "Defense of Amnytas",
+      "eligibility": "RULE_VALIDATED"
+    },
+    {
+      "id": "dragons-end",
+      "label": "Dragon's End",
+      "eligibility": "RULE_VALIDATED"
+    },
+    {
+      "id": "dragons-stand",
+      "label": "Dragon's Stand",
+      "eligibility": "RULE_VALIDATED"
+    },
+    {
+      "id": "dragonstorm",
+      "label": "Dragonstorm",
+      "eligibility": "RULE_VALIDATED"
+    },
+    {
+      "id": "guild-missions",
+      "label": "Guild Missions",
+      "eligibility": "RULE_VALIDATED"
+    },
+    {
+      "id": "gyala-delve",
+      "label": "Gyala Delve",
+      "eligibility": "RULE_VALIDATED"
+    },
+    {
+      "id": "mothman",
+      "label": "Mothman",
+      "eligibility": "HISTORICAL_EXCEPTION_ONLY"
+    },
+    {
+      "id": "rifts",
+      "label": "Rifts",
+      "eligibility": "HISTORICAL_EXCEPTION_ONLY"
+    },
+    {
+      "id": "secrets-of-the-weald",
+      "label": "Secrets of the Weald",
+      "eligibility": "RULE_VALIDATED"
+    },
+    {
+      "id": "triple-trouble",
+      "label": "Triple Trouble",
+      "eligibility": "RULE_VALIDATED"
+    },
+    {
+      "id": "twisted-marionette",
+      "label": "Twisted Marionette",
+      "eligibility": "RULE_VALIDATED"
+    },
+    {
+      "id": "wizard-tower",
+      "label": "Wizard Tower",
+      "eligibility": "HISTORICAL_EXCEPTION_ONLY"
+    },
+    {
+      "id": "wvw",
+      "label": "WvW",
+      "eligibility": "RULE_VALIDATED"
+    }
+  ],
+  "awards": [
+    {
+      "id": "a-f364a2cb4a7ccae125237725",
+      "memberId": "m-1111111111111111",
+      "eventId": "triple-trouble",
+      "roleId": "taxi",
+      "eventDate": "2026-10-27",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": "V2-01",
+      "points": 3,
+      "provenanceType": "APPROVED_RULE",
+      "exceptionRef": null
+    },
+    {
+      "id": "a-8726c5d6153a74f69b4e6a75",
+      "memberId": "m-1111111111111111",
+      "eventId": "triple-trouble",
+      "roleId": "taxi",
+      "eventDate": "2026-10-26",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": "V2-01",
+      "points": 3,
+      "provenanceType": "APPROVED_RULE",
+      "exceptionRef": null
+    },
+    {
+      "id": "a-0255d05782633fadefa9987e",
+      "memberId": "m-1111111111111111",
+      "eventId": "triple-trouble",
+      "roleId": "taxi",
+      "eventDate": "2026-10-25",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": "V2-01",
+      "points": 3,
+      "provenanceType": "APPROVED_RULE",
+      "exceptionRef": null
+    },
+    {
+      "id": "a-8008ea7b6a0899f1fa62d8be",
+      "memberId": "m-1111111111111111",
+      "eventId": "triple-trouble",
+      "roleId": "taxi",
+      "eventDate": "2026-10-24",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": "V2-01",
+      "points": 3,
+      "provenanceType": "APPROVED_RULE",
+      "exceptionRef": null
+    },
+    {
+      "id": "a-0f249f4f940df4d69aa2007b",
+      "memberId": "m-1111111111111111",
+      "eventId": "triple-trouble",
+      "roleId": "taxi",
+      "eventDate": "2026-10-23",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": "V2-01",
+      "points": 3,
+      "provenanceType": "APPROVED_RULE",
+      "exceptionRef": null
+    },
+    {
+      "id": "a-e5c2ac5afdc436bb4b0e8909",
+      "memberId": "m-1111111111111111",
+      "eventId": "triple-trouble",
+      "roleId": "taxi",
+      "eventDate": "2026-10-22",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": "V2-01",
+      "points": 3,
+      "provenanceType": "APPROVED_RULE",
+      "exceptionRef": null
+    },
+    {
+      "id": "a-aef65ba23fb7c05f701c1897",
+      "memberId": "m-1111111111111111",
+      "eventId": "triple-trouble",
+      "roleId": "taxi",
+      "eventDate": "2026-10-21",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": "V2-01",
+      "points": 3,
+      "provenanceType": "APPROVED_RULE",
+      "exceptionRef": null
+    },
+    {
+      "id": "a-75fa00b42eb1673fcae04bdb",
+      "memberId": "m-1111111111111111",
+      "eventId": "triple-trouble",
+      "roleId": "taxi",
+      "eventDate": "2026-10-20",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": "V2-01",
+      "points": 3,
+      "provenanceType": "APPROVED_RULE",
+      "exceptionRef": null
+    },
+    {
+      "id": "a-c2d9b3ac198da200bf715de3",
+      "memberId": "m-1111111111111111",
+      "eventId": "triple-trouble",
+      "roleId": "taxi",
+      "eventDate": "2026-10-19",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": "V2-01",
+      "points": 3,
+      "provenanceType": "APPROVED_RULE",
+      "exceptionRef": null
+    },
+    {
+      "id": "a-771f4cb5d6bd6d9aadf48d61",
+      "memberId": "m-1111111111111111",
+      "eventId": "triple-trouble",
+      "roleId": "taxi",
+      "eventDate": "2026-10-18",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": "V2-01",
+      "points": 3,
+      "provenanceType": "APPROVED_RULE",
+      "exceptionRef": null
+    },
+    {
+      "id": "a-de9c21bdaba044540937f5ff",
+      "memberId": "m-2222222222222222",
+      "eventId": "rifts",
+      "roleId": "other-commander",
+      "eventDate": "2026-10-15",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": null,
+      "points": 3,
+      "provenanceType": "RATIFIED_HISTORICAL_EXCEPTION",
+      "exceptionRef": "hx-0a0adcdd6280b18129d42bde"
+    },
+    {
+      "id": "a-e161c94a6dbeed428c55b7a4",
+      "memberId": "m-1111111111111111",
+      "eventId": "mothman",
+      "roleId": "other-commander",
+      "eventDate": "2026-10-14",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": null,
+      "points": 3,
+      "provenanceType": "RATIFIED_HISTORICAL_EXCEPTION",
+      "exceptionRef": "hx-750220d10257ee61eea2ca8c"
+    },
+    {
+      "id": "a-9de4626141139bd85879764a",
+      "memberId": "m-2222222222222222",
+      "eventId": "dbs",
+      "roleId": "derv-escort",
+      "eventDate": "2026-10-13",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": "V2-06",
+      "points": 2,
+      "provenanceType": "APPROVED_RULE",
+      "exceptionRef": null
+    },
+    {
+      "id": "a-0940ba16d110d62c30ab510e",
+      "memberId": "m-1111111111111111",
+      "eventId": "dbs",
+      "roleId": "doordash-feed",
+      "eventDate": "2026-10-12",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": "V2-07",
+      "points": 2,
+      "provenanceType": "APPROVED_RULE",
+      "exceptionRef": null
+    },
+    {
+      "id": "a-220674159fa656b7611ea18c",
+      "memberId": "m-2222222222222222",
+      "eventId": "triple-trouble",
+      "roleId": "commander",
+      "eventDate": "2026-10-11",
+      "eventInstance": "1",
+      "cycleId": 0,
+      "ruleId": "V2-05",
+      "points": 3,
+      "provenanceType": "APPROVED_RULE",
+      "exceptionRef": null
+    },
+    {
+      "id": "a-b02cde88da358fc66c2a63bd",
+      "memberId": "m-1111111111111111",
+      "eventId": "triple-trouble",
+      "roleId": "commander",
+      "eventDate": "2026-10-10",
+      "eventInstance": "1",
+      "cycleId": 0,
+      "ruleId": "V2-05",
+      "points": 3,
+      "provenanceType": "APPROVED_RULE",
+      "exceptionRef": null
+    }
+  ],
+  "historicalExceptions": [
+    {
+      "ref": "hx-0a0adcdd6280b18129d42bde",
+      "awardId": "a-de9c21bdaba044540937f5ff",
+      "memberId": "m-2222222222222222",
+      "eventId": "rifts",
+      "roleId": "other-commander",
+      "eventDate": "2026-10-15",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "points": 3,
+      "status": "RATIFIED_HISTORICAL_EXCEPTION",
+      "authority": "PROJECT_OWNER",
+      "approvalDate": "2026-10-27",
+      "scope": "EXACT_HISTORICAL_CONTRIBUTION"
+    },
+    {
+      "ref": "hx-750220d10257ee61eea2ca8c",
+      "awardId": "a-e161c94a6dbeed428c55b7a4",
+      "memberId": "m-1111111111111111",
+      "eventId": "mothman",
+      "roleId": "other-commander",
+      "eventDate": "2026-10-14",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "points": 3,
+      "status": "RATIFIED_HISTORICAL_EXCEPTION",
+      "authority": "PROJECT_OWNER",
+      "approvalDate": "2026-10-27",
+      "scope": "EXACT_HISTORICAL_CONTRIBUTION"
+    }
+  ],
+  "withheldAwardSummary": [
+    {
+      "provenanceType": "APPROVED_RULE",
+      "count": 1,
+      "points": 3
+    }
+  ],
+  "pendingSummary": [],
+  "members": [
+    {
+      "id": "m-1111111111111111",
+      "displayName": "Example Aria",
+      "candidatePoints": 38,
+      "awardCandidateCount": 13,
+      "partialRank": 1
+    },
+    {
+      "id": "m-2222222222222222",
+      "displayName": "Example Bram",
+      "candidatePoints": 8,
+      "awardCandidateCount": 3,
+      "partialRank": 2
+    },
+    {
+      "id": "m-3333333333333333",
+      "displayName": "Example Cato",
+      "candidatePoints": 0,
+      "awardCandidateCount": 0,
+      "partialRank": null
+    }
+  ],
+  "eventTotals": [
+    {
+      "eventId": "dbs",
+      "candidatePoints": 4,
+      "awardCandidateCount": 2
+    },
+    {
+      "eventId": "mothman",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "rifts",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "triple-trouble",
+      "candidatePoints": 36,
+      "awardCandidateCount": 12
+    }
+  ],
+  "roleTotals": [
+    {
+      "roleId": "commander",
+      "candidatePoints": 6,
+      "awardCandidateCount": 2
+    },
+    {
+      "roleId": "derv-escort",
+      "candidatePoints": 2,
+      "awardCandidateCount": 1
+    },
+    {
+      "roleId": "doordash-feed",
+      "candidatePoints": 2,
+      "awardCandidateCount": 1
+    },
+    {
+      "roleId": "other-commander",
+      "candidatePoints": 6,
+      "awardCandidateCount": 2
+    },
+    {
+      "roleId": "taxi",
+      "candidatePoints": 30,
+      "awardCandidateCount": 10
+    }
+  ],
+  "eventRoleTotals": [
+    {
+      "eventId": "dbs",
+      "roleId": "derv-escort",
+      "candidatePoints": 2,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "dbs",
+      "roleId": "doordash-feed",
+      "candidatePoints": 2,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "mothman",
+      "roleId": "other-commander",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "rifts",
+      "roleId": "other-commander",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "triple-trouble",
+      "roleId": "commander",
+      "candidatePoints": 6,
+      "awardCandidateCount": 2
+    },
+    {
+      "eventId": "triple-trouble",
+      "roleId": "taxi",
+      "candidatePoints": 30,
+      "awardCandidateCount": 10
+    }
+  ],
+  "dailyTotals": [
+    {
+      "eventDate": "2026-10-10",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2026-10-11",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2026-10-12",
+      "candidatePoints": 2,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2026-10-13",
+      "candidatePoints": 2,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2026-10-14",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2026-10-15",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2026-10-18",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2026-10-19",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2026-10-20",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2026-10-21",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2026-10-22",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2026-10-23",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2026-10-24",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2026-10-25",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2026-10-26",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2026-10-27",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    }
+  ],
+  "cycleTotals": [
+    {
+      "cycleId": 0,
+      "candidatePoints": 6,
+      "awardCandidateCount": 2
+    },
+    {
+      "cycleId": 1,
+      "candidatePoints": 40,
+      "awardCandidateCount": 14
+    }
+  ],
+  "recentAwardIds": [
+    "a-f364a2cb4a7ccae125237725",
+    "a-8726c5d6153a74f69b4e6a75",
+    "a-0255d05782633fadefa9987e",
+    "a-8008ea7b6a0899f1fa62d8be",
+    "a-0f249f4f940df4d69aa2007b",
+    "a-e5c2ac5afdc436bb4b0e8909",
+    "a-aef65ba23fb7c05f701c1897",
+    "a-75fa00b42eb1673fcae04bdb",
+    "a-c2d9b3ac198da200bf715de3",
+    "a-771f4cb5d6bd6d9aadf48d61"
+  ],
+  "provenanceTotals": [
+    {
+      "provenanceType": "APPROVED_RULE",
+      "awardCandidateCount": 14,
+      "candidatePoints": 40
+    },
+    {
+      "provenanceType": "RATIFIED_HISTORICAL_EXCEPTION",
+      "awardCandidateCount": 2,
+      "candidatePoints": 6
+    }
+  ]
+}

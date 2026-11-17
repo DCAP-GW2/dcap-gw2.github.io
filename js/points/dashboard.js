@@ -1,3 +1,4 @@
+import { maybeRenderV2 } from './preview.js';
 import { getPointsData } from './api.js';
 import { memberNameNode } from './member-link.js';
 
@@ -111,6 +112,7 @@ function enhanceNavigation() {
 async function initialiseDashboard() {
   const root = document.querySelector('[data-points-dashboard]');
   if (!root) return;
+  if (await maybeRenderV2(root, 'dashboard')) return;
   setText(root, '[data-points-rule-reference]', root.querySelector('[data-points-rule-version]').textContent);
   enhanceNavigation();
   // Keep neutral HTML placeholders until the shared API returns validated data.

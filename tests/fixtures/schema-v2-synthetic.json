@@ -1,0 +1,1013 @@
+{
+  "schemaVersion": 2,
+  "contractVersion": "2.0.0-dev.1",
+  "source": {
+    "kind": "PINNED_HISTORICAL_SNAPSHOT",
+    "timeZone": "Pacific/Auckland",
+    "updatedAt": null,
+    "observedAt": "2026-10-26T00:00:00Z",
+    "latestEventDate": "2026-01-02"
+  },
+  "migration": {
+    "revision": "dev-candidate-synthetic-01",
+    "activeMigrationRevision": null,
+    "engineVersion": "2B.1.0",
+    "mappingVersion": "stage2a-confirmed-plus-explicit-note-parser-1",
+    "ruleVersion": "DCAP Points v2.0",
+    "productionEffectiveDate": null
+  },
+  "publication": {
+    "status": "INACTIVE_PRIVATE_DEV",
+    "previewOnly": true,
+    "complete": false
+  },
+  "validation": {
+    "status": "VERIFIED_PRIVATE_PREVIEW",
+    "identityStatus": "PRESERVED_PROVISIONAL",
+    "generatedAt": "2026-10-26T00:00:00Z",
+    "hashAlgorithm": "SHA-256",
+    "contentHash": "b6c27261c914ac574a0b83e89c4e775b841dd899041dd2c0a729f314a46d6143"
+  },
+  "population": {
+    "sourceCount": 25,
+    "awardCandidateCount": 24,
+    "unresolvedCount": 1,
+    "canonicalMemberCount": 2,
+    "observedPublicIdCount": 1,
+    "missingPublicIdCount": 1,
+    "candidatePoints": 82,
+    "totalMeaning": "NUMERICAL_AWARD_CANDIDATES_ONLY",
+    "periodStart": "2025-12-09",
+    "periodEnd": "2026-01-02",
+    "currentCycleId": null
+  },
+  "rules": [
+    {
+      "id": "V2-01",
+      "version": "DCAP Points v2.0",
+      "eventId": "triple-trouble",
+      "roleId": "taxi",
+      "eventLabel": "Triple Trouble",
+      "roleLabel": "Taxi",
+      "points": 3,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-02",
+      "version": "DCAP Points v2.0",
+      "eventId": "triple-trouble",
+      "roleId": "map-spammer",
+      "eventLabel": "Triple Trouble",
+      "roleLabel": "Map Spammer",
+      "points": 5,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-03",
+      "version": "DCAP Points v2.0",
+      "eventId": "triple-trouble",
+      "roleId": "blocker",
+      "eventLabel": "Triple Trouble",
+      "roleLabel": "Blocker",
+      "points": 3,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-04",
+      "version": "DCAP Points v2.0",
+      "eventId": "triple-trouble",
+      "roleId": "setup",
+      "eventLabel": "Triple Trouble",
+      "roleLabel": "Setup",
+      "points": 3,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-05",
+      "version": "DCAP Points v2.0",
+      "eventId": "triple-trouble",
+      "roleId": "commander",
+      "eventLabel": "Triple Trouble",
+      "roleLabel": "Commander",
+      "points": 3,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-06",
+      "version": "DCAP Points v2.0",
+      "eventId": "dbs",
+      "roleId": "derv-escort",
+      "eventLabel": "DBS",
+      "roleLabel": "Derv Escort",
+      "points": 2,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-07",
+      "version": "DCAP Points v2.0",
+      "eventId": "dbs",
+      "roleId": "doordash-feed",
+      "eventLabel": "DBS",
+      "roleLabel": "Doordash / Feed",
+      "points": 2,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-08",
+      "version": "DCAP Points v2.0",
+      "eventId": "bfla",
+      "roleId": "commander",
+      "eventLabel": "BFLA",
+      "roleLabel": "Commander",
+      "points": 3,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": "BFLA"
+    },
+    {
+      "id": "V2-09",
+      "version": "DCAP Points v2.0",
+      "eventId": "bfla",
+      "roleId": "sub-lane-lead",
+      "eventLabel": "BFLA",
+      "roleLabel": "Sub/Lane Lead",
+      "points": 2,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": "BFLA"
+    },
+    {
+      "id": "V2-10",
+      "version": "DCAP Points v2.0",
+      "eventId": "twisted-marionette",
+      "roleId": "commander",
+      "eventLabel": "Twisted Marionette",
+      "roleLabel": "Commander",
+      "points": 4,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-11",
+      "version": "DCAP Points v2.0",
+      "eventId": "dragonstorm",
+      "roleId": "commander",
+      "eventLabel": "Dragonstorm",
+      "roleLabel": "Commander",
+      "points": 2,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-12",
+      "version": "DCAP Points v2.0",
+      "eventId": "dragons-stand",
+      "roleId": "commander",
+      "eventLabel": "Dragon's Stand",
+      "roleLabel": "Commander",
+      "points": 3,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-13",
+      "version": "DCAP Points v2.0",
+      "eventId": "wvw",
+      "roleId": "commander",
+      "eventLabel": "WvW",
+      "roleLabel": "Commander",
+      "points": 5,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-14",
+      "version": "DCAP Points v2.0",
+      "eventId": "gyala-delve",
+      "roleId": "commander",
+      "eventLabel": "Gyala Delve",
+      "roleLabel": "Commander",
+      "points": 5,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-15",
+      "version": "DCAP Points v2.0",
+      "eventId": "gyala-delve",
+      "roleId": "map-spammer",
+      "eventLabel": "Gyala Delve",
+      "roleLabel": "Map Spammer",
+      "points": 5,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-16",
+      "version": "DCAP Points v2.0",
+      "eventId": "guild-missions",
+      "roleId": "commander",
+      "eventLabel": "Guild Missions",
+      "roleLabel": "Commander",
+      "points": 5,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-17",
+      "version": "DCAP Points v2.0",
+      "eventId": "aetherblade-assault",
+      "roleId": "commander",
+      "eventLabel": "Aetherblade Assault",
+      "roleLabel": "Commander",
+      "points": 2,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-18",
+      "version": "DCAP Points v2.0",
+      "eventId": "dragons-end",
+      "roleId": "commander",
+      "eventLabel": "Dragon's End",
+      "roleLabel": "Commander",
+      "points": 5,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": "Dragon's End"
+    },
+    {
+      "id": "V2-19",
+      "version": "DCAP Points v2.0",
+      "eventId": "dragons-end",
+      "roleId": "sub-lane-lead",
+      "eventLabel": "Dragon's End",
+      "roleLabel": "Sub/Lane Lead",
+      "points": 3,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": "Dragon's End"
+    },
+    {
+      "id": "V2-20",
+      "version": "DCAP Points v2.0",
+      "eventId": "cm-convergence",
+      "roleId": "commander",
+      "eventLabel": "CM Convergence",
+      "roleLabel": "Commander",
+      "points": 5,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": "CM Convergence"
+    },
+    {
+      "id": "V2-21",
+      "version": "DCAP Points v2.0",
+      "eventId": "cm-convergence",
+      "roleId": "sub-lane-lead",
+      "eventLabel": "CM Convergence",
+      "roleLabel": "Sub/Lane Lead",
+      "points": 2,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": "CM Convergence"
+    },
+    {
+      "id": "V2-22",
+      "version": "DCAP Points v2.0",
+      "eventId": "defense-of-amnytas",
+      "roleId": "commander",
+      "eventLabel": "Defense of Amnytas",
+      "roleLabel": "Commander",
+      "points": 4,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-23",
+      "version": "DCAP Points v2.0",
+      "eventId": "secrets-of-the-weald",
+      "roleId": "commander",
+      "eventLabel": "Secrets of the Weald",
+      "roleLabel": "Commander",
+      "points": 4,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-24",
+      "version": "DCAP Points v2.0",
+      "eventId": "all-events",
+      "roleId": "student",
+      "eventLabel": "All events",
+      "roleLabel": "Student",
+      "points": 2,
+      "status": "APPROVED_NUMERIC",
+      "nonStackingGroup": null
+    },
+    {
+      "id": "V2-25",
+      "version": "DCAP Points v2.0",
+      "eventId": "actual-event-retained",
+      "roleId": "other-commander",
+      "eventLabel": "Actual event retained",
+      "roleLabel": "Other Commander",
+      "points": null,
+      "status": "PENDING",
+      "nonStackingGroup": null
+    }
+  ],
+  "members": [
+    {
+      "id": "m-0123456789abcdef",
+      "displayName": "Fictional Member",
+      "candidatePoints": 82,
+      "awardCandidateCount": 24,
+      "partialRank": 1
+    }
+  ],
+  "eventTotals": [
+    {
+      "eventId": "aetherblade-assault",
+      "candidatePoints": 2,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "bfla",
+      "candidatePoints": 5,
+      "awardCandidateCount": 2
+    },
+    {
+      "eventId": "cm-convergence",
+      "candidatePoints": 7,
+      "awardCandidateCount": 2
+    },
+    {
+      "eventId": "dbs",
+      "candidatePoints": 4,
+      "awardCandidateCount": 2
+    },
+    {
+      "eventId": "defense-of-amnytas",
+      "candidatePoints": 4,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "dragons-end",
+      "candidatePoints": 8,
+      "awardCandidateCount": 2
+    },
+    {
+      "eventId": "dragons-stand",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "dragonstorm",
+      "candidatePoints": 2,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "guild-missions",
+      "candidatePoints": 5,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "gyala-delve",
+      "candidatePoints": 10,
+      "awardCandidateCount": 2
+    },
+    {
+      "eventId": "secrets-of-the-weald",
+      "candidatePoints": 4,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "triple-trouble",
+      "candidatePoints": 19,
+      "awardCandidateCount": 6
+    },
+    {
+      "eventId": "twisted-marionette",
+      "candidatePoints": 4,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "wvw",
+      "candidatePoints": 5,
+      "awardCandidateCount": 1
+    }
+  ],
+  "roleTotals": [
+    {
+      "roleId": "blocker",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "roleId": "commander",
+      "candidatePoints": 50,
+      "awardCandidateCount": 13
+    },
+    {
+      "roleId": "derv-escort",
+      "candidatePoints": 2,
+      "awardCandidateCount": 1
+    },
+    {
+      "roleId": "doordash-feed",
+      "candidatePoints": 2,
+      "awardCandidateCount": 1
+    },
+    {
+      "roleId": "map-spammer",
+      "candidatePoints": 10,
+      "awardCandidateCount": 2
+    },
+    {
+      "roleId": "setup",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "roleId": "student",
+      "candidatePoints": 2,
+      "awardCandidateCount": 1
+    },
+    {
+      "roleId": "sub-lane-lead",
+      "candidatePoints": 7,
+      "awardCandidateCount": 3
+    },
+    {
+      "roleId": "taxi",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    }
+  ],
+  "eventRoleTotals": [
+    {
+      "eventId": "aetherblade-assault",
+      "roleId": "commander",
+      "candidatePoints": 2,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "bfla",
+      "roleId": "commander",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "bfla",
+      "roleId": "sub-lane-lead",
+      "candidatePoints": 2,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "cm-convergence",
+      "roleId": "commander",
+      "candidatePoints": 5,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "cm-convergence",
+      "roleId": "sub-lane-lead",
+      "candidatePoints": 2,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "dbs",
+      "roleId": "derv-escort",
+      "candidatePoints": 2,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "dbs",
+      "roleId": "doordash-feed",
+      "candidatePoints": 2,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "defense-of-amnytas",
+      "roleId": "commander",
+      "candidatePoints": 4,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "dragons-end",
+      "roleId": "commander",
+      "candidatePoints": 5,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "dragons-end",
+      "roleId": "sub-lane-lead",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "dragons-stand",
+      "roleId": "commander",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "dragonstorm",
+      "roleId": "commander",
+      "candidatePoints": 2,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "guild-missions",
+      "roleId": "commander",
+      "candidatePoints": 5,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "gyala-delve",
+      "roleId": "commander",
+      "candidatePoints": 5,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "gyala-delve",
+      "roleId": "map-spammer",
+      "candidatePoints": 5,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "secrets-of-the-weald",
+      "roleId": "commander",
+      "candidatePoints": 4,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "triple-trouble",
+      "roleId": "blocker",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "triple-trouble",
+      "roleId": "commander",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "triple-trouble",
+      "roleId": "map-spammer",
+      "candidatePoints": 5,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "triple-trouble",
+      "roleId": "setup",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "triple-trouble",
+      "roleId": "student",
+      "candidatePoints": 2,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "triple-trouble",
+      "roleId": "taxi",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "twisted-marionette",
+      "roleId": "commander",
+      "candidatePoints": 4,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventId": "wvw",
+      "roleId": "commander",
+      "candidatePoints": 5,
+      "awardCandidateCount": 1
+    }
+  ],
+  "dailyTotals": [
+    {
+      "eventDate": "2025-12-09",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2025-12-10",
+      "candidatePoints": 5,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2025-12-11",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2025-12-12",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2025-12-13",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2025-12-14",
+      "candidatePoints": 2,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2025-12-15",
+      "candidatePoints": 2,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2025-12-16",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2025-12-17",
+      "candidatePoints": 2,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2025-12-18",
+      "candidatePoints": 4,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2025-12-19",
+      "candidatePoints": 2,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2025-12-20",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2025-12-21",
+      "candidatePoints": 5,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2025-12-22",
+      "candidatePoints": 5,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2025-12-23",
+      "candidatePoints": 5,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2025-12-24",
+      "candidatePoints": 5,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2025-12-25",
+      "candidatePoints": 2,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2025-12-26",
+      "candidatePoints": 5,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2025-12-27",
+      "candidatePoints": 3,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2025-12-28",
+      "candidatePoints": 5,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2025-12-29",
+      "candidatePoints": 2,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2025-12-30",
+      "candidatePoints": 4,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2025-12-31",
+      "candidatePoints": 4,
+      "awardCandidateCount": 1
+    },
+    {
+      "eventDate": "2026-01-01",
+      "candidatePoints": 2,
+      "awardCandidateCount": 1
+    }
+  ],
+  "cycleTotals": [
+    {
+      "cycleId": 0,
+      "candidatePoints": 36,
+      "awardCandidateCount": 12
+    },
+    {
+      "cycleId": 1,
+      "candidatePoints": 46,
+      "awardCandidateCount": 12
+    }
+  ],
+  "awards": [
+    {
+      "id": "a-e3b7cc67a356bd9024c4f9f4",
+      "memberId": "m-0123456789abcdef",
+      "eventId": "triple-trouble",
+      "roleId": "student",
+      "eventDate": "2026-01-01",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": "V2-24",
+      "points": 2
+    },
+    {
+      "id": "a-49a51857cfa0a237dca31f6f",
+      "memberId": "m-0123456789abcdef",
+      "eventId": "secrets-of-the-weald",
+      "roleId": "commander",
+      "eventDate": "2025-12-31",
+      "eventInstance": "1",
+      "cycleId": 0,
+      "ruleId": "V2-23",
+      "points": 4
+    },
+    {
+      "id": "a-e852b86d603f6436b71a3291",
+      "memberId": "m-0123456789abcdef",
+      "eventId": "defense-of-amnytas",
+      "roleId": "commander",
+      "eventDate": "2025-12-30",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": "V2-22",
+      "points": 4
+    },
+    {
+      "id": "a-b5e877c0506761481ffe87e3",
+      "memberId": "m-0123456789abcdef",
+      "eventId": "cm-convergence",
+      "roleId": "sub-lane-lead",
+      "eventDate": "2025-12-29",
+      "eventInstance": "1",
+      "cycleId": 0,
+      "ruleId": "V2-21",
+      "points": 2
+    },
+    {
+      "id": "a-e9ba3c9b17b2da0753aa898b",
+      "memberId": "m-0123456789abcdef",
+      "eventId": "cm-convergence",
+      "roleId": "commander",
+      "eventDate": "2025-12-28",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": "V2-20",
+      "points": 5
+    },
+    {
+      "id": "a-cd6aed8eebdb00fbefc624b4",
+      "memberId": "m-0123456789abcdef",
+      "eventId": "dragons-end",
+      "roleId": "sub-lane-lead",
+      "eventDate": "2025-12-27",
+      "eventInstance": "1",
+      "cycleId": 0,
+      "ruleId": "V2-19",
+      "points": 3
+    },
+    {
+      "id": "a-5960a112d39a17995247ba4b",
+      "memberId": "m-0123456789abcdef",
+      "eventId": "dragons-end",
+      "roleId": "commander",
+      "eventDate": "2025-12-26",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": "V2-18",
+      "points": 5
+    },
+    {
+      "id": "a-87f6995799a20db660f7e252",
+      "memberId": "m-0123456789abcdef",
+      "eventId": "aetherblade-assault",
+      "roleId": "commander",
+      "eventDate": "2025-12-25",
+      "eventInstance": "1",
+      "cycleId": 0,
+      "ruleId": "V2-17",
+      "points": 2
+    },
+    {
+      "id": "a-7bd69e1bcefa992e82748d00",
+      "memberId": "m-0123456789abcdef",
+      "eventId": "guild-missions",
+      "roleId": "commander",
+      "eventDate": "2025-12-24",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": "V2-16",
+      "points": 5
+    },
+    {
+      "id": "a-e7937070f5b33f1028523be2",
+      "memberId": "m-0123456789abcdef",
+      "eventId": "gyala-delve",
+      "roleId": "map-spammer",
+      "eventDate": "2025-12-23",
+      "eventInstance": "1",
+      "cycleId": 0,
+      "ruleId": "V2-15",
+      "points": 5
+    },
+    {
+      "id": "a-1d894456a92cf73caa9cc908",
+      "memberId": "m-0123456789abcdef",
+      "eventId": "gyala-delve",
+      "roleId": "commander",
+      "eventDate": "2025-12-22",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": "V2-14",
+      "points": 5
+    },
+    {
+      "id": "a-cf6bfb6f9cd8c9ad58cca5e5",
+      "memberId": "m-0123456789abcdef",
+      "eventId": "wvw",
+      "roleId": "commander",
+      "eventDate": "2025-12-21",
+      "eventInstance": "1",
+      "cycleId": 0,
+      "ruleId": "V2-13",
+      "points": 5
+    },
+    {
+      "id": "a-a8cb33f6dae6bb0ad46fdf67",
+      "memberId": "m-0123456789abcdef",
+      "eventId": "dragons-stand",
+      "roleId": "commander",
+      "eventDate": "2025-12-20",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": "V2-12",
+      "points": 3
+    },
+    {
+      "id": "a-451473d95094219f38425751",
+      "memberId": "m-0123456789abcdef",
+      "eventId": "dragonstorm",
+      "roleId": "commander",
+      "eventDate": "2025-12-19",
+      "eventInstance": "1",
+      "cycleId": 0,
+      "ruleId": "V2-11",
+      "points": 2
+    },
+    {
+      "id": "a-5e449756ebe90229c726ad05",
+      "memberId": "m-0123456789abcdef",
+      "eventId": "twisted-marionette",
+      "roleId": "commander",
+      "eventDate": "2025-12-18",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": "V2-10",
+      "points": 4
+    },
+    {
+      "id": "a-c09395862dd1432efcd74fbe",
+      "memberId": "m-0123456789abcdef",
+      "eventId": "bfla",
+      "roleId": "sub-lane-lead",
+      "eventDate": "2025-12-17",
+      "eventInstance": "1",
+      "cycleId": 0,
+      "ruleId": "V2-09",
+      "points": 2
+    },
+    {
+      "id": "a-4139308151bcd731aec35a97",
+      "memberId": "m-0123456789abcdef",
+      "eventId": "bfla",
+      "roleId": "commander",
+      "eventDate": "2025-12-16",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": "V2-08",
+      "points": 3
+    },
+    {
+      "id": "a-64a2e1b3d0351631013df692",
+      "memberId": "m-0123456789abcdef",
+      "eventId": "dbs",
+      "roleId": "doordash-feed",
+      "eventDate": "2025-12-15",
+      "eventInstance": "1",
+      "cycleId": 0,
+      "ruleId": "V2-07",
+      "points": 2
+    },
+    {
+      "id": "a-5b973ce3f0e77484353a557d",
+      "memberId": "m-0123456789abcdef",
+      "eventId": "dbs",
+      "roleId": "derv-escort",
+      "eventDate": "2025-12-14",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": "V2-06",
+      "points": 2
+    },
+    {
+      "id": "a-f58af6f20f094edb4de50dfc",
+      "memberId": "m-0123456789abcdef",
+      "eventId": "triple-trouble",
+      "roleId": "commander",
+      "eventDate": "2025-12-13",
+      "eventInstance": "1",
+      "cycleId": 0,
+      "ruleId": "V2-05",
+      "points": 3
+    },
+    {
+      "id": "a-378769e0f31a2531b1097d26",
+      "memberId": "m-0123456789abcdef",
+      "eventId": "triple-trouble",
+      "roleId": "setup",
+      "eventDate": "2025-12-12",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": "V2-04",
+      "points": 3
+    },
+    {
+      "id": "a-c22e5f52694df51eff656d91",
+      "memberId": "m-0123456789abcdef",
+      "eventId": "triple-trouble",
+      "roleId": "blocker",
+      "eventDate": "2025-12-11",
+      "eventInstance": "1",
+      "cycleId": 0,
+      "ruleId": "V2-03",
+      "points": 3
+    },
+    {
+      "id": "a-d2598b6e6e9601afdca42c47",
+      "memberId": "m-0123456789abcdef",
+      "eventId": "triple-trouble",
+      "roleId": "map-spammer",
+      "eventDate": "2025-12-10",
+      "eventInstance": "1",
+      "cycleId": 1,
+      "ruleId": "V2-02",
+      "points": 5
+    },
+    {
+      "id": "a-4f203abf765df206d6c4cbb9",
+      "memberId": "m-0123456789abcdef",
+      "eventId": "triple-trouble",
+      "roleId": "taxi",
+      "eventDate": "2025-12-09",
+      "eventInstance": "1",
+      "cycleId": 0,
+      "ruleId": "V2-01",
+      "points": 3
+    }
+  ],
+  "recentAwardIds": [
+    "a-e3b7cc67a356bd9024c4f9f4",
+    "a-49a51857cfa0a237dca31f6f",
+    "a-e852b86d603f6436b71a3291",
+    "a-b5e877c0506761481ffe87e3",
+    "a-e9ba3c9b17b2da0753aa898b",
+    "a-cd6aed8eebdb00fbefc624b4",
+    "a-5960a112d39a17995247ba4b",
+    "a-87f6995799a20db660f7e252",
+    "a-7bd69e1bcefa992e82748d00",
+    "a-e7937070f5b33f1028523be2"
+  ],
+  "pendingSummary": [
+    {
+      "status": "pending_eligibility_and_score",
+      "count": 1
+    }
+  ]
+}

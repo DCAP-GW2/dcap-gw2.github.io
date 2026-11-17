@@ -1,0 +1,1312 @@
+{
+  "executedAt": "2026-10-27T07:57:33.569Z",
+  "chromium": "151.0.7922.173",
+  "environment": "Debian Linux, headless system Chromium via Playwright, loopback HTTP only",
+  "widths": [
+    320,
+    390,
+    768,
+    1024,
+    1440
+  ],
+  "counts": {
+    "passed": 256,
+    "failed": 0,
+    "skipped": 0
+  },
+  "results": [
+    {
+      "name": "DEV.2 complete overview 320px",
+      "status": "PASS",
+      "ms": 46
+    },
+    {
+      "name": "DEV.2 complete overview 390px",
+      "status": "PASS",
+      "ms": 35
+    },
+    {
+      "name": "DEV.2 complete overview 768px",
+      "status": "PASS",
+      "ms": 32
+    },
+    {
+      "name": "DEV.2 complete overview 1024px",
+      "status": "PASS",
+      "ms": 33
+    },
+    {
+      "name": "DEV.2 complete overview 1440px",
+      "status": "PASS",
+      "ms": 59
+    },
+    {
+      "name": "200% text complete overview 320px",
+      "status": "PASS",
+      "ms": 34
+    },
+    {
+      "name": "axe WCAG 2.2 AA overview",
+      "status": "PASS",
+      "ms": 813
+    },
+    {
+      "name": "DEV.2 complete leaderboard/ 320px",
+      "status": "PASS",
+      "ms": 21
+    },
+    {
+      "name": "DEV.2 complete leaderboard/ 390px",
+      "status": "PASS",
+      "ms": 25
+    },
+    {
+      "name": "DEV.2 complete leaderboard/ 768px",
+      "status": "PASS",
+      "ms": 39
+    },
+    {
+      "name": "DEV.2 complete leaderboard/ 1024px",
+      "status": "PASS",
+      "ms": 34
+    },
+    {
+      "name": "DEV.2 complete leaderboard/ 1440px",
+      "status": "PASS",
+      "ms": 51
+    },
+    {
+      "name": "200% text complete leaderboard/ 320px",
+      "status": "PASS",
+      "ms": 30
+    },
+    {
+      "name": "axe WCAG 2.2 AA leaderboard/",
+      "status": "PASS",
+      "ms": 605
+    },
+    {
+      "name": "DEV.2 complete members/ 320px",
+      "status": "PASS",
+      "ms": 16
+    },
+    {
+      "name": "DEV.2 complete members/ 390px",
+      "status": "PASS",
+      "ms": 22
+    },
+    {
+      "name": "DEV.2 complete members/ 768px",
+      "status": "PASS",
+      "ms": 34
+    },
+    {
+      "name": "DEV.2 complete members/ 1024px",
+      "status": "PASS",
+      "ms": 40
+    },
+    {
+      "name": "DEV.2 complete members/ 1440px",
+      "status": "PASS",
+      "ms": 22
+    },
+    {
+      "name": "200% text complete members/ 320px",
+      "status": "PASS",
+      "ms": 24
+    },
+    {
+      "name": "axe WCAG 2.2 AA members/",
+      "status": "PASS",
+      "ms": 563
+    },
+    {
+      "name": "DEV.2 complete members/profile/ 320px",
+      "status": "PASS",
+      "ms": 18
+    },
+    {
+      "name": "DEV.2 complete members/profile/ 390px",
+      "status": "PASS",
+      "ms": 24
+    },
+    {
+      "name": "DEV.2 complete members/profile/ 768px",
+      "status": "PASS",
+      "ms": 24
+    },
+    {
+      "name": "DEV.2 complete members/profile/ 1024px",
+      "status": "PASS",
+      "ms": 39
+    },
+    {
+      "name": "DEV.2 complete members/profile/ 1440px",
+      "status": "PASS",
+      "ms": 29
+    },
+    {
+      "name": "200% text complete members/profile/ 320px",
+      "status": "PASS",
+      "ms": 22
+    },
+    {
+      "name": "axe WCAG 2.2 AA members/profile/",
+      "status": "PASS",
+      "ms": 607
+    },
+    {
+      "name": "DEV.2 complete statistics/ 320px",
+      "status": "PASS",
+      "ms": 19
+    },
+    {
+      "name": "DEV.2 complete statistics/ 390px",
+      "status": "PASS",
+      "ms": 28
+    },
+    {
+      "name": "DEV.2 complete statistics/ 768px",
+      "status": "PASS",
+      "ms": 31
+    },
+    {
+      "name": "DEV.2 complete statistics/ 1024px",
+      "status": "PASS",
+      "ms": 32
+    },
+    {
+      "name": "DEV.2 complete statistics/ 1440px",
+      "status": "PASS",
+      "ms": 35
+    },
+    {
+      "name": "200% text complete statistics/ 320px",
+      "status": "PASS",
+      "ms": 33
+    },
+    {
+      "name": "axe WCAG 2.2 AA statistics/",
+      "status": "PASS",
+      "ms": 980
+    },
+    {
+      "name": "DEV.2 complete how-points-work/ 320px",
+      "status": "PASS",
+      "ms": 17
+    },
+    {
+      "name": "DEV.2 complete how-points-work/ 390px",
+      "status": "PASS",
+      "ms": 26
+    },
+    {
+      "name": "DEV.2 complete how-points-work/ 768px",
+      "status": "PASS",
+      "ms": 32
+    },
+    {
+      "name": "DEV.2 complete how-points-work/ 1024px",
+      "status": "PASS",
+      "ms": 29
+    },
+    {
+      "name": "DEV.2 complete how-points-work/ 1440px",
+      "status": "PASS",
+      "ms": 34
+    },
+    {
+      "name": "200% text complete how-points-work/ 320px",
+      "status": "PASS",
+      "ms": 34
+    },
+    {
+      "name": "axe WCAG 2.2 AA how-points-work/",
+      "status": "PASS",
+      "ms": 710
+    },
+    {
+      "name": "DEV.2 complete rewards/ 320px",
+      "status": "PASS",
+      "ms": 15
+    },
+    {
+      "name": "DEV.2 complete rewards/ 390px",
+      "status": "PASS",
+      "ms": 29
+    },
+    {
+      "name": "DEV.2 complete rewards/ 768px",
+      "status": "PASS",
+      "ms": 33
+    },
+    {
+      "name": "DEV.2 complete rewards/ 1024px",
+      "status": "PASS",
+      "ms": 32
+    },
+    {
+      "name": "DEV.2 complete rewards/ 1440px",
+      "status": "PASS",
+      "ms": 34
+    },
+    {
+      "name": "200% text complete rewards/ 320px",
+      "status": "PASS",
+      "ms": 17
+    },
+    {
+      "name": "axe WCAG 2.2 AA rewards/",
+      "status": "PASS",
+      "ms": 514
+    },
+    {
+      "name": "DEV.2 incomplete overview 320px",
+      "status": "PASS",
+      "ms": 22
+    },
+    {
+      "name": "DEV.2 incomplete overview 390px",
+      "status": "PASS",
+      "ms": 23
+    },
+    {
+      "name": "DEV.2 incomplete overview 768px",
+      "status": "PASS",
+      "ms": 35
+    },
+    {
+      "name": "DEV.2 incomplete overview 1024px",
+      "status": "PASS",
+      "ms": 29
+    },
+    {
+      "name": "DEV.2 incomplete overview 1440px",
+      "status": "PASS",
+      "ms": 30
+    },
+    {
+      "name": "200% text incomplete overview 320px",
+      "status": "PASS",
+      "ms": 17
+    },
+    {
+      "name": "DEV.2 incomplete leaderboard/ 320px",
+      "status": "PASS",
+      "ms": 20
+    },
+    {
+      "name": "DEV.2 incomplete leaderboard/ 390px",
+      "status": "PASS",
+      "ms": 32
+    },
+    {
+      "name": "DEV.2 incomplete leaderboard/ 768px",
+      "status": "PASS",
+      "ms": 33
+    },
+    {
+      "name": "DEV.2 incomplete leaderboard/ 1024px",
+      "status": "PASS",
+      "ms": 33
+    },
+    {
+      "name": "DEV.2 incomplete leaderboard/ 1440px",
+      "status": "PASS",
+      "ms": 34
+    },
+    {
+      "name": "200% text incomplete leaderboard/ 320px",
+      "status": "PASS",
+      "ms": 25
+    },
+    {
+      "name": "DEV.2 incomplete members/ 320px",
+      "status": "PASS",
+      "ms": 16
+    },
+    {
+      "name": "DEV.2 incomplete members/ 390px",
+      "status": "PASS",
+      "ms": 26
+    },
+    {
+      "name": "DEV.2 incomplete members/ 768px",
+      "status": "PASS",
+      "ms": 41
+    },
+    {
+      "name": "DEV.2 incomplete members/ 1024px",
+      "status": "PASS",
+      "ms": 34
+    },
+    {
+      "name": "DEV.2 incomplete members/ 1440px",
+      "status": "PASS",
+      "ms": 31
+    },
+    {
+      "name": "200% text incomplete members/ 320px",
+      "status": "PASS",
+      "ms": 23
+    },
+    {
+      "name": "DEV.2 incomplete members/profile/ 320px",
+      "status": "PASS",
+      "ms": 30
+    },
+    {
+      "name": "DEV.2 incomplete members/profile/ 390px",
+      "status": "PASS",
+      "ms": 37
+    },
+    {
+      "name": "DEV.2 incomplete members/profile/ 768px",
+      "status": "PASS",
+      "ms": 21
+    },
+    {
+      "name": "DEV.2 incomplete members/profile/ 1024px",
+      "status": "PASS",
+      "ms": 31
+    },
+    {
+      "name": "DEV.2 incomplete members/profile/ 1440px",
+      "status": "PASS",
+      "ms": 34
+    },
+    {
+      "name": "200% text incomplete members/profile/ 320px",
+      "status": "PASS",
+      "ms": 26
+    },
+    {
+      "name": "DEV.2 incomplete statistics/ 320px",
+      "status": "PASS",
+      "ms": 21
+    },
+    {
+      "name": "DEV.2 incomplete statistics/ 390px",
+      "status": "PASS",
+      "ms": 58
+    },
+    {
+      "name": "DEV.2 incomplete statistics/ 768px",
+      "status": "PASS",
+      "ms": 34
+    },
+    {
+      "name": "DEV.2 incomplete statistics/ 1024px",
+      "status": "PASS",
+      "ms": 46
+    },
+    {
+      "name": "DEV.2 incomplete statistics/ 1440px",
+      "status": "PASS",
+      "ms": 38
+    },
+    {
+      "name": "200% text incomplete statistics/ 320px",
+      "status": "PASS",
+      "ms": 33
+    },
+    {
+      "name": "DEV.2 incomplete how-points-work/ 320px",
+      "status": "PASS",
+      "ms": 19
+    },
+    {
+      "name": "DEV.2 incomplete how-points-work/ 390px",
+      "status": "PASS",
+      "ms": 36
+    },
+    {
+      "name": "DEV.2 incomplete how-points-work/ 768px",
+      "status": "PASS",
+      "ms": 52
+    },
+    {
+      "name": "DEV.2 incomplete how-points-work/ 1024px",
+      "status": "PASS",
+      "ms": 52
+    },
+    {
+      "name": "DEV.2 incomplete how-points-work/ 1440px",
+      "status": "PASS",
+      "ms": 38
+    },
+    {
+      "name": "200% text incomplete how-points-work/ 320px",
+      "status": "PASS",
+      "ms": 33
+    },
+    {
+      "name": "DEV.2 incomplete rewards/ 320px",
+      "status": "PASS",
+      "ms": 14
+    },
+    {
+      "name": "DEV.2 incomplete rewards/ 390px",
+      "status": "PASS",
+      "ms": 29
+    },
+    {
+      "name": "DEV.2 incomplete rewards/ 768px",
+      "status": "PASS",
+      "ms": 38
+    },
+    {
+      "name": "DEV.2 incomplete rewards/ 1024px",
+      "status": "PASS",
+      "ms": 33
+    },
+    {
+      "name": "DEV.2 incomplete rewards/ 1440px",
+      "status": "PASS",
+      "ms": 34
+    },
+    {
+      "name": "200% text incomplete rewards/ 320px",
+      "status": "PASS",
+      "ms": 13
+    },
+    {
+      "name": "DEV.2 missing overview 320px",
+      "status": "PASS",
+      "ms": 18
+    },
+    {
+      "name": "DEV.2 missing overview 390px",
+      "status": "PASS",
+      "ms": 24
+    },
+    {
+      "name": "DEV.2 missing overview 768px",
+      "status": "PASS",
+      "ms": 31
+    },
+    {
+      "name": "DEV.2 missing overview 1024px",
+      "status": "PASS",
+      "ms": 43
+    },
+    {
+      "name": "DEV.2 missing overview 1440px",
+      "status": "PASS",
+      "ms": 33
+    },
+    {
+      "name": "200% text missing overview 320px",
+      "status": "PASS",
+      "ms": 24
+    },
+    {
+      "name": "DEV.2 missing leaderboard/ 320px",
+      "status": "PASS",
+      "ms": 19
+    },
+    {
+      "name": "DEV.2 missing leaderboard/ 390px",
+      "status": "PASS",
+      "ms": 28
+    },
+    {
+      "name": "DEV.2 missing leaderboard/ 768px",
+      "status": "PASS",
+      "ms": 28
+    },
+    {
+      "name": "DEV.2 missing leaderboard/ 1024px",
+      "status": "PASS",
+      "ms": 36
+    },
+    {
+      "name": "DEV.2 missing leaderboard/ 1440px",
+      "status": "PASS",
+      "ms": 46
+    },
+    {
+      "name": "200% text missing leaderboard/ 320px",
+      "status": "PASS",
+      "ms": 40
+    },
+    {
+      "name": "DEV.2 missing members/ 320px",
+      "status": "PASS",
+      "ms": 17
+    },
+    {
+      "name": "DEV.2 missing members/ 390px",
+      "status": "PASS",
+      "ms": 33
+    },
+    {
+      "name": "DEV.2 missing members/ 768px",
+      "status": "PASS",
+      "ms": 37
+    },
+    {
+      "name": "DEV.2 missing members/ 1024px",
+      "status": "PASS",
+      "ms": 38
+    },
+    {
+      "name": "DEV.2 missing members/ 1440px",
+      "status": "PASS",
+      "ms": 29
+    },
+    {
+      "name": "200% text missing members/ 320px",
+      "status": "PASS",
+      "ms": 25
+    },
+    {
+      "name": "DEV.2 missing members/profile/ 320px",
+      "status": "PASS",
+      "ms": 19
+    },
+    {
+      "name": "DEV.2 missing members/profile/ 390px",
+      "status": "PASS",
+      "ms": 36
+    },
+    {
+      "name": "DEV.2 missing members/profile/ 768px",
+      "status": "PASS",
+      "ms": 40
+    },
+    {
+      "name": "DEV.2 missing members/profile/ 1024px",
+      "status": "PASS",
+      "ms": 45
+    },
+    {
+      "name": "DEV.2 missing members/profile/ 1440px",
+      "status": "PASS",
+      "ms": 30
+    },
+    {
+      "name": "200% text missing members/profile/ 320px",
+      "status": "PASS",
+      "ms": 24
+    },
+    {
+      "name": "DEV.2 missing statistics/ 320px",
+      "status": "PASS",
+      "ms": 22
+    },
+    {
+      "name": "DEV.2 missing statistics/ 390px",
+      "status": "PASS",
+      "ms": 32
+    },
+    {
+      "name": "DEV.2 missing statistics/ 768px",
+      "status": "PASS",
+      "ms": 50
+    },
+    {
+      "name": "DEV.2 missing statistics/ 1024px",
+      "status": "PASS",
+      "ms": 60
+    },
+    {
+      "name": "DEV.2 missing statistics/ 1440px",
+      "status": "PASS",
+      "ms": 62
+    },
+    {
+      "name": "200% text missing statistics/ 320px",
+      "status": "PASS",
+      "ms": 35
+    },
+    {
+      "name": "DEV.2 missing how-points-work/ 320px",
+      "status": "PASS",
+      "ms": 18
+    },
+    {
+      "name": "DEV.2 missing how-points-work/ 390px",
+      "status": "PASS",
+      "ms": 33
+    },
+    {
+      "name": "DEV.2 missing how-points-work/ 768px",
+      "status": "PASS",
+      "ms": 30
+    },
+    {
+      "name": "DEV.2 missing how-points-work/ 1024px",
+      "status": "PASS",
+      "ms": 23
+    },
+    {
+      "name": "DEV.2 missing how-points-work/ 1440px",
+      "status": "PASS",
+      "ms": 31
+    },
+    {
+      "name": "200% text missing how-points-work/ 320px",
+      "status": "PASS",
+      "ms": 49
+    },
+    {
+      "name": "DEV.2 missing rewards/ 320px",
+      "status": "PASS",
+      "ms": 17
+    },
+    {
+      "name": "DEV.2 missing rewards/ 390px",
+      "status": "PASS",
+      "ms": 44
+    },
+    {
+      "name": "DEV.2 missing rewards/ 768px",
+      "status": "PASS",
+      "ms": 42
+    },
+    {
+      "name": "DEV.2 missing rewards/ 1024px",
+      "status": "PASS",
+      "ms": 25
+    },
+    {
+      "name": "DEV.2 missing rewards/ 1440px",
+      "status": "PASS",
+      "ms": 39
+    },
+    {
+      "name": "200% text missing rewards/ 320px",
+      "status": "PASS",
+      "ms": 26
+    },
+    {
+      "name": "DEV.2 pending overview 320px",
+      "status": "PASS",
+      "ms": 15
+    },
+    {
+      "name": "DEV.2 pending overview 390px",
+      "status": "PASS",
+      "ms": 37
+    },
+    {
+      "name": "DEV.2 pending overview 768px",
+      "status": "PASS",
+      "ms": 32
+    },
+    {
+      "name": "DEV.2 pending overview 1024px",
+      "status": "PASS",
+      "ms": 34
+    },
+    {
+      "name": "DEV.2 pending overview 1440px",
+      "status": "PASS",
+      "ms": 35
+    },
+    {
+      "name": "200% text pending overview 320px",
+      "status": "PASS",
+      "ms": 22
+    },
+    {
+      "name": "DEV.2 pending leaderboard/ 320px",
+      "status": "PASS",
+      "ms": 22
+    },
+    {
+      "name": "DEV.2 pending leaderboard/ 390px",
+      "status": "PASS",
+      "ms": 32
+    },
+    {
+      "name": "DEV.2 pending leaderboard/ 768px",
+      "status": "PASS",
+      "ms": 33
+    },
+    {
+      "name": "DEV.2 pending leaderboard/ 1024px",
+      "status": "PASS",
+      "ms": 26
+    },
+    {
+      "name": "DEV.2 pending leaderboard/ 1440px",
+      "status": "PASS",
+      "ms": 61
+    },
+    {
+      "name": "200% text pending leaderboard/ 320px",
+      "status": "PASS",
+      "ms": 22
+    },
+    {
+      "name": "DEV.2 pending members/ 320px",
+      "status": "PASS",
+      "ms": 16
+    },
+    {
+      "name": "DEV.2 pending members/ 390px",
+      "status": "PASS",
+      "ms": 26
+    },
+    {
+      "name": "DEV.2 pending members/ 768px",
+      "status": "PASS",
+      "ms": 26
+    },
+    {
+      "name": "DEV.2 pending members/ 1024px",
+      "status": "PASS",
+      "ms": 35
+    },
+    {
+      "name": "DEV.2 pending members/ 1440px",
+      "status": "PASS",
+      "ms": 38
+    },
+    {
+      "name": "200% text pending members/ 320px",
+      "status": "PASS",
+      "ms": 27
+    },
+    {
+      "name": "DEV.2 pending members/profile/ 320px",
+      "status": "PASS",
+      "ms": 18
+    },
+    {
+      "name": "DEV.2 pending members/profile/ 390px",
+      "status": "PASS",
+      "ms": 48
+    },
+    {
+      "name": "DEV.2 pending members/profile/ 768px",
+      "status": "PASS",
+      "ms": 58
+    },
+    {
+      "name": "DEV.2 pending members/profile/ 1024px",
+      "status": "PASS",
+      "ms": 60
+    },
+    {
+      "name": "DEV.2 pending members/profile/ 1440px",
+      "status": "PASS",
+      "ms": 63
+    },
+    {
+      "name": "200% text pending members/profile/ 320px",
+      "status": "PASS",
+      "ms": 43
+    },
+    {
+      "name": "DEV.2 pending statistics/ 320px",
+      "status": "PASS",
+      "ms": 20
+    },
+    {
+      "name": "DEV.2 pending statistics/ 390px",
+      "status": "PASS",
+      "ms": 29
+    },
+    {
+      "name": "DEV.2 pending statistics/ 768px",
+      "status": "PASS",
+      "ms": 44
+    },
+    {
+      "name": "DEV.2 pending statistics/ 1024px",
+      "status": "PASS",
+      "ms": 39
+    },
+    {
+      "name": "DEV.2 pending statistics/ 1440px",
+      "status": "PASS",
+      "ms": 41
+    },
+    {
+      "name": "200% text pending statistics/ 320px",
+      "status": "PASS",
+      "ms": 36
+    },
+    {
+      "name": "DEV.2 pending how-points-work/ 320px",
+      "status": "PASS",
+      "ms": 23
+    },
+    {
+      "name": "DEV.2 pending how-points-work/ 390px",
+      "status": "PASS",
+      "ms": 29
+    },
+    {
+      "name": "DEV.2 pending how-points-work/ 768px",
+      "status": "PASS",
+      "ms": 37
+    },
+    {
+      "name": "DEV.2 pending how-points-work/ 1024px",
+      "status": "PASS",
+      "ms": 47
+    },
+    {
+      "name": "DEV.2 pending how-points-work/ 1440px",
+      "status": "PASS",
+      "ms": 31
+    },
+    {
+      "name": "200% text pending how-points-work/ 320px",
+      "status": "PASS",
+      "ms": 29
+    },
+    {
+      "name": "DEV.2 pending rewards/ 320px",
+      "status": "PASS",
+      "ms": 17
+    },
+    {
+      "name": "DEV.2 pending rewards/ 390px",
+      "status": "PASS",
+      "ms": 33
+    },
+    {
+      "name": "DEV.2 pending rewards/ 768px",
+      "status": "PASS",
+      "ms": 30
+    },
+    {
+      "name": "DEV.2 pending rewards/ 1024px",
+      "status": "PASS",
+      "ms": 38
+    },
+    {
+      "name": "DEV.2 pending rewards/ 1440px",
+      "status": "PASS",
+      "ms": 39
+    },
+    {
+      "name": "200% text pending rewards/ 320px",
+      "status": "PASS",
+      "ms": 12
+    },
+    {
+      "name": "DEV.2 ties overview 320px",
+      "status": "PASS",
+      "ms": 15
+    },
+    {
+      "name": "DEV.2 ties overview 390px",
+      "status": "PASS",
+      "ms": 27
+    },
+    {
+      "name": "DEV.2 ties overview 768px",
+      "status": "PASS",
+      "ms": 26
+    },
+    {
+      "name": "DEV.2 ties overview 1024px",
+      "status": "PASS",
+      "ms": 26
+    },
+    {
+      "name": "DEV.2 ties overview 1440px",
+      "status": "PASS",
+      "ms": 32
+    },
+    {
+      "name": "200% text ties overview 320px",
+      "status": "PASS",
+      "ms": 19
+    },
+    {
+      "name": "DEV.2 ties leaderboard/ 320px",
+      "status": "PASS",
+      "ms": 13
+    },
+    {
+      "name": "DEV.2 ties leaderboard/ 390px",
+      "status": "PASS",
+      "ms": 25
+    },
+    {
+      "name": "DEV.2 ties leaderboard/ 768px",
+      "status": "PASS",
+      "ms": 17
+    },
+    {
+      "name": "DEV.2 ties leaderboard/ 1024px",
+      "status": "PASS",
+      "ms": 39
+    },
+    {
+      "name": "DEV.2 ties leaderboard/ 1440px",
+      "status": "PASS",
+      "ms": 30
+    },
+    {
+      "name": "200% text ties leaderboard/ 320px",
+      "status": "PASS",
+      "ms": 43
+    },
+    {
+      "name": "DEV.2 ties members/ 320px",
+      "status": "PASS",
+      "ms": 14
+    },
+    {
+      "name": "DEV.2 ties members/ 390px",
+      "status": "PASS",
+      "ms": 25
+    },
+    {
+      "name": "DEV.2 ties members/ 768px",
+      "status": "PASS",
+      "ms": 25
+    },
+    {
+      "name": "DEV.2 ties members/ 1024px",
+      "status": "PASS",
+      "ms": 19
+    },
+    {
+      "name": "DEV.2 ties members/ 1440px",
+      "status": "PASS",
+      "ms": 19
+    },
+    {
+      "name": "200% text ties members/ 320px",
+      "status": "PASS",
+      "ms": 14
+    },
+    {
+      "name": "DEV.2 ties members/profile/ 320px",
+      "status": "PASS",
+      "ms": 18
+    },
+    {
+      "name": "DEV.2 ties members/profile/ 390px",
+      "status": "PASS",
+      "ms": 32
+    },
+    {
+      "name": "DEV.2 ties members/profile/ 768px",
+      "status": "PASS",
+      "ms": 42
+    },
+    {
+      "name": "DEV.2 ties members/profile/ 1024px",
+      "status": "PASS",
+      "ms": 33
+    },
+    {
+      "name": "DEV.2 ties members/profile/ 1440px",
+      "status": "PASS",
+      "ms": 35
+    },
+    {
+      "name": "200% text ties members/profile/ 320px",
+      "status": "PASS",
+      "ms": 31
+    },
+    {
+      "name": "DEV.2 ties statistics/ 320px",
+      "status": "PASS",
+      "ms": 19
+    },
+    {
+      "name": "DEV.2 ties statistics/ 390px",
+      "status": "PASS",
+      "ms": 32
+    },
+    {
+      "name": "DEV.2 ties statistics/ 768px",
+      "status": "PASS",
+      "ms": 42
+    },
+    {
+      "name": "DEV.2 ties statistics/ 1024px",
+      "status": "PASS",
+      "ms": 36
+    },
+    {
+      "name": "DEV.2 ties statistics/ 1440px",
+      "status": "PASS",
+      "ms": 38
+    },
+    {
+      "name": "200% text ties statistics/ 320px",
+      "status": "PASS",
+      "ms": 37
+    },
+    {
+      "name": "DEV.2 ties how-points-work/ 320px",
+      "status": "PASS",
+      "ms": 14
+    },
+    {
+      "name": "DEV.2 ties how-points-work/ 390px",
+      "status": "PASS",
+      "ms": 24
+    },
+    {
+      "name": "DEV.2 ties how-points-work/ 768px",
+      "status": "PASS",
+      "ms": 30
+    },
+    {
+      "name": "DEV.2 ties how-points-work/ 1024px",
+      "status": "PASS",
+      "ms": 40
+    },
+    {
+      "name": "DEV.2 ties how-points-work/ 1440px",
+      "status": "PASS",
+      "ms": 29
+    },
+    {
+      "name": "200% text ties how-points-work/ 320px",
+      "status": "PASS",
+      "ms": 28
+    },
+    {
+      "name": "DEV.2 ties rewards/ 320px",
+      "status": "PASS",
+      "ms": 16
+    },
+    {
+      "name": "DEV.2 ties rewards/ 390px",
+      "status": "PASS",
+      "ms": 22
+    },
+    {
+      "name": "DEV.2 ties rewards/ 768px",
+      "status": "PASS",
+      "ms": 20
+    },
+    {
+      "name": "DEV.2 ties rewards/ 1024px",
+      "status": "PASS",
+      "ms": 28
+    },
+    {
+      "name": "DEV.2 ties rewards/ 1440px",
+      "status": "PASS",
+      "ms": 52
+    },
+    {
+      "name": "200% text ties rewards/ 320px",
+      "status": "PASS",
+      "ms": 27
+    },
+    {
+      "name": "v1 seven actual page regressions",
+      "status": "PASS",
+      "ms": 1513
+    },
+    {
+      "name": "synthetic seven actual page regressions",
+      "status": "PASS",
+      "ms": 1758
+    },
+    {
+      "name": "public domain query gate uses v1 without DEV fixture requests",
+      "status": "PASS",
+      "ms": 748
+    },
+    {
+      "name": "cross-page revision pin / normal: overview, leaderboard, members, profile, reload, Back, offline",
+      "status": "PASS",
+      "ms": 2212
+    },
+    {
+      "name": "cross-page revision pin / disabled: overview, leaderboard, members, profile, reload, Back, offline",
+      "status": "PASS",
+      "ms": 2237
+    },
+    {
+      "name": "cross-page revision pin / getter-throws: overview, leaderboard, members, profile, reload, Back, offline",
+      "status": "PASS",
+      "ms": 2333
+    },
+    {
+      "name": "cross-page revision pin / methods-throw: overview, leaderboard, members, profile, reload, Back, offline",
+      "status": "PASS",
+      "ms": 2397
+    },
+    {
+      "name": "keyboard-only navigation across every Points view, profile, Back and shared Points links",
+      "status": "PASS",
+      "ms": 4543
+    },
+    {
+      "name": "keyboard Enter/Space, focus ring, aria-expanded and five/ten profile history",
+      "status": "PASS",
+      "ms": 934
+    },
+    {
+      "name": "search, tied competition ranks, historical cycle controls and recent provenance labels",
+      "status": "PASS",
+      "ms": 2270
+    },
+    {
+      "name": "unknown/missing IDs are safe and do not generate display-name routes",
+      "status": "PASS",
+      "ms": 1130
+    },
+    {
+      "name": "failure state invalid",
+      "status": "PASS",
+      "ms": 628
+    },
+    {
+      "name": "failure state unavailable",
+      "status": "PASS",
+      "ms": 552
+    },
+    {
+      "name": "failure state version",
+      "status": "PASS",
+      "ms": 569
+    },
+    {
+      "name": "failure state checksum",
+      "status": "PASS",
+      "ms": 635
+    },
+    {
+      "name": "failure state revision",
+      "status": "PASS",
+      "ms": 634
+    },
+    {
+      "name": "failure state same-revision-hash",
+      "status": "PASS",
+      "ms": 603
+    },
+    {
+      "name": "failure state corrupt-cache",
+      "status": "PASS",
+      "ms": 747
+    },
+    {
+      "name": "failure state wrong-cache-revision",
+      "status": "PASS",
+      "ms": 611
+    },
+    {
+      "name": "failure state expired-cache",
+      "status": "PASS",
+      "ms": 591
+    },
+    {
+      "name": "failure state bad-session",
+      "status": "PASS",
+      "ms": 571
+    },
+    {
+      "name": "failure state session-revision",
+      "status": "PASS",
+      "ms": 587
+    },
+    {
+      "name": "failure state session-hash",
+      "status": "PASS",
+      "ms": 580
+    },
+    {
+      "name": "failure state invalid-url",
+      "status": "PASS",
+      "ms": 1183
+    },
+    {
+      "name": "failure state duplicate-fixture",
+      "status": "PASS",
+      "ms": 1199
+    },
+    {
+      "name": "failure state unknown-fixture",
+      "status": "PASS",
+      "ms": 535
+    },
+    {
+      "name": "failure state timeout-late",
+      "status": "PASS",
+      "ms": 845
+    },
+    {
+      "name": "mid-session different revision and same-revision different hash retain verified fallback",
+      "status": "PASS",
+      "ms": 1944
+    },
+    {
+      "name": "profile 0 entries, long fictional name, validated test-only fixture",
+      "status": "PASS",
+      "ms": 694
+    },
+    {
+      "name": "profile 1 entries, long fictional name, validated test-only fixture",
+      "status": "PASS",
+      "ms": 653
+    },
+    {
+      "name": "profile 5 entries, long fictional name, validated test-only fixture",
+      "status": "PASS",
+      "ms": 699
+    },
+    {
+      "name": "profile 6 entries, long fictional name, validated test-only fixture",
+      "status": "PASS",
+      "ms": 694
+    },
+    {
+      "name": "profile 10 entries, long fictional name, validated test-only fixture",
+      "status": "PASS",
+      "ms": 692
+    },
+    {
+      "name": "profile 12 entries, long fictional name, validated test-only fixture",
+      "status": "PASS",
+      "ms": 724
+    },
+    {
+      "name": "loading state suppresses live placeholders until asynchronous checksum completes",
+      "status": "PASS",
+      "ms": 746
+    },
+    {
+      "name": "table regions scroll horizontally with keyboard and retain readable row labels",
+      "status": "PASS",
+      "ms": 882
+    },
+    {
+      "name": "rendered totals and latest ten derive exclusively from reviewed numerical awards",
+      "status": "PASS",
+      "ms": 966
+    },
+    {
+      "name": "no JavaScript: seven page navigation, readable unavailable states and no invented data",
+      "status": "PASS",
+      "ms": 2032
+    },
+    {
+      "name": "no uncaught browser errors and no external preview network dependency",
+      "status": "PASS",
+      "ms": 0
+    }
+  ],
+  "uncaughtErrors": [],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+  ],
+  "externalOrigins": [
+    "https://script.google.com"
+  ]
+}
