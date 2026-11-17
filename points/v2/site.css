@@ -1,0 +1,14 @@
+/* Production-specific presentation, strictly scoped to verified v2 roots. */
+.dcap-v2-production{max-width:1100px;margin:0 auto;padding:1.5rem 1rem;color:inherit}
+.dcap-v2-production h1{font-size:clamp(1.5rem,3vw,2.2rem);line-height:1.2}
+.dcap-v2-production h2{margin-top:1.8rem;font-size:1.25rem}
+.dcap-v2-production .dcap-v2-asof{font-weight:600}
+.dcap-v2-production .dcap-v2-detail{font-size:.88rem;opacity:.8}
+.dcap-v2-production .dcap-v2-warning{border-left:3px solid currentColor;padding-left:1rem}
+.dcap-v2-production .dcap-v2-scroll{max-width:100%;overflow-x:auto;outline-offset:3px}
+.dcap-v2-production .dcap-v2-table{width:100%;border-collapse:collapse;text-align:left}
+.dcap-v2-production .dcap-v2-table th,.dcap-v2-production .dcap-v2-table td{border-bottom:1px solid #9996;padding:.5rem .7rem;vertical-align:top}
+.dcap-v2-production .dcap-v2-table thead th{font-weight:700}
+.dcap-v2-production input{width:min(100%,28rem);padding:.5rem;margin:.75rem 0}
+.dcap-v2-production button{margin-top:.75rem;padding:.5rem 1rem;cursor:pointer}
+@media(max-width:600px){.dcap-v2-production .dcap-v2-table{min-width:520px}}
