@@ -136,3 +136,28 @@ test('no change to owner private Sheets or production deployments',()=>{
  assert(manifest.oauthScopes.includes('https://www.googleapis.com/auth/spreadsheets.readonly'));
  assert(!manifest.oauthScopes.includes('https://www.googleapis.com/auth/spreadsheets'));
 });
+
+test('65 further owner-final awards process as a normal batch without new r00x files',()=>{
+ const d=baseRows();
+ for(let i=0;i<65;i++){
+  d.future.push([(100+i).toString(16).padStart(24,'0'),'2026-11-19','triple-trouble',
+   'future-instance-'+i,baseline.members[0].id,'blocker','V2-03',3,
+   'APPROVED_RULE','owner-final-batch-001','OWNER_FINAL','','2026-11-19T08:00:00.000Z']);
+ }
+ const x=make(d);
+ assert.equal(x.out.awards.length,125);
+ assert.equal(x.out.awards.reduce((s,a)=>s+a.points,0),387);
+ assert.equal(x.out.revision,undefined);
+ assert.equal(combineOwnerFeed(baseline,x.out).population.candidatePoints,2081);
+ assert.equal(combineOwnerFeed(baseline,x.out).population.awardCandidateCount,676);
+});
+test('existing Commander/Lane Lead non-stacking groups cannot be awarded twice in one instance',()=>{
+ const d=baseRows();
+ d.future.push(['000000000000000000000001','2026-11-19','bfla','same-instance',
+  baseline.members[0].id,'commander','V2-08',3,'APPROVED_RULE',
+  'owner-final-batch-001','OWNER_FINAL','','2026-11-19T08:00:00.000Z']);
+ d.future.push(['000000000000000000000002','2026-11-19','bfla','same-instance',
+  baseline.members[0].id,'sub-lane-lead','V2-09',2,'APPROVED_RULE',
+  'owner-final-batch-002','OWNER_FINAL','','2026-11-19T08:00:00.000Z']);
+ assert.equal(make(d).out.kind,'UNAVAILABLE');
+});
