@@ -98,17 +98,18 @@ export function planSimpleAward({baseline,registry,journal,decision}){
   })),
   ...registry.future.filter(x=>x.status==='OWNER_FINAL'||x.status==='PENDING_OWNER_POINTS')
  ];
- const collision=prior.find(x=>x.candidateKey===d.candidateKey||
+ const collisions=prior.filter(x=>x.candidateKey===d.candidateKey||
   eventInstanceKey(x)===eventInstanceKey(current));
- if(collision){
-  // The same candidate's pending record may be finalised by APPENDING a
-  // final record, without changing the pending row or granting a second award.
-  const pendingFinalisation=collision.status==='PENDING_OWNER_POINTS'&&
-   collision.candidateKey===d.candidateKey&&
-   eventInstanceKey(collision)===eventInstanceKey(current)&&manual;
-  if(!pendingFinalisation)return Object.freeze({
+ if(collisions.length){
+  // A pending case may be finalised exactly once by APPENDING a final record.
+  // Any already-final record (even if a pending row comes first) blocks writes.
+  const matchingPending=collisions.length===1&&
+   collisions[0].status==='PENDING_OWNER_POINTS'&&
+   collisions[0].candidateKey===d.candidateKey&&
+   eventInstanceKey(collisions[0])===eventInstanceKey(current)&&manual;
+  if(!matchingPending)return Object.freeze({
    state:'POSSIBLE_DUPLICATE',
-   reason:collision.candidateKey===d.candidateKey?'SAME_CANDIDATE_KEY':'SAME_MEMBER_EVENT_INSTANCE_ROLE',
+   reason:collisions.some(x=>x.candidateKey===d.candidateKey)?'SAME_CANDIDATE_KEY':'SAME_MEMBER_EVENT_INSTANCE_ROLE',
    action:'REVIEW_EXISTING_AWARD',safeToAppend:false
   });
  }
