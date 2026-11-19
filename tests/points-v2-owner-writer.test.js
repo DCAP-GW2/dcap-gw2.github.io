@@ -221,3 +221,26 @@ test('dry run checks proposed award but writes nothing',()=>{
  assert.equal(result.status,'DRY_RUN_ONLY');assert.equal(result.accepted,3);
  assert.equal(f.writes.length,0);
 });
+
+test('native writer no-argument read-only preflight succeeds without any writes',()=>{
+ const f=fixture();
+ const receipt=toJSON(f.context.testOwnerWriterReadOnlyPreflight());
+ assert.equal(receipt.stage,'DCAP_V2_OWNER_WRITER_READ_ONLY_PREFLIGHT');
+ assert.equal(receipt.state,'PASS');
+ assert.equal(receipt.continuingAwards,60);
+ assert.equal(receipt.continuingPoints,192);
+ assert.equal(receipt.newPublicMembers,0);
+ assert.equal(receipt.manuallyAssignedCommanderAwards,0);
+ assert.equal(receipt.approvedRegistryRows,0);
+ assert.equal(receipt.rewardsEnabled,false);
+ assert.equal(receipt.sheetWritesPerformed,0);
+ assert.equal(f.writes.length,0);
+ assert.equal(f.logs.length,1);
+ assert.deepEqual(JSON.parse(f.logs[0]),receipt);
+ assert(!f.logs[0].includes('private'));
+});
+test('native writer preflight refuses incorrect owner identity before journal access',()=>{
+ const f=fixture({effectiveEmail:'wrong@example.invalid'});
+ assert.throws(()=>f.context.testOwnerWriterReadOnlyPreflight(),/OWNER_WRITE_NOT_OWNER/);
+ assert.equal(f.writes.length,0);
+});
