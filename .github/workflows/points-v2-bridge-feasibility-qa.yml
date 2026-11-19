@@ -1,0 +1,25 @@
+name: DCAP v2 ChatGPT writer bridge feasibility — offline only
+on:
+  push:
+    branches:
+      - feat/points-v2-chatgpt-bridge-feasibility-20261120
+permissions:
+  contents: read
+jobs:
+  nonpublishing:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify website remains on immutable historical selection
+        run: |
+          node --input-type=module -e "import {readFileSync} from 'node:fs';import assert from 'node:assert/strict';const s=JSON.parse(readFileSync('points/data/v2/selection.json'));const cfg=readFileSync('points/v2/live-config.mjs','utf8');assert.equal(s.revision,'r000');assert(cfg.includes('LIVE_FEED_ENABLED = false'));assert(cfg.includes(\"LIVE_FEED_URL = ''\"))"
+      - name: Execute Node and new bridge security tests
+        run: npm test
+      - name: Execute additional module tests
+        run: node --test tests/*.test.mjs
