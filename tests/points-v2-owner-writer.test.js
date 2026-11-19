@@ -7,7 +7,7 @@ import {validateOwnerFeed,combineOwnerFeed} from '../points/v2/owner-feed.mjs';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const b=JSON.parse(read('points/data/v2/releases/r000.json'));
 const delta=JSON.parse(read('points/data/v2/releases/r001.json'));
-const code=read('backend/points-v2-owner-registry/Code.gs')+'\n'+read('backend/points-v2-owner-registry/OwnerWriter.gs');
+const code=read('backend/points-v2-owner-registry/Code.gs')+'\n'+read('backend/points-v2-owner-registry/OwnerWriter.gs')+'\n'+read('backend/points-v2-owner-registry/NativeDisposableAcceptance.gs');
 const columns={
  legacy:['seq','entryId','candidateKey','sourceMessageId','sourceReference','eventDate','eventId','instanceId',
  'memberId','roleId','ruleId','v2Points','approvedBy','approvedAt','approvalDigest','ruleVersion',
@@ -49,7 +49,7 @@ function fixture(overrides={}){
   members:[columns.members],events:[columns.events],rules:[columns.rules],future:[columns.future]};
  const logs=[],writes=[],lock={acquired:false,released:false};
  const props={DCAP_V2_JOURNAL_ID:journalId,DCAP_V2_REGISTRY_ID:registryId,
-  DCAP_V2_PUBLIC_IDS_JSON:JSON.stringify(b.members.map(x=>x.id)),DCAP_V2_OWNER_EMAIL:ownerEmail};
+  DCAP_V2_PUBLIC_IDS_JSON:JSON.stringify(b.members.map(x=>x.id)),DCAP_V2_OWNER_EMAIL:ownerEmail,\n  DCAP_V2_TEST_REGISTRY_ID:registryId,DCAP_V2_REAL_REGISTRY_ID:'c'.repeat(30),\n  DCAP_V2_ACCEPTANCE_MODE:'FICTIONAL_TEST_ONLY'};
  const effectiveEmail=overrides.effectiveEmail??ownerEmail;
  const find=(id,range)=>{
   assert.equal(id===journalId||id===registryId,true);
@@ -68,7 +68,7 @@ function fixture(overrides={}){
     assert.equal(options.valueRenderOption,'UNFORMATTED_VALUE');
     return {values:find(id,range)};
    }},
-   get:(id)=>{assert.equal(id,registryId);return {sheets:tabKeys.map(k=>({
+   get:(id)=>{assert.equal(id,registryId);return {properties:{title:'DCAP v2 — Native Writer Acceptance — Disposable Fictional — 2026-11-20'},sheets:tabKeys.map(k=>({
     properties:{title:tabNames[tabKeys.indexOf(k)],sheetId:registryIds[k]}
    }))}},
    batchUpdate:(payload,id)=>{
@@ -243,4 +243,48 @@ test('native writer preflight refuses incorrect owner identity before journal ac
  const f=fixture({effectiveEmail:'wrong@example.invalid'});
  assert.throws(()=>f.context.testOwnerWriterReadOnlyPreflight(),/OWNER_WRITE_NOT_OWNER/);
  assert.equal(f.writes.length,0);
+});
+
+
+test('native disposable dry-run uses real candidate validation but writes no rows',()=>{
+ const f=fixture();
+ const receipt=toJSON(f.context.testDisposableWriterDryRun());
+ assert.equal(receipt.stage,'DCAP_V2_NATIVE_DISPOSABLE_DRY_RUN');
+ assert.equal(receipt.state,'PASS');
+ assert.equal(receipt.continuingAwards,61);
+ assert.equal(receipt.continuingPoints,196);
+ assert.equal(receipt.sheetWritesPerformed,0);
+ assert.equal(receipt.realRegistryWrites,0);
+ assert.deepEqual(receipt.disposableRegistryRows,{members:0,events:0,rules:0,awards:0});
+ assert.equal(f.writes.length,0);
+});
+test('native acceptance commits once, retries idempotently and verifies public totals',()=>{
+ const f=fixture();
+ const first=toJSON(f.context.testDisposableWriterCommitAndRetry());
+ assert.equal(first.stage,'DCAP_V2_NATIVE_DISPOSABLE_COMMIT_RETRY');
+ assert.equal(first.firstOperation,'APPLIED');
+ assert.equal(first.retryOperation,'ALREADY_APPLIED');
+ assert.equal(first.sheetWritesPerformed,1);
+ assert.equal(first.continuingPoints,196);
+ assert.equal(first.newPublicMembers,1);
+ assert.equal(first.manualCommanderAwards,1);
+ assert.equal(f.writes.length,1);
+ assert.deepEqual(first.disposableRegistryRows,{members:1,events:1,rules:0,awards:1});
+ const reRun=toJSON(f.context.testDisposableWriterCommitAndRetry());
+ assert.equal(reRun.firstOperation,'ALREADY_APPLIED');
+ assert.equal(reRun.retryOperation,'ALREADY_APPLIED');
+ assert.equal(reRun.sheetWritesPerformed,0);
+ assert.equal(f.writes.length,1);
+});
+test('native acceptance refuses real registry or missing test-only marker without mutation',()=>{
+ for(const change of [
+  props=>{props.DCAP_V2_REAL_REGISTRY_ID=registryId},
+  props=>{props.DCAP_V2_TEST_REGISTRY_ID='x'.repeat(30)},
+  props=>{props.DCAP_V2_ACCEPTANCE_MODE=''},
+  props=>{props.DCAP_V2_REGISTRY_ID=props.DCAP_V2_REAL_REGISTRY_ID}
+ ]){
+  const f=fixture();change(f.props);
+  assert.throws(()=>f.context.testDisposableWriterCommitAndRetry());
+  assert.equal(f.writes.length,0);
+ }
 });
