@@ -29,7 +29,7 @@ export function classifyCommander(eventId,eventDate,baseRules,versions=[]){
  const rules=baseRules.filter(r=>r.roleId==='commander'&&positive(r.points)&&r.eventId===eventId);
  for(const v of versions){
   if(v.roleId==='commander'&&v.eventId===eventId&&v.effectiveFrom<=eventDate&&positive(v.points)){
-   if(!rules.some(r=>r.id===v.ruleId))rules.push({id:v.ruleId,...v});
+   if(!rules.some(r=>r.id===v.ruleId))rules.push({...v,id:v.ruleId});
   }
  }
  for(const rule of rules){
