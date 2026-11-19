@@ -1,0 +1,28 @@
+name: DCAP v2 owner-governed registries (offline, no deployment)
+on:
+  push:
+    branches:
+      - feat/points-v2-owner-registry-offline-20261119
+permissions:
+  contents: read
+concurrency:
+  group: owner-registry-qa-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  offline-tests:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Assert no live endpoint and frozen historical selector
+        run: |
+          node --input-type=module -e "import{readFileSync}from'node:fs';import assert from'node:assert/strict';const s=JSON.parse(readFileSync('points/data/v2/selection.json'));const c=readFileSync('points/v2/live-config.mjs','utf8');assert.equal(s.revision,'r000');assert(c.includes('LIVE_FEED_ENABLED = false'));assert(c.includes(\"LIVE_FEED_URL = ''\"))"
+      - name: Run all Node and dynamic owner-registry tests
+        run: npm test
+      - name: Run ESM regression tests
+        run: node --test tests/*.test.mjs
