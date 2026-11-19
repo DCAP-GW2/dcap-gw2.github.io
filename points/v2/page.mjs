@@ -1,14 +1,14 @@
 /** Production-shaped seven-view client. Never rescoring; only verified public awards. */
-import {loadV2} from './continuing-loader.mjs';
+import {loadV2} from './live-loader.mjs';
 import {PATHS} from './config.mjs';
 const el=(tag,content='',cls='')=>{const x=document.createElement(tag);if(content!==null)x.textContent=String(content);if(cls)x.className=cls;return x};
 const fmt=x=>new Intl.NumberFormat('en-NZ').format(x);
-const label=(doc)=>doc.continuing?`Published contributions through ${doc.continuing.throughDate} (NZ date). Cycle 0: ${doc.season.displayLabel}. Updated on publication, not live data.`:`Historical snapshot — data through ${new Date(doc.source.asOf).toLocaleString('en-NZ',{timeZone:'Pacific/Auckland',dateStyle:'medium',timeStyle:'short'})} (Auckland). Cycle 0: ${doc.season.displayLabel}. Not live data.`;
+const label=(doc)=>doc.continuing?`Approved contributions through ${doc.continuing.throughDate} (NZ date). Cycle 0: ${doc.season.displayLabel}. Refreshed when the page is opened, not pushed live.`:`Historical snapshot — data through ${new Date(doc.source.asOf).toLocaleString('en-NZ',{timeZone:'Pacific/Auckland',dateStyle:'medium',timeStyle:'short'})} (Auckland). Cycle 0: ${doc.season.displayLabel}. Not live data.`;
 const paths=[['Overview','/points/'],['Leaderboard','/points/leaderboard/'],['Members','/points/members/'],['Statistics','/points/statistics/'],['How Points Work','/points/how-points-work/'],['Rewards','/points/rewards/']];
 const url=(path,id,privatePreview)=>{const u=new URL(path,location.origin);if(privatePreview)u.searchParams.set('dcapV2Review','private');if(id)u.searchParams.set('member',id);return u.href};
 const link=(name,path,id,privatePreview)=>{const x=el('a',name);x.href=url(path,id,privatePreview);return x};
 function table(columns,records){const wrap=el('div',null,'dcap-v2-scroll');wrap.tabIndex=0;wrap.setAttribute('role','region');wrap.setAttribute('aria-label',columns.join(', '));const t=el('table',null,'dcap-v2-table');const thead=el('thead'),hr=el('tr');for(const c of columns){const th=el('th',c);th.scope='col';hr.append(th)}thead.append(hr);t.append(thead);const body=el('tbody');for(const cells of records){const tr=el('tr');for(let i=0;i<cells.length;i++){const td=el(i===0?'th':'td');if(i===0)td.scope='row';const value=cells[i];if(value instanceof Node)td.append(value);else td.textContent=String(value);tr.append(td)}body.append(tr)}t.append(body);wrap.append(t);return wrap}
-const intro=(root,title,doc,result)=>{root.append(el('h1',title));root.append(el('p',label(doc),'dcap-v2-asof'));if(result.state==='last-available')root.append(el('p','Last available verified data — the current snapshot could not be retrieved.','dcap-v2-warning'));root.append(el('p',`Publication revision: ${result.revision} · Rewards: DISABLED`,'dcap-v2-detail'))};
+const intro=(root,title,doc,result)=>{root.append(el('h1',title));root.append(el('p',label(doc),'dcap-v2-asof'));if(result.state==='last-available')root.append(el('p','Last available validated data — the current feed could not be retrieved.','dcap-v2-warning'));root.append(el('p',`Data source: ${doc.continuing?'Approved public points feed':'Historical backup'} · Rewards: DISABLED`,'dcap-v2-detail'))};
 function view(root,name,doc,result,privatePreview){
  const members=doc.members,awards=doc.awards;
  if(name==='overview'){
