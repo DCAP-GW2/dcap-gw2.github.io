@@ -29,6 +29,7 @@ const ownCheck_=(v,k)=>{if(!v)ownFail_(k)};
 const ownDate_=s=>typeof s==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(s)&&
  !Number.isNaN(Date.parse(s+'T00:00:00Z'))&&new Date(s+'T00:00:00Z').toISOString().slice(0,10)===s;
 const ownId_=s=>typeof s==='string'&&/^[a-z0-9][a-z0-9-]{1,90}$/.test(s);
+const ownRuleId_=s=>typeof s==='string'&&/^[A-Za-z0-9][A-Za-z0-9-]{1,90}$/.test(s);
 const ownPositive_=n=>Number.isSafeInteger(n)&&n>0;
 const ownDecision_=s=>typeof s==='string'&&/^[A-Za-z0-9_-]{6,90}$/.test(s);
 const ownRuleMatch_=(r,award)=>r.roleId===award.roleId&&(r.eventId===award.eventId||r.eventId==='all-events');
@@ -37,8 +38,8 @@ function ownReadRows_(values,kind){
  ownCheck_(Array.isArray(values)&&values.length&&JSON.stringify(values[0])===JSON.stringify(headers),'HEADERS_'+kind);
  const rows=values.slice(1);
  ownCheck_(rows.length<=10000,'ROWS_'+kind);
- for(const row of rows)ownCheck_(Array.isArray(row)&&row.length===headers.length,'ROW_LENGTH_'+kind);
- return rows.map(row=>Object.fromEntries(headers.map((key,index)=>[key,row[index]])));
+ for(const row of rows)ownCheck_(Array.isArray(row)&&row.length>0&&row.length<=headers.length,'ROW_LENGTH_'+kind);
+ return rows.map(row=>Object.fromEntries(headers.map((key,index)=>[key,row[index]??''])));
 }
 function ownReadPublicIds_(raw){
  const arr=JSON.parse(raw||'null');
@@ -72,7 +73,7 @@ function buildOwnerPublicFeed_(raw,originalPublicIds){
 
  const members=[],memberIds=new Set(baselineIds),memberDates=new Map();
  for(const m of registeredMembers){
-  ownCheck_(ownId_(m.memberId)&&typeof m.displayName==='string'&&m.displayName.trim().length>0&&m.displayName.length<=160&&
+  ownCheck_(/^m-[a-f0-9]{16}$/.test(m.memberId)&&typeof m.displayName==='string'&&m.displayName.trim().length>0&&m.displayName.length<=160&&
    ownDate_(m.approvedFrom)&&m.status==='OWNER_FINAL'&&ownDecision_(m.ownerDecisionRef)&&
    !memberDates.has(m.memberId),'MEMBER_REGISTRY');
   members.push({id:m.memberId,displayName:m.displayName,approvedFrom:m.approvedFrom});
@@ -91,7 +92,7 @@ function buildOwnerPublicFeed_(raw,originalPublicIds){
  rules.set(OWN_DBS_.ruleId,OWN_DBS_);
  for(const v of registeredRules){
   ownCheck_(ownId_(v.ruleVersionId)&&!versionIds.has(v.ruleVersionId)&&
-   ownId_(v.ruleId)&&ownId_(v.eventId)&&existingEvents.has(v.eventId)&&
+   ownRuleId_(v.ruleId)&&ownId_(v.eventId)&&(existingEvents.has(v.eventId)||v.eventId==='all-events')&&
    ownId_(v.roleId)&&v.roleId!=='other-commander'&&
    ownPositive_(v.points)&&ownDate_(v.effectiveFrom)&&v.effectiveFrom>=OWN_START_&&
    v.status==='OWNER_FINAL'&&ownDecision_(v.ownerDecisionRef),'RULE_REGISTRY');
@@ -119,7 +120,7 @@ function buildOwnerPublicFeed_(raw,originalPublicIds){
   if(a.provenanceType==='OWNER_MANUAL_OTHER_COMMANDER'){
    ownCheck_(a.roleId==='other-commander'&&a.ruleId===null&&ownOtherCommander_(a.eventId,a.eventDate,OWN_RULES_,versions),'MANUAL_UNAPPROVED');
   }else{
-   ownCheck_(a.provenanceType==='APPROVED_RULE'&&ownId_(a.ruleId)&&rules.has(a.ruleId),'RULE_ID');
+   ownCheck_(a.provenanceType==='APPROVED_RULE'&&ownRuleId_(a.ruleId)&&rules.has(a.ruleId),'RULE_ID');
    const r=ownCurrentRule_(a.ruleId,a.eventDate,OWN_RULES_,versions);
    ownCheck_(r&&ownRuleMatch_(r,a)&&a.points===r.points,'RULE_POINT_MISMATCH');
   }
@@ -147,7 +148,7 @@ function buildOwnerPublicFeed_(raw,originalPublicIds){
   const manual=f.awardType==='OWNER_MANUAL_OTHER_COMMANDER';
   ownCheck_(manual?(f.roleId==='other-commander'&&(f.ruleId===''||f.ruleId===null)&&
    (f.ruleVersionId===''||f.ruleVersionId===null)):
-   (ownId_(f.ruleId)&&(f.ruleVersionId===''||f.ruleVersionId===null||versionIds.has(f.ruleVersionId))),'AWARD_RULE_REF');
+   (ownRuleId_(f.ruleId)&&(f.ruleVersionId===''||f.ruleVersionId===null||versionIds.has(f.ruleVersionId))),'AWARD_RULE_REF');
   addAward({id:'a-c-'+f.candidateKey,memberId:f.memberId,eventDate:f.eventDate,eventId:f.eventId,
    roleId:f.roleId,ruleId:manual?null:f.ruleId,points:f.points,cycleId:0,
    provenanceType:f.awardType},f.instanceId);
