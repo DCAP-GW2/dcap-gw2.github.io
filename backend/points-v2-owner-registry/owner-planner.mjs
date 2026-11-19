@@ -5,6 +5,7 @@
  */
 import {classifyCommander,OTHER_COMMANDER} from '../points/v2/owner-feed.mjs';
 const id=x=>typeof x==='string'&&/^[a-z0-9][a-z0-9-]{1,90}$/.test(x);
+const ruleId=x=>typeof x==='string'&&/^[A-Za-z0-9][A-Za-z0-9-]{1,90}$/.test(x);
 const date=x=>typeof x==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(x)&&
  !Number.isNaN(Date.parse(x+'T00:00:00Z'))&&new Date(x+'T00:00:00Z').toISOString().slice(0,10)===x;
 const positive=n=>Number.isSafeInteger(n)&&n>0;
@@ -56,7 +57,7 @@ export function planContribution(input,{baselineRules,ruleVersions=[]}){
   awardType:'APPROVED_RULE',ownerDecisionRef:input.ownerDecisionRef};
 }
 export function planRuleChange(change,{baselineRules,existingVersions=[]}){
- if(!change||!id(change.ruleId)||!date(change.effectiveFrom)||!positive(change.points))err('RULE_FIELDS');
+ if(!change||!ruleId(change.ruleId)||!date(change.effectiveFrom)||!positive(change.points))err('RULE_FIELDS');
  if(!change.ownerFinal||!id(change.ownerDecisionRef))return {state:'PENDING_OWNER_FINAL'};
  const prior=baselineRules.find(x=>x.id===change.ruleId);
  if(prior?.roleId==='other-commander'||change.roleId==='other-commander')err('NO_OTHER_COMMANDER_DEFAULT');
