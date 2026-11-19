@@ -1,0 +1,25 @@
+name: DCAP v2 simple Sheets workflow — offline tests only
+on:
+  push:
+    branches:
+      - feat/points-v2-simple-sheets-workflow-20261120
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Confirm historical selector remains r000
+        run: |
+          node --input-type=module -e "import{readFileSync}from'node:fs';import assert from'node:assert/strict';const s=JSON.parse(readFileSync('points/data/v2/selection.json'));const c=readFileSync('points/v2/live-config.mjs','utf8');assert.equal(s.revision,'r000');assert(c.includes('LIVE_FEED_ENABLED = false'));"
+      - name: Run all Node tests including simplified award planner
+        run: npm test
+      - name: Additional ESM tests
+        run: node --test tests/*.test.mjs
