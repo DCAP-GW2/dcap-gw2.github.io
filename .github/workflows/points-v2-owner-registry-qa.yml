@@ -26,3 +26,22 @@ jobs:
         run: npm test
       - name: Run ESM regression tests
         run: node --test tests/*.test.mjs
+      - name: Install mocked-browser test dependencies
+        run: |
+          npm install --no-save --ignore-scripts playwright @axe-core/playwright
+          npx playwright install --with-deps chromium
+      - name: Start private localhost static server
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/dcap-owner-test.log 2>&1 &
+          sleep 2
+          curl --fail --silent --show-error http://127.0.0.1:8765/points/data/v2/selection.json > /dev/null
+      - name: Run owner registries and Other Commander Chromium acceptance
+        run: node tests/points-v2-owner-browser.mjs
+      - name: Retain browser report; no Pages deployment
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dcap-owner-registry-${{ github.run_number }}
+          path: test-results/points-v2-owner-browser.json
+          if-no-files-found: ignore
+          retention-days: 7
