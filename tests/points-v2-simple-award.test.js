@@ -89,3 +89,11 @@ test('strict headers detect accidental sheet structure drift',()=>{
  assert.deepEqual(parseSheetRows([SCHEMA.members,['m-000000000000cafe','One','2026-11-20','OWNER_FINAL','owner-final']], 'members')[0].displayName,'One');
  assert.throws(()=>parseSheetRows([['other','columns']], 'members'),/HEADER_MISMATCH/);
 });
+
+test('previously owner-approved DBS Commander remains 2 points, not Other Commander',()=>{
+ const p=plan(final({eventId:'dbs',roleId:'commander'}));
+ assert.equal(p.state,'READY_TO_APPEND');
+ assert.equal(p.points,2);
+ assert.equal(p.ruleId,'N5E-DBS-COMMANDER-2');
+ assert.equal(p.values[8],'APPROVED_RULE');
+});
