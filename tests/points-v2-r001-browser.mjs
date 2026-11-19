@@ -8,6 +8,7 @@ const PARAM='dcapV2Review=private';
 const CACHE='dcap.points.public.v2.production.1.continuing';
 const HIST_SHA='2059ca41cdfda3577de6a77f8ecc5fe6ad25cd715777ac71c81da70a7f162c73';
 const selection=JSON.parse(readFileSync(new URL('../points/data/v2/selection.json',import.meta.url),'utf8'));
+const originalV1Points=JSON.parse(readFileSync(new URL('../points/data/v2/releases/r000.json',import.meta.url),'utf8')).population.originalPoints;
 const cases=[],browser=await chromium.launch({headless:true,args:['--no-sandbox']});
 const failCase=(name,error)=>{cases.push({name,status:'FAIL',error:String(error?.stack||error)});console.error('FAIL',name,error)};
 async function run(name,fn){
@@ -63,7 +64,7 @@ await run('overview published totals, date-only label, v1 preservation and disab
  try{
   await current(e.page);
   const text=await e.page.locator('main').innerText();
-  for(const x of ['1,886 v2 points','611 approved awards','37 public profiles','1,694 original v1 historical points preserved','2026-10-26','Rewards: DISABLED'])
+  for(const x of ['1,886 v2 points','611 approved awards','37 public profiles',new Intl.NumberFormat('en-NZ').format(originalV1Points)+' original v1 historical points preserved','2026-10-26','Rewards: DISABLED'])
    assert(text.includes(x),'missing '+x);
   assert(!text.includes('private journal'));
   await unexpectedErrors(e.errors);
