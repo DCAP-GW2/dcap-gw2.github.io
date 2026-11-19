@@ -194,7 +194,11 @@ test('missing current delta falls back to baseline without a cached delta', asyn
 test('missing delta with matching previously verified cache displays last available r001', async () => {
   reset();assert.equal((await loadV2()).revision,'r001');
   routes.delete('/points/data/v2/releases/r001.json');
+  const stale=JSON.parse(storage.get(DELTA_CACHE_KEY));
+  stale.savedAt=Date.now()-120000;
+  storage.set(DELTA_CACHE_KEY,JSON.stringify(stale));
   const x=await loadV2();
+  assert.equal(x.state,'last-available');
   assert.equal(x.revision,'r001');
   assert.equal(x.data.population.candidatePoints,1886);
 });
@@ -221,7 +225,7 @@ test('selector outage allows pinned verified cached r001 but never invented data
 test('tampered cached data cannot be promoted even with a valid selector', async () => {
   reset();assert.equal((await loadV2()).revision,'r001');
   const c=JSON.parse(storage.get(DELTA_CACHE_KEY));
-  c.text=c.text.replace('"points":5','"points":4');
+  c.text+=' '; // Valid JSON with a different SHA-256 digest must fail cache validation.
   storage.set(DELTA_CACHE_KEY,JSON.stringify(c));
   routes.delete('/points/data/v2/releases/r001.json');
   const x=await loadV2();
