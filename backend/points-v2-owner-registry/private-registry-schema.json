@@ -1,0 +1,70 @@
+{
+  "title": "DCAP Points v2 — Owner Registry (PRIVATE, UNINSTALLED)",
+  "releaseState": "OFFLINE_SCHEMA_ONLY",
+  "sourceJournal": "Existing N5 Real Award Journal, read-only and immutable",
+  "ownerPolicy": "OWNER_FINAL: user's explicit final chat instruction replaces future committee approval",
+  "tabs": [
+    {
+      "name": "N5 Public Members",
+      "headers": [
+        "memberId",
+        "displayName",
+        "approvedFrom",
+        "status",
+        "ownerDecisionRef"
+      ],
+      "note": "Append owner-final new identities or owner-approved display-name changes. Existing 37 historical public IDs stay in frozen r000; a memberId must remain stable."
+    },
+    {
+      "name": "N5 Events",
+      "headers": [
+        "eventId",
+        "eventLabel",
+        "status",
+        "ownerDecisionRef"
+      ],
+      "note": "Register additional public event IDs, including commander events not in existing rules."
+    },
+    {
+      "name": "N5 Rule Versions",
+      "headers": [
+        "ruleVersionId",
+        "ruleId",
+        "eventId",
+        "roleId",
+        "points",
+        "effectiveFrom",
+        "status",
+        "ownerDecisionRef"
+      ],
+      "note": "Append prospective point changes. Do not overwrite previous awards. Never set a default other-commander rule."
+    },
+    {
+      "name": "N5 Owner Awards",
+      "headers": [
+        "candidateKey",
+        "eventDate",
+        "eventId",
+        "instanceId",
+        "memberId",
+        "roleId",
+        "ruleId",
+        "points",
+        "awardType",
+        "ownerDecisionRef",
+        "status",
+        "ruleVersionId",
+        "approvedAt"
+      ],
+      "note": "Append future owner-final awards; for an Other Commander use roleId=other-commander, awardType=OWNER_MANUAL_OTHER_COMMANDER and leave ruleId and ruleVersionId blank. Pending manual points are PENDING_OWNER_POINTS and excluded from publication."
+    }
+  ],
+  "statusValues": [
+    "OWNER_FINAL",
+    "PENDING_OWNER_POINTS"
+  ],
+  "otherCommander": "For Commander contribution without applicable event-specific commander rule, always ask the owner for an individual positive integer. Do not reuse any previous Other Commander amount.",
+  "cumulativeData": "Frozen r000 plus 60 existing approved N5 journal rows plus newer owner-final awards in the separate registry workbook.",
+  "privileges": "Read-only public API connects to both private Sheets; a separate authenticated owner-only writer is still required to submit changes.",
+  "noAutomaticDeployment": true
+}
