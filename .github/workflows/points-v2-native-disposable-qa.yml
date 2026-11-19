@@ -1,0 +1,25 @@
+name: DCAP v2 native disposable writer acceptance (offline only)
+on:
+  push:
+    branches:
+      - test/points-v2-native-disposable-writer-20261120
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check immutable historical selection and disabled endpoint
+        run: |
+          node --input-type=module -e "import{readFileSync}from'node:fs';import assert from'node:assert/strict';const sel=JSON.parse(readFileSync('points/data/v2/selection.json'));const cfg=readFileSync('points/v2/live-config.mjs','utf8');assert.equal(sel.revision,'r000');assert(cfg.includes('LIVE_FEED_ENABLED = false'));"
+      - name: Test native disposable writer probe with mocked Apps Script services
+        run: npm test
+      - name: Run additional module checks
+        run: node --test tests/*.test.mjs
