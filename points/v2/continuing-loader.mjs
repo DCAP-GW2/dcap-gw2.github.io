@@ -3,6 +3,9 @@ import {loadV2 as loadHistorical,hashBytes} from './loader.mjs';
 import {combineContinuing,validateContinuing} from './continuing.mjs';
 import {CONTRACT,CACHE_KEY,MAX_BYTES,HISTORICAL_REVISION,HISTORICAL_SHA256,HISTORICAL_PATH,CACHE_MS} from './config.mjs';
 const CACHE_DELTA_KEY=CACHE_KEY+'.continuing';
+// Only a release digest embedded in the reviewed client can authenticate an offline cache.
+// Add the digest of each newly approved public release here at publication time.
+const TRUSTED_OFFLINE_SHA256=Object.freeze({r001:'c7f3478b530e589807a10aeb2501b8543036d7ed8227f61cbbe4f4549ce060f4'});
 const HEX=/^[0-9a-f]{64}$/;
 const RELEASE=/^r[0-9]{3,8}$/;
 const utf8=new TextDecoder('utf-8',{fatal:true});
@@ -17,6 +20,16 @@ async function getBytes(path){
   if(!response.ok)throw Error('HTTP_'+response.status);
   const len=response.headers.get('content-length');
   if(len&&Number(len)>MAX_BYTES)throw Error('OVERSIZE_HEADER');
+  if(response.body?.getReader){
+   const reader=response.body.getReader(),parts=[];let total=0;
+   for(;;){const {done,value}=await reader.read();if(done)break;
+    total+=value.byteLength;if(total>MAX_BYTES){await reader.cancel();throw Error('OVERSIZE_DATA');}
+    parts.push(value);
+   }
+   const bytes=new Uint8Array(total);let offset=0;
+   for(const part of parts){bytes.set(part,offset);offset+=part.byteLength;}
+   return bytes;
+  }
   const bytes=new Uint8Array(await response.arrayBuffer());
   if(bytes.length>MAX_BYTES)throw Error('OVERSIZE_DATA');
   return bytes;
@@ -33,8 +46,11 @@ export function verifyContinuingSelection(s){
 }
 async function cachedDelta(base,expected=null){
  const c=readCache();
- if(!c||typeof c.text!=='string'||typeof c.revision!=='string'||!RELEASE.test(c.revision)||!HEX.test(c.sha256)||c.text.length>MAX_BYTES)return null;
- if(expected&&(c.revision!==expected.revision||c.sha256!==expected.sha256))return null;
+ if(!c||typeof c.text!=='string'||typeof c.revision!=='string'||!RELEASE.test(c.revision)||!HEX.test(c.sha256)||c.text.length>MAX_BYTES||!Number.isFinite(c.savedAt)||c.savedAt>Date.now()+1000)return null;
+ const trusted=expected
+  ? c.revision===expected.revision&&c.sha256===expected.sha256
+  : TRUSTED_OFFLINE_SHA256[c.revision]===c.sha256;
+ if(!trusted)return null;
  try{
   const text=await verifiedText(new TextEncoder().encode(c.text),c.sha256),delta=JSON.parse(text);
   if(delta.revision!==c.revision)throw Error('CACHE_REVISION');
@@ -46,15 +62,21 @@ export async function loadV2(){
  const historical=await loadHistorical();
  if(!historical.data)return historical;
  const baseline=historical.data;
- const cache=await cachedDelta(baseline);
  let selection=null;
  try{selection=verifyContinuingSelection(JSON.parse(utf8.decode(await getBytes('/points/data/v2/selection.json'))))}catch{}
- if(!selection||selection.revision===HISTORICAL_REVISION){
-  if(cache&&rank(cache.revision)>rank(HISTORICAL_REVISION))return {state:'last-available',source:'browser-last-available',revision:cache.revision,data:cache.data};
-  return {state:selection?'primary':'last-available',source:historical.source,revision:HISTORICAL_REVISION,data:baseline};
+ // The network selector is authoritative for controlled rollback. With an outage,
+ // accept only an offline-cache digest pinned in this reviewed client.
+ const cache=selection?.revision===HISTORICAL_REVISION?null:await cachedDelta(baseline,selection);
+ if(selection?.revision===HISTORICAL_REVISION){
+  return {state:historical.state,source:historical.source,revision:HISTORICAL_REVISION,data:baseline};
  }
- if(cache&&rank(cache.revision)>rank(selection.revision))return {state:'last-available',source:'browser-last-available',revision:cache.revision,data:cache.data};
- if(cache&&cache.revision===selection.revision&&readCache()?.sha256===selection.sha256&&Number.isFinite(cache.savedAt)&&Date.now()-cache.savedAt<CACHE_MS)return {state:'current-cache',source:'browser-cache',revision:cache.revision,data:cache.data};
+ if(!selection){
+  if(cache)return {state:'last-available',source:'browser-last-available',revision:cache.revision,data:cache.data};
+  return {state:'last-available',source:historical.source,revision:HISTORICAL_REVISION,data:baseline};
+ }
+ if(cache&&cache.revision===selection.revision&&Date.now()-cache.savedAt<CACHE_MS){
+  return {state:'current-cache',source:'browser-cache',revision:cache.revision,data:cache.data};
+ }
  try{
   const text=await verifiedText(await getBytes(selection.path),selection.sha256);
   const delta=JSON.parse(text);
