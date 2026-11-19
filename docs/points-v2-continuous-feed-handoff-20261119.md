@@ -40,6 +40,7 @@ The previous `r001.json` candidate is retained only as test input and audit/refe
 - Node tests cover exact baseline and 60 approved awards, 125 continuing awards without `r002`, 37 profiles, historical v1 preservation, exception/TBD rules and malformed/private rows.
 - The read-only backend is exercised offline with fictional journal records using Node's VM, including >60 accepted entries and generic-error fail-closed responses.
 - Browser QA mocks the new CORS-enabled endpoint *only inside localhost*, exercising all six main views, member-profile navigation, cache expiry, >60 updates, outages, invalid data, fallback and accessibility. **No real endpoint is contacted.**
+- **Executed:** 35/35 repository Node, 3/3 additional Node, and 20/20 Chromium browser scenarios PASSED (58/58 total; no test failures). GitHub Actions run: https://github.com/DCAP-GW2/dcap-gw2.github.io/actions/runs/44476675980. Browser tests include 30 responsive page/viewport combinations and six axe serious/critical accessibility scans with zero such violations.
 - Reference workflow: `.github/workflows/points-v2-live-feed-qa.yml` has `contents: read` and no deployment step.
 
 ## Remaining one-time release gates — NOT AUTHORISED
