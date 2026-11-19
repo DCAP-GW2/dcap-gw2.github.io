@@ -84,16 +84,16 @@ test('owner identity, mode and target title failures produce no queries to priva
  }
 });
 test('scripts.run builder exposes only a fixed read-only function with no external args',()=>{
- const q=buildReadOnlyProbeRequest({scriptId:ID,mode:'FICTIONAL_READ_ONLY'});
+ const q=buildReadOnlyProbeRequest({deploymentId:ID,mode:'FICTIONAL_READ_ONLY'});
  assert.equal(q.method,'POST');
  assert.equal(q.body.function,'probeBridgeReadOnly');
  assert.deepEqual(q.body.parameters,[]);
  assert.equal(q.body.devMode,false);
  assert(q.expectedScopes.every(x=>x!=='https://www.googleapis.com/auth/spreadsheets'));
  for(const altered of [
-  {scriptId:ID,mode:'LIVE'},
-  {scriptId:ID,mode:'FICTIONAL_READ_ONLY',function:'ownerApplyApprovedBatch_'},
-  {scriptId:'wrong',mode:'FICTIONAL_READ_ONLY'}
+  {deploymentId:ID,mode:'LIVE'},
+  {deploymentId:ID,mode:'FICTIONAL_READ_ONLY',function:'ownerApplyApprovedBatch_'},
+  {deploymentId:'wrong',mode:'FICTIONAL_READ_ONLY'}
  ])assert.throws(()=>buildReadOnlyProbeRequest(altered),/DCAP_BRIDGE_/);
 });
 test('mock Google Execution API envelope passes only the exact aggregate schema',()=>{
@@ -111,7 +111,7 @@ test('mock Google Execution API envelope passes only the exact aggregate schema'
 });
 test('mock transport injects no credentials and never calls a live external script',async()=>{
  let calls=0;
- const result=await executeDryProbe({scriptId:ID,mode:'FICTIONAL_READ_ONLY',transport:async req=>{
+ const result=await executeDryProbe({deploymentId:ID,mode:'FICTIONAL_READ_ONLY',transport:async req=>{
   calls++;
   assert.equal(req.body.function,'probeBridgeReadOnly');
   assert.equal(req.path,'/v1/scripts/'+ID+':run');
