@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {mkdirSync,writeFileSync,readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
 import {chromium} from 'playwright';
 import AxeBuilder from '@axe-core/playwright';
 
@@ -7,7 +8,10 @@ const ROOT='http://127.0.0.1:8765';
 const PARAM='dcapV2Review=private';
 const CACHE='dcap.points.public.v2.production.1.continuing';
 const HIST_SHA='2059ca41cdfda3577de6a77f8ecc5fe6ad25cd715777ac71c81da70a7f162c73';
-const selection=JSON.parse(readFileSync(new URL('../points/data/v2/selection.json',import.meta.url),'utf8'));
+const stagedSelection=JSON.parse(readFileSync(new URL('../points/data/v2/selection.json',import.meta.url),'utf8'));
+const deltaSha=createHash('sha256').update(readFileSync(new URL('../points/data/v2/releases/r001.json',import.meta.url))).digest('hex');
+const selection={...stagedSelection,revision:'r001',path:'/points/data/v2/releases/r001.json',sha256:deltaSha};
+assert.equal(stagedSelection.revision,'r000','staging must not activate r001 in its on-disk selection');
 const originalV1Points=JSON.parse(readFileSync(new URL('../points/data/v2/releases/r000.json',import.meta.url),'utf8')).population.originalPoints;
 const cases=[],browser=await chromium.launch({headless:true,args:['--no-sandbox']});
 const failCase=(name,error)=>{cases.push({name,status:'FAIL',error:String(error?.stack||error)});console.error('FAIL',name,error)};
@@ -15,8 +19,10 @@ async function run(name,fn){
  try{const details=await fn();cases.push({name,status:'PASS',details:details||null});console.log('PASS',name)}
  catch(e){failCase(name,e)}
 }
-async function env(width=1280){
+async function env(width=1280, simulateR001=true){
  const context=await browser.newContext({viewport:{width,height:900},reducedMotion:'reduce'});
+ // Simulate future selection solely in the browser; on-disk stage stays pinned to r000.
+ if(simulateR001)await context.route('**/points/data/v2/selection.json',r=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify(selection)}));
  const page=await context.newPage();
  const errors=[];
  page.on('pageerror',e=>errors.push(String(e)));
@@ -41,6 +47,15 @@ const views=[
  ['/points/how-points-work/','how'],
  ['/points/rewards/','rewards']
 ];
+await run('staged static website defaults to r000 without selector override',async()=>{
+ const e=await env(1280,false);
+ try{
+  const state=await current(e.page,'/points/','r000');
+  assert.equal(state.revision,'r000');
+  assert.match(await e.page.locator('main').innerText(),/1,694 v2 points/);
+  await unexpectedErrors(e.errors);
+ }finally{await e.close()}
+});
 for(const width of [320,390,768,1024,1440]){
  await run('responsive six views at '+width+'px',async()=>{
   const e=await env(width);
