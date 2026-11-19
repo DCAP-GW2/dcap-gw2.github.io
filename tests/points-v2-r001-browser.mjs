@@ -24,7 +24,7 @@ async function env(width=1280){
 function route(path='/points/'){return ROOT+path+(path.includes('?')?'&':'?')+PARAM;}
 async function current(page,path='/points/',revision='r001'){
  await page.goto(route(path),{waitUntil:'load'});
- await page.waitForFunction(rev=>window.DCAP_V2_STATUS?.revision===rev,{timeout:20000},revision);
+ await page.waitForFunction(rev=>window.DCAP_V2_STATUS?.revision===rev,revision,{timeout:20000});
  const state=await page.evaluate(()=>window.DCAP_V2_STATUS);
  assert.equal(state.revision,revision);
  assert.equal(state.rewards,false);
