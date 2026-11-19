@@ -147,8 +147,14 @@ export function combineOwnerFeed(baseline,feed){
   }
   return [...m].sort((a,b)=>a[0].localeCompare(b[0])).map(([,item])=>item);
  };
+ // A future-approved rule version must NOT appear as today's points prematurely.
+ const todayParts=new Intl.DateTimeFormat('en-GB',{timeZone:'Pacific/Auckland',
+  year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+ const part=type=>todayParts.find(x=>x.type===type)?.value;
+ const todayNZ=part('year')+'-'+part('month')+'-'+part('day');
  const activeRules=baseline.rules.map(r=>({...r}));
- for(const v of feed.ruleVersions){
+ for(const v of [...feed.ruleVersions].sort((a,b)=>a.effectiveFrom.localeCompare(b.effectiveFrom))){
+  if(v.effectiveFrom>todayNZ)continue;
   const match=activeRules.find(r=>r.id===v.ruleId);
   if(match){if(!match.effectiveFrom||match.effectiveFrom<=v.effectiveFrom){
    match.points=v.points;match.effectiveFrom=v.effectiveFrom;match.status='OWNER_APPROVED';}}
