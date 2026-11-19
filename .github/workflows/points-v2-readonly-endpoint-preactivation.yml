@@ -1,0 +1,47 @@
+name: DCAP v2 read-only endpoint preactivation — no deployment
+on:
+  push:
+    branches:
+      - test/points-v2-readonly-endpoint-preactivation-20261120
+permissions:
+  contents: read
+concurrency:
+  group: dcap-v2-readonly-preact-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  acceptance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Confirm immutable r000, blank live endpoint and read-only manifest
+        run: |
+          node --input-type=module -e "import{readFileSync}from'node:fs';import assert from'node:assert/strict';const s=JSON.parse(readFileSync('points/data/v2/selection.json'));const c=readFileSync('points/v2/live-config.mjs','utf8');const m=JSON.parse(readFileSync('backend/points-v2-owner-registry/appsscript.json'));assert.equal(s.revision,'r000');assert(c.includes('LIVE_FEED_ENABLED = false'));assert(c.includes(\"LIVE_FEED_URL = ''\"));assert(m.oauthScopes.includes('https://www.googleapis.com/auth/spreadsheets.readonly'));assert(!m.oauthScopes.includes('https://www.googleapis.com/auth/spreadsheets'));"
+      - name: Read-only source and browser-loader regression
+        run: npm test
+      - name: Additional ESM tests
+        run: node --test tests/*.test.mjs
+      - name: Install browser test dependencies
+        run: |
+          npm install --no-save --ignore-scripts playwright @axe-core/playwright
+          npx playwright install --with-deps chromium
+      - name: Start isolated static preview
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/dcap-v2-readonly-preview.log 2>&1 &
+          sleep 2
+          curl --fail --silent --show-error http://127.0.0.1:8765/points/data/v2/selection.json > /dev/null
+      - name: Browser acceptance of live-read-only mock, dynamic members and last-valid fallback
+        run: node tests/points-v2-owner-browser.mjs
+      - name: Preserve acceptance report only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dcap-v2-readonly-endpoint-preact-${{ github.run_number }}
+          path: test-results/points-v2-owner-browser.json
+          retention-days: 7
+          if-no-files-found: ignore
