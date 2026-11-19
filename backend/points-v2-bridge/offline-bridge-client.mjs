@@ -15,12 +15,12 @@ export const EXPECTED_KEYS=Object.freeze([
 function assert(ok,code){if(!ok)throw Error('DCAP_BRIDGE_'+code)}
 export function buildReadOnlyProbeRequest(options={}){
  const keys=Object.keys(options).sort();
- assert(keys.every(k=>['scriptId','mode'].includes(k))&&keys.includes('scriptId')&&keys.includes('mode'),'REQUEST_FIELDS');
+ assert(keys.every(k=>['deploymentId','mode'].includes(k))&&keys.includes('deploymentId')&&keys.includes('mode'),'REQUEST_FIELDS');
  assert(options.mode===BRIDGE_MODE,'MODE');
- assert(typeof options.scriptId==='string'&&VALID_ID.test(options.scriptId),'SCRIPT_ID');
+ assert(typeof options.deploymentId==='string'&&VALID_ID.test(options.deploymentId),'DEPLOYMENT_ID');
  return Object.freeze({
   method:'POST',
-  path:'/v1/scripts/'+encodeURIComponent(options.scriptId)+':run',
+  path:'/v1/scripts/'+encodeURIComponent(options.deploymentId)+':run',
   body:Object.freeze({function:PROBE_FUNCTION,parameters:[],devMode:false}),
   expectedScopes:Object.freeze([
    'https://www.googleapis.com/auth/spreadsheets.readonly',
@@ -50,9 +50,9 @@ export function interpretScriptsRunResponse(data){
  return validateProbeReceipt(data.response.result);
 }
 /** Explicitly injected mock transport; never uses fetch or credentials here. */
-export async function executeDryProbe({scriptId,mode,transport}){
+export async function executeDryProbe({deploymentId,mode,transport}){
  assert(typeof transport==='function','TRANSPORT');
- const request=buildReadOnlyProbeRequest({scriptId,mode});
+ const request=buildReadOnlyProbeRequest({deploymentId,mode});
  const result=await transport(request);
  return interpretScriptsRunResponse(result);
 }
