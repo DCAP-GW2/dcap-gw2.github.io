@@ -57,7 +57,8 @@ This release branch was copied from the previously browser-tested `r001` integra
 
 - Original candidate integration: 23/23 Node cases and 24/24 Chromium scenarios passed on branch `dcap-v2-continuing-r001-20261119`; GitHub Actions run: https://github.com/DCAP-GW2/dcap-gw2.github.io/actions/runs/44468084301
 - Staged-hold validation workflow (actual r000 selection plus browser-simulated r001): https://github.com/DCAP-GW2/dcap-gw2.github.io/actions/runs/44472158785
-- The staged workflow has **read-only `contents: read` permissions, no deployment stage or backend permissions**, and must be green before any publication approval.
+- Staged-hold workflow **PASSED** on tested code commit `2e62142c800b233dcda9520ca99311b16c29aeb5`: **21/21 repository Node, 3/3 additional Node, 25/25 Chromium scenarios**; total **49/49**, zero failed. Its dedicated case verifies that the actual staged website selects `r000` while a browser-only simulated selector exercises `r001`.
+- The staged workflow has **read-only `contents: read` permissions, no deployment stage or backend permissions**. The later documentation-only commit does not alter the tested website code, selector or release payload.
 - Tests of the isolated localhost HTML do not independently prove the final GitHub Pages live HTTPS site or the source settings.
 
 ## 5. Two separately authorised publication steps
