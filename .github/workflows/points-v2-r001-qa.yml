@@ -1,0 +1,57 @@
+name: DCAP r001 isolated QA (no deployment)
+
+on:
+  push:
+    branches:
+      - dcap-v2-continuing-r001-20261119
+    paths:
+      - "points/v2/**"
+      - "points/data/v2/**"
+      - "tests/**"
+      - ".github/workflows/points-v2-r001-qa.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dcap-r001-qa-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  node-and-browser:
+    if: github.ref == 'refs/heads/dcap-v2-continuing-r001-20261119'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out isolated review branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run repository Node tests
+        run: npm test
+      - name: Run additional mjs Node tests
+        run: node --test tests/*.test.mjs
+      - name: Install headless browser QA dependencies
+        run: |
+          npm install --no-save --ignore-scripts playwright @axe-core/playwright
+          npx playwright install --with-deps chromium
+      - name: Start local static test server
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/dcap-r001-server.log 2>&1 &
+          sleep 2
+          curl --fail --silent --show-error http://127.0.0.1:8765/points/data/v2/selection.json > /dev/null
+      - name: Chromium seven-page, fallback and accessibility acceptance
+        run: node tests/points-v2-r001-browser.mjs
+      - name: Save QA evidence only (no Pages deployment)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dcap-r001-qa-${{ github.run_number }}
+          path: |
+            test-results/r001-browser-report.json
+          if-no-files-found: ignore
+          retention-days: 7
