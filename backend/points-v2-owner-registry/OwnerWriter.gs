@@ -195,3 +195,32 @@ function ownerWriterDryRun_(requests){
   alreadyApplied:plan.alreadyApplied,previewAwardCount:plan.data.awards.length,
   previewAwardPoints:plan.data.awards.reduce((n,a)=>n+a.points,0)};
 }
+
+/**
+ * No-argument editor preflight, suitable for Apps Script Run dropdown.
+ * Verifies owner's effective identity, real journal + separate registry read,
+ * and current public projection without writing or exposing private metadata.
+ */
+function testOwnerWriterReadOnlyPreflight(){
+ const cfg=ownerWriteResolve_(PropertiesService.getScriptProperties());
+ const read=(sheetId,range)=>(Sheets.Spreadsheets.Values.get(sheetId,range,
+  {valueRenderOption:'UNFORMATTED_VALUE'}).values||[]);
+ const raw={legacy:read(cfg.journalId,OWN_SHEETS_.legacy),
+  ...ownerWriteRegistryRows_(cfg.registryId)};
+ const feed=buildOwnerPublicFeed_(raw,cfg.allowed);
+ const receipt={
+  stage:'DCAP_V2_OWNER_WRITER_READ_ONLY_PREFLIGHT',
+  state:'PASS',
+  continuingAwards:feed.awards.length,
+  continuingPoints:feed.awards.reduce((sum,a)=>sum+a.points,0),
+  newPublicMembers:feed.members.filter(m=>!cfg.allowed.has(m.id)).length,
+  manuallyAssignedCommanderAwards:feed.awards.filter(a=>a.provenanceType===
+   'OWNER_MANUAL_OTHER_COMMANDER').length,
+  approvedRegistryRows:raw.members.length+raw.events.length+raw.rules.length+
+   raw.future.length-4,
+  rewardsEnabled:feed.rewardsEnabled,
+  sheetWritesPerformed:0
+ };
+ console.log(JSON.stringify(receipt));
+ return receipt;
+}
