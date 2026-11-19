@@ -71,7 +71,11 @@ export function planSimpleAward({baseline,registry,journal,decision}){
  const ruleSet=effectiveRules(baseline.rules,versions,d.eventDate);
  const newRules=versions.filter(v=>!baseline.rules.some(r=>r.id===v.ruleId)&&v.effectiveFrom<=d.eventDate)
   .map(v=>({id:v.ruleId,eventId:v.eventId,roleId:v.roleId,points:v.points}));
- const rules=ruleSet.concat(newRules);
+ // Preserve the pre-existing owner-approved DBS Commander 2-point amendment.
+ // It is an approved event-specific rule, not a discretionary Other Commander.
+ const dbsCommander={id:'N5E-DBS-COMMANDER-2',eventId:'dbs',roleId:'commander',
+  points:2,nonStackingGroup:null};
+ const rules=ruleSet.concat(dbsCommander,newRules);
  const commander=rules.filter(r=>r.eventId===d.eventId&&r.roleId==='commander');
  const manual=(d.roleId==='commander'||d.roleId==='other-commander')&&commander.length===0;
  let role=manual?'other-commander':d.roleId;
