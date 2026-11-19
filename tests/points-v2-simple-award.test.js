@@ -71,7 +71,7 @@ test('existing journal duplicate is checked without modifying the journal',()=>{
 test('BFLA commander/lane stacking is flagged even when roles differ',()=>{
  const r=fixture();
  r.future.push({...final({eventId:'bfla',roleId:'commander'}),ruleId:'V2-08',status:'OWNER_FINAL'});
- const p=plan(final({eventId:'bfla',roleId:'sub-lane-lead'}),r);
+ const p=plan(final({eventId:'bfla',roleId:'sub-lane-lead',candidateKey:'0000000000000000000000fb'}),r);
  assert.equal(p.state,'POSSIBLE_DUPLICATE');
  assert.equal(p.reason,'NON_STACKING_ROLES');
 });
