@@ -13,7 +13,10 @@ const deltaBytes = read('points/data/v2/releases/r001.json');
 const selectionBytes = read('points/data/v2/selection.json');
 const historical = JSON.parse(historicalBytes.toString('utf8'));
 const delta = JSON.parse(deltaBytes.toString('utf8'));
-const selection = JSON.parse(selectionBytes.toString('utf8'));
+// The staged publishing selector intentionally remains r000. Test r001 through a
+// locally constructed, never-published selection; retain the real hold selector too.
+const stagedSelection = JSON.parse(selectionBytes.toString('utf8'));
+const selection = {...stagedSelection,revision:'r001',path:'/points/data/v2/releases/r001.json',sha256:createHash('sha256').update(deltaBytes).digest('hex')};
 const clone = x => structuredClone(x);
 const sha256 = x => createHash('sha256').update(x).digest('hex');
 const sum = xs => xs.reduce((n,x) => n+x.points,0);
@@ -26,6 +29,13 @@ test('immutable r000 and candidate r001 match their published SHA-256 pins', () 
   assert.equal(selection.lastKnownGood.revision, HISTORICAL_REVISION);
   assert.equal(selection.revision,'r001');
   assert.equal(selection.path,'/points/data/v2/releases/r001.json');
+});
+
+test('staged release selector keeps r000 selected until separate owner cutover', () => {
+  assert.equal(stagedSelection.revision,'r000');
+  assert.equal(stagedSelection.lastKnownGood.revision,'r000');
+  assert.equal(stagedSelection.sha256,HISTORICAL_SHA256);
+  assert.equal(stagedSelection.path,'/points/data/v2/releases/r000.json');
 });
 
 test('both closed contracts validate independently', () => {
@@ -152,7 +162,7 @@ globalThis.fetch=async url=>{
 };
 function reset() {
   storage.clear(); routes.clear();
-  routes.set('/points/data/v2/selection.json',selectionBytes);
+  routes.set('/points/data/v2/selection.json',new TextEncoder().encode(JSON.stringify(selection)));
   routes.set('/points/data/v2/releases/r000.json',historicalBytes);
   routes.set('/points/data/v2/releases/r001.json',deltaBytes);
 }
