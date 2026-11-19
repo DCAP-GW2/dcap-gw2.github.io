@@ -49,7 +49,9 @@ export function validateOwnerFeed(feed,baseline){
   feed.source.startDate==='2026-10-22'&&date(feed.source.throughDate)&&
   feed.source.throughDate>=feed.source.startDate&&feed.source.evidenceType==='OWNER_ATTESTED_DATE_ONLY','SOURCE');
  check(exact(feed.season,['rawCycleId','displayLabel','automaticReset'])&&
-  JSON.stringify(feed.season)===JSON.stringify(baseline.season)&&feed.rewardsEnabled===false,'SEASON');
+  feed.season.rawCycleId===baseline.season.rawCycleId&&
+  feed.season.displayLabel===baseline.season.displayLabel&&feed.season.automaticReset===false&&
+  feed.rewardsEnabled===false,'SEASON');
  check(Array.isArray(feed.members)&&feed.members.length<=10000&&
   Array.isArray(feed.events)&&feed.events.length<=10000&&
   Array.isArray(feed.ruleVersions)&&feed.ruleVersions.length<=10000&&
