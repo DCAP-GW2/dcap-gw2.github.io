@@ -27,6 +27,7 @@ function rows(count=60){
  return out;
 }
 function execute(input,props=null) {
+ const logs=[];
  const context={
   PropertiesService:{getScriptProperties:()=>({getProperty:name=>{
    if(name==='DCAP_V2_JOURNAL_ID')return props?.sheetId??'a'.repeat(30);
@@ -34,10 +35,11 @@ function execute(input,props=null) {
    return null;
   }})},
   Sheets:{Spreadsheets:{Values:{get:(_id,_range,opts)=>{assert.equal(opts.valueRenderOption,'UNFORMATTED_VALUE');return {values:input};}}}},
-  ContentService:{MimeType:{JSON:'application/json'},createTextOutput:s=>({text:s,mime:null,setMimeType(t){this.mime=t;return this;}})}
+  console:{log:x=>logs.push(x)},
+  ContentService:{MimeType:{JSON:'application/json'},createTextOutput:s=>({text:s,mime:null,getContent(){return this.text;},setMimeType(t){this.mime=t;return this;}})}
  };
  vm.createContext(context);vm.runInContext(code,context);
- return context;
+ return {...context,logs};
 }
 test('Apps Script source uses read-only Advanced Sheets with no writer or trigger',()=>{
  assert(!/SpreadsheetApp\.|setValues\(|appendRow\(|setValue\(|doPost\s*\(|ScriptApp\.|createTrigger\(/.test(code));
@@ -106,4 +108,35 @@ test('missing owner approval or public identity allowlist returns generic unavai
  }
  const ctx=execute(rows(),{sheetId:'invalid'});
  assert.equal(ctx.doGet().text,'{"kind":"UNAVAILABLE"}');
+});
+
+
+test('private editor preflight reports only public aggregates, no sensitive source fields',()=>{
+ const ctx=execute(rows());
+ const receipt=JSON.parse(JSON.stringify(ctx.testPrivateReadOnlyFeed()));
+ assert.equal(receipt.stage,'DCAP_V2_ISOLATED_READONLY_PREFLIGHT');
+ assert.equal(receipt.result,'PASS');
+ assert.equal(receipt.approvedAwards,60);
+ assert.equal(receipt.continuingPoints,192);
+ assert.equal(receipt.knownContributors,18);
+ assert.equal(receipt.throughEventDate,'2026-10-26');
+ assert.equal(receipt.rewardsEnabled,false);
+ assert.equal(receipt.continuingReleasesRequired,false);
+ assert.equal(ctx.logs.length,1);
+ assert.deepEqual(JSON.parse(ctx.logs[0]),receipt);
+ assert(!ctx.logs[0].includes('OWNER_EMAIL_PRIVATE'));
+ assert(!ctx.logs[0].includes('DO_NOT_PUBLICISE_PRIVATE_SOURCE'));
+ assert(!ctx.logs[0].includes('m-'));
+});
+test('private editor preflight fails without disclosure if approval/config is invalid',()=>{
+ const data=rows();data[1][16]='PENDING';
+ const ctx=execute(data);
+ assert.throws(()=>ctx.testPrivateReadOnlyFeed(),/PRIVATE_FEED_|PRIVATE_PREFLIGHT_/);
+ assert.equal(ctx.logs.length,0);
+});
+test('37-person allowlist file exactly matches frozen public historical roster',()=>{
+ const allowlist=JSON.parse(read('backend/points-v2-live-feed/public-ids-allowlist.json'));
+ assert.equal(allowlist.length,37);
+ assert.equal(new Set(allowlist).size,37);
+ assert.deepEqual(allowlist,ids);
 });
