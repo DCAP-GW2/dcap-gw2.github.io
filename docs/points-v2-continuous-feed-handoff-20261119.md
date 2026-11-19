@@ -26,6 +26,8 @@ Historical `r000` has 551 v2 awards / 1,694 v2 points; the private journal curre
 
 The previous `r001.json` candidate is retained only as test input and audit/reference evidence in the isolated GitHub branch, not as a required continuing-release mechanism. The installed web API must **read the journal directly** rather than importing the old static `r001.json` into production.
 
+**Release packaging rule:** This offline branch inherits old `r001` files, QA workflows and documents from the staged-hold branch for test continuity. **Do not merge the whole branch into `main`**. For the one-time website cutover, construct a minimal, separately reviewed release branch from current `main` containing only the needed continuous-feed client files and approved configuration. Exclude obsolete `r001` selection/loader artifacts and test-only workflow assets from production.
+
 ## Security and outage behaviour
 
 1. The public endpoint returns **no source message IDs, private evidence references, approval names/emails, approval digests, digest chain, journal sheet IDs or script IDs**. Server errors return a generic invalid-schema marker, never the private exception.
