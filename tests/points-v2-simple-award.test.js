@@ -75,12 +75,15 @@ test('BFLA commander/lane stacking is flagged even when roles differ',()=>{
  assert.equal(p.state,'POSSIBLE_DUPLICATE');
  assert.equal(p.reason,'NON_STACKING_ROLES');
 });
-test('a pending Other Commander is not silently given an amount',()=>{
+test('pending Other Commander needs an owner amount and can then be finalised once',()=>{
  const r=fixture();r.events.push({eventId:'ley-line-anomaly',status:'OWNER_FINAL'});
  r.future.push({...final({eventId:'ley-line-anomaly',roleId:'other-commander'}),
   status:'PENDING_OWNER_POINTS'});
  const p=plan(final({eventId:'ley-line-anomaly',roleId:'commander',points:6}),r);
- assert.equal(p.state,'POSSIBLE_DUPLICATE');
+ assert.equal(p.state,'READY_TO_APPEND');
+ assert.equal(p.values[7],6);
+ r.future.push({...p.values.reduce((o,v,i)=>(o[SCHEMA.future[i]]=v,o),{}),status:'OWNER_FINAL'});
+ assert.equal(plan(final({eventId:'ley-line-anomaly',roleId:'commander',points:6}),r).state,'POSSIBLE_DUPLICATE');
 });
 test('strict headers detect accidental sheet structure drift',()=>{
  assert.deepEqual(parseSheetRows([SCHEMA.members,['m-000000000000cafe','One','2026-11-20','OWNER_FINAL','owner-final']], 'members')[0].displayName,'One');
