@@ -65,7 +65,7 @@ export function planRuleChange(change,{baselineRules,existingVersions=[]}){
  if(!id(base.eventId)||!id(base.roleId))err('RULE_CONTEXT');
  if(existingVersions.some(v=>v.ruleId===change.ruleId&&v.effectiveFrom===change.effectiveFrom))
   err('RULE_DATE_DUPLICATE');
- const v={id:change.versionId||(change.ruleId+'-'+change.effectiveFrom),
+ const v={id:change.versionId||(change.ruleId.toLowerCase()+'-'+change.effectiveFrom),
   ruleId:change.ruleId,eventId:base.eventId,roleId:base.roleId,
   points:change.points,effectiveFrom:change.effectiveFrom};
  if(!id(v.id))err('RULE_VERSION_ID');
