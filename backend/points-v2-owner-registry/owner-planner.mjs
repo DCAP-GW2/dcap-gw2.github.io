@@ -3,7 +3,7 @@
  * An explicit final owner instruction is the only policy approval required.
  * Other Commander NEVER has a default points value.
  */
-import {classifyCommander,OTHER_COMMANDER} from '../points/v2/owner-feed.mjs';
+import {classifyCommander,OTHER_COMMANDER} from '../../points/v2/owner-feed.mjs';
 const id=x=>typeof x==='string'&&/^[a-z0-9][a-z0-9-]{1,90}$/.test(x);
 const ruleId=x=>typeof x==='string'&&/^[A-Za-z0-9][A-Za-z0-9-]{1,90}$/.test(x);
 const date=x=>typeof x==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(x)&&
