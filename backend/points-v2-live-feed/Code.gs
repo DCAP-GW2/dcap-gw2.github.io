@@ -95,3 +95,31 @@ function doGet(){
    .setMimeType(ContentService.MimeType.JSON);
  }
 }
+
+/**
+ * Owner-only editor test; never deploy or schedule this function as a trigger.
+ * Reports aggregate facts only, not IDs, emails, journal rows, receipts or hashes.
+ * Run directly from the newly created isolated Apps Script editor after adding
+ * Script Properties and authorising the read-only Sheets scope.
+ */
+function testPrivateReadOnlyFeed(){
+ const raw=doGet().getContent();
+ let payload;
+ try{payload=JSON.parse(raw)}catch{throw Error('PRIVATE_PREFLIGHT_UNAVAILABLE')}
+ liveAssert_(payload&&payload.kind===LIVE_KIND_&&Array.isArray(payload.awards),'PRIVATE_PREFLIGHT_UNAVAILABLE');
+ let points=0;const people=new Set();
+ payload.awards.forEach(a=>{points+=a.points;people.add(a.memberId)});
+ const report={
+  stage:'DCAP_V2_ISOLATED_READONLY_PREFLIGHT',
+  result:'PASS',
+  approvedAwards:payload.awards.length,
+  continuingPoints:points,
+  knownContributors:people.size,
+  throughEventDate:payload.source.throughDate,
+  rewardsEnabled:payload.rewardsEnabled,
+  historicalBaseline:'r000',
+  continuingReleasesRequired:false
+ };
+ console.log(JSON.stringify(report));
+ return report;
+}
