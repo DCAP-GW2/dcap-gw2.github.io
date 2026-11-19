@@ -67,3 +67,40 @@ The writer returns a **safe aggregate receipt**, not private source IDs, names, 
 6. Approve production activation only after verified read-only public API CORS, privacy, and seven-page browser acceptance. Original historical v1 data and rewards remain unchanged.
 
 **Result:** The new private registry is ready and empty; the writer is a tested offline candidate, **not installed or operational**. Routine future awards do not require `r002` or GitHub releases once the approved pipeline is live.
+
+
+## One-click owner-only private installation preflight
+
+The Apps Script project itself could not be created by the available chat connectors. No installation or deployment has occurred.
+
+To install it in the journal owner's Google account, create a **new standalone Apps Script project** (not the existing journal-bound script or any V4/V9 deployment). Add \`Code.gs\` and \`OwnerWriter.gs\` from this folder; use \`writer-appsscript.json\` as its **appsscript.json** manifest (do not use the public read-only manifest). Enable **Google Sheets API v4** under Advanced Services.
+
+In that NEW isolated project, configure four Script Properties privately:
+- \`DCAP_V2_JOURNAL_ID\` — existing protected original N5E journal spreadsheet ID;
+- \`DCAP_V2_REGISTRY_ID\` — **the empty, owner-only registry workbook created this stage**, not the disposable test copy;
+- \`DCAP_V2_PUBLIC_IDS_JSON\` — exact original 37 public IDs from the previously verified historical baseline roster;
+- \`DCAP_V2_OWNER_EMAIL\` — exact authenticated owner Google account email.
+
+Before creating any writes, select **testOwnerWriterReadOnlyPreflight** from the Apps Script function dropdown and click Run. The function requires **no parameters** and **does not write**. For the currently preserved real 60-row journal with an empty registry the expected sanitized receipt is:
+
+\`\`\`json
+{
+ "stage":"DCAP_V2_OWNER_WRITER_READ_ONLY_PREFLIGHT",
+ "state":"PASS",
+ "continuingAwards":60,
+ "continuingPoints":192,
+ "newPublicMembers":0,
+ "manuallyAssignedCommanderAwards":0,
+ "approvedRegistryRows":0,
+ "rewardsEnabled":false,
+ "sheetWritesPerformed":0
+}
+\`\`\`
+
+A differing receipt must be reconciled before considering any real awards. Do not share private Script Properties, the full execution log, or journal source rows.
+
+### Separate disposable write evidence (not a native script deployment)
+
+An owner-only **copy** of the four-tab registry was used for a real Google Sheets API write of three **fictional** records: a new member, a new event and one owner-manual 4-point Other Commander contribution. The entire batch succeeded and was independently read back as exactly 1/1/0/1 populated rows across the four tabs. The original owner registry remained 0/0/0/0. Feeding the fictional copy plus actual read-only journal into the public projection produced exactly 1,890 points, 612 awards and 38 profiles, and no private audit fields.
+
+This proves the Sheets **request shape** and public projection on a real private Google Sheet. It does **not** prove that the native \`ownerApplyApprovedBatch_\` Apps Script function has executed successfully, or that authenticated ChatGPT calls are available. The disposable copy must never be used as the production registry.
