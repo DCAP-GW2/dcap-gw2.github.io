@@ -100,10 +100,19 @@ export function planSimpleAward({baseline,registry,journal,decision}){
  ];
  const collision=prior.find(x=>x.candidateKey===d.candidateKey||
   eventInstanceKey(x)===eventInstanceKey(current));
- if(collision)return Object.freeze({
-  state:'POSSIBLE_DUPLICATE',reason:collision.candidateKey===d.candidateKey?'SAME_CANDIDATE_KEY':'SAME_MEMBER_EVENT_INSTANCE_ROLE',
-  action:'REVIEW_EXISTING_AWARD',safeToAppend:false
- });
+ if(collision){
+  // The same candidate's pending record may be finalised by APPENDING a
+  // final record, without changing the pending row or granting a second award.
+  const pendingFinalisation=collision.status==='PENDING_OWNER_POINTS'&&
+   collision.candidateKey===d.candidateKey&&
+   eventInstanceKey(collision)===eventInstanceKey(current)&&manual;
+  if(!pendingFinalisation)return Object.freeze({
+   state:'POSSIBLE_DUPLICATE',
+   reason:collision.candidateKey===d.candidateKey?'SAME_CANDIDATE_KEY':'SAME_MEMBER_EVENT_INSTANCE_ROLE',
+   action:'REVIEW_EXISTING_AWARD',safeToAppend:false
+  });
+ }
+
  const nonStackGroup=selected?.nonStackingGroup;
  if(nonStackGroup&&prior.some(x=>{
   const r=rules.find(y=>y.id===x.ruleId);
