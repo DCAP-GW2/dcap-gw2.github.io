@@ -11,6 +11,7 @@ export const OWNER_MANUAL='OWNER_MANUAL_OTHER_COMMANDER';
 const exact=(o,keys)=>o&&typeof o==='object'&&!Array.isArray(o)&&
  Object.keys(o).sort().join('|')===keys.slice().sort().join('|');
 const id=s=>typeof s==='string'&&/^[a-z0-9][a-z0-9-]{1,90}$/.test(s);
+const ruleId=s=>typeof s==='string'&&/^[A-Za-z0-9][A-Za-z0-9-]{1,90}$/.test(s);
 const date=s=>typeof s==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(s)&&
  !Number.isNaN(Date.parse(s+'T00:00:00Z'))&&new Date(s+'T00:00:00Z').toISOString().slice(0,10)===s;
 const positive=n=>Number.isSafeInteger(n)&&n>0;
@@ -57,7 +58,7 @@ export function validateOwnerFeed(feed,baseline){
  const members=new Map(baseline.members.map(m=>[m.id,{...m}]));
  const updates=new Set();
  for(const m of feed.members){
-  check(exact(m,['id','displayName','approvedFrom'])&&id(m.id)&&
+  check(exact(m,['id','displayName','approvedFrom'])&&/^m-[a-f0-9]{16}$/.test(m.id)&&
    typeof m.displayName==='string'&&m.displayName.trim().length>0&&m.displayName.length<=160&&
    date(m.approvedFrom)&&!updates.has(m.id),'MEMBER');
   updates.add(m.id);
@@ -76,8 +77,8 @@ export function validateOwnerFeed(feed,baseline){
  const versions=[],seenVersions=new Set(),seenPairs=new Set();
  for(const v of feed.ruleVersions){
   check(exact(v,['id','ruleId','eventId','roleId','points','effectiveFrom'])&&
-   id(v.id)&&id(v.ruleId)&&id(v.eventId)&&id(v.roleId)&&v.roleId!==OTHER_COMMANDER&&
-   eventIds.has(v.eventId)&&positive(v.points)&&date(v.effectiveFrom)&&
+   id(v.id)&&ruleId(v.ruleId)&&id(v.eventId)&&id(v.roleId)&&v.roleId!==OTHER_COMMANDER&&
+   (eventIds.has(v.eventId)||v.eventId==='all-events')&&positive(v.points)&&date(v.effectiveFrom)&&
    v.effectiveFrom>=feed.source.startDate&&!seenVersions.has(v.id),'RULE_VERSION');
   seenVersions.add(v.id);
   const old=rules.get(v.ruleId);
@@ -99,7 +100,7 @@ export function validateOwnerFeed(feed,baseline){
   const memberChange=feed.members.find(m=>m.id===a.memberId);
   if(!baseline.members.some(m=>m.id===a.memberId))check(memberChange?.approvedFrom<=a.eventDate,'MEMBER_EFFECTIVE');
   if(a.provenanceType==='APPROVED_RULE'){
-   check(id(a.ruleId)&&rules.has(a.ruleId),'AWARD_RULE');
+   check(ruleId(a.ruleId)&&rules.has(a.ruleId),'AWARD_RULE');
    const original=rules.get(a.ruleId),v=latestFor(versions,a.ruleId,a.eventDate);
    check((v||original).points===a.points&&
     (v||original).roleId===a.roleId&&scoped((v||original),a.eventId),'AWARD_POINTS_DATE');
