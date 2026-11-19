@@ -1,0 +1,31 @@
+name: DCAP v2 owner-only writer QA (no deployment)
+on:
+  push:
+    branches:
+      - feat/points-v2-owner-writer-isolated-20261119
+permissions:
+  contents: read
+concurrency:
+  group: dcap-owner-writer-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  offline-writer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify public live feed still disabled and historical selection pinned
+        run: |
+          node --input-type=module -e "import{readFileSync}from'node:fs';import assert from'node:assert/strict';const sel=JSON.parse(readFileSync('points/data/v2/selection.json'));const c=readFileSync('points/v2/live-config.mjs','utf8');assert.equal(sel.revision,'r000');assert(c.includes('LIVE_FEED_ENABLED = false'));assert(c.includes(\"LIVE_FEED_URL = ''\"));"
+      - name: Check owner-only writer has no HTTP public entrypoint
+        run: |
+          node --input-type=module -e "import{readFileSync}from'node:fs';import assert from'node:assert/strict';const w=readFileSync('backend/points-v2-owner-registry/OwnerWriter.gs','utf8');assert(!/function\s+doPost\s*\(/.test(w));const p=JSON.parse(readFileSync('backend/points-v2-owner-registry/writer-appsscript.json'));assert(p.oauthScopes.includes('https://www.googleapis.com/auth/spreadsheets'));"
+      - name: Run full Node and writer regression
+        run: npm test
+      - name: Run ESM regression
+        run: node --test tests/*.test.mjs
