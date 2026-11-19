@@ -126,3 +126,11 @@ test('bad, duplicate or unapproved new members, event IDs, points and rules fail
  ];
  for(const mutate of cases){const f=base();mutate(f);assert.throws(()=>validateOwnerFeed(f,baseline),/OWNER_FEED_/)}
 });
+
+test('approved rule changes scheduled for the distant future do not display as active today',()=>{
+ const f=base();
+ f.ruleVersions.push({id:'tt-commander-from-2099',ruleId:'V2-05',
+  eventId:'triple-trouble',roleId:'commander',points:9,effectiveFrom:'2099-12-01'});
+ assert.equal(validateOwnerFeed(f,baseline).valid,true);
+ assert.equal(combineOwnerFeed(baseline,f).rules.find(r=>r.id==='V2-05').points,3);
+});
