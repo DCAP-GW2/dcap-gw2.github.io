@@ -49,7 +49,9 @@ function fixture(overrides={}){
   members:[columns.members],events:[columns.events],rules:[columns.rules],future:[columns.future]};
  const logs=[],writes=[],lock={acquired:false,released:false};
  const props={DCAP_V2_JOURNAL_ID:journalId,DCAP_V2_REGISTRY_ID:registryId,
-  DCAP_V2_PUBLIC_IDS_JSON:JSON.stringify(b.members.map(x=>x.id)),DCAP_V2_OWNER_EMAIL:ownerEmail,\n  DCAP_V2_TEST_REGISTRY_ID:registryId,DCAP_V2_REAL_REGISTRY_ID:'c'.repeat(30),\n  DCAP_V2_ACCEPTANCE_MODE:'FICTIONAL_TEST_ONLY'};
+  DCAP_V2_PUBLIC_IDS_JSON:JSON.stringify(b.members.map(x=>x.id)),DCAP_V2_OWNER_EMAIL:ownerEmail,
+  DCAP_V2_TEST_REGISTRY_ID:registryId,DCAP_V2_REAL_REGISTRY_ID:'c'.repeat(30),
+  DCAP_V2_ACCEPTANCE_MODE:'FICTIONAL_TEST_ONLY'};
  const effectiveEmail=overrides.effectiveEmail??ownerEmail;
  const find=(id,range)=>{
   assert.equal(id===journalId||id===registryId,true);
