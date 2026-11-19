@@ -1,0 +1,59 @@
+name: DCAP r001 staged-hold QA (no deployment)
+
+on:
+  push:
+    branches:
+      - release/points-v2-r001-staged-hold-20261119
+    paths:
+      - "points/v2/**"
+      - "points/data/v2/**"
+      - "tests/**"
+      - ".github/workflows/points-v2-r001-staging-qa.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dcap-r001-staging-qa-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  node-and-browser-staging:
+    if: github.ref == 'refs/heads/release/points-v2-r001-staged-hold-20261119'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out unpublished staged branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify the actual selector is pinned to r000
+        run: |
+          node --input-type=module -e "import {readFileSync} from 'node:fs';import assert from 'node:assert/strict';import {HISTORICAL_SHA256} from './points/v2/config.mjs';const s=JSON.parse(readFileSync('points/data/v2/selection.json'));assert.equal(s.revision,'r000');assert.equal(s.lastKnownGood.revision,'r000');assert.equal(s.sha256,HISTORICAL_SHA256)"
+      - name: Run staging-aware Node tests
+        run: |
+          npm test
+          node --test tests/*.test.mjs
+      - name: Install local browser test dependencies
+        run: |
+          npm install --no-save --ignore-scripts playwright @axe-core/playwright
+          npx playwright install --with-deps chromium
+      - name: Start local static test server
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/dcap-r001-staging-server.log 2>&1 &
+          sleep 2
+          curl --fail --silent --show-error http://127.0.0.1:8765/points/data/v2/selection.json > /dev/null
+      - name: Real Chromium staging hold and simulated future r001 acceptance
+        run: node tests/points-v2-r001-browser.mjs
+      - name: Save test evidence only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dcap-r001-staged-hold-${{ github.run_number }}
+          path: test-results/r001-browser-report.json
+          if-no-files-found: ignore
+          retention-days: 7
