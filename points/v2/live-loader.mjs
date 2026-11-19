@@ -5,12 +5,15 @@
  */
 import {loadV2 as loadHistorical} from './loader.mjs';
 import {validateLiveFeed,combineLiveFeed} from './live-feed.mjs';
+import {validateOwnerFeed,combineOwnerFeed,OWNER_FEED_KIND} from './owner-feed.mjs';
 import {CACHE_KEY} from './config.mjs';
 import {LIVE_FEED_ENABLED,LIVE_FEED_URL,LIVE_CACHE_MS,LIVE_TIMEOUT_MS,LIVE_MAX_BYTES} from './live-config.mjs';
 
 const STORAGE_KEY=CACHE_KEY+'.continuous';
 const utf8=new TextDecoder('utf-8',{fatal:true});
 const bytesFrom=s=>new TextEncoder().encode(s);
+const validateFeed=(doc,base)=>doc?.kind===OWNER_FEED_KIND?validateOwnerFeed(doc,base):validateLiveFeed(doc,base);
+const combineFeed=(base,doc)=>doc?.kind===OWNER_FEED_KIND?combineOwnerFeed(base,doc):combineLiveFeed(base,doc);
 const safeEndpoint=url=>/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(url);
 function readCache(){
  try{const x=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');return x&&typeof x==='object'&&!Array.isArray(x)?x:null}catch{return null}
@@ -21,18 +24,23 @@ async function acceptedCache(base){
  if(!c||typeof c.text!=='string'||bytesFrom(c.text).byteLength>LIVE_MAX_BYTES||
     !Number.isFinite(c.savedAt)||c.savedAt<0||c.savedAt>Date.now()+1000)return null;
  try{
-  const doc=JSON.parse(c.text);validateLiveFeed(doc,base);
-  return {feed:doc,merged:combineLiveFeed(base,doc),savedAt:c.savedAt};
+  const doc=JSON.parse(c.text);validateFeed(doc,base);
+  return {feed:doc,merged:combineFeed(base,doc),savedAt:c.savedAt};
  }catch{return null}
 }
 function previousAwardsPreserved(previous,current){
  if(!previous)return true;
- if(current.awards.length<previous.awards.length)return false;
+ if(previous.kind!==current.kind||current.awards.length<previous.awards.length)return false;
  const next=new Map(current.awards.map(a=>[a.id,a]));
- return previous.awards.every(old=>{
-  const currentAward=next.get(old.id);
-  return currentAward&&JSON.stringify(currentAward)===JSON.stringify(old);
- });
+ if(!previous.awards.every(old=>{const x=next.get(old.id);return x&&JSON.stringify(x)===JSON.stringify(old);}))return false;
+ if(previous.kind===OWNER_FEED_KIND){
+  // Public source must remain cumulative: no silently retracted members, event IDs or rule versions.
+  for(const key of ['members','events','ruleVersions']){
+   const m=new Map(current[key].map(x=>[x.id,x]));
+   if(!previous[key].every(x=>m.has(x.id)&&JSON.stringify(x)===JSON.stringify(m.get(x.id))))return false;
+  }
+ }
+ return true;
 }
 async function boundedResponse(response){
  if(!response.ok)throw Error('LIVE_HTTP');
@@ -75,9 +83,9 @@ export async function loadV2(){
  }
  try{
   const {doc,text}=await requestFeed();
-  validateLiveFeed(doc,baseline);
+  validateFeed(doc,baseline);
   if(cache&&!previousAwardsPreserved(cache.feed,doc))throw Error('NON_MONOTONIC_PUBLIC_AWARDS');
-  const merged=combineLiveFeed(baseline,doc);
+  const merged=combineFeed(baseline,doc);
   saveCache({text,savedAt:Date.now()});
   return {state:'primary',source:'approved-read-only-feed',revision:'live',data:merged};
  }catch{
