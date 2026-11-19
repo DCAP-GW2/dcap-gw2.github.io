@@ -105,7 +105,7 @@ function buildOwnerPublicFeed_(raw,originalPublicIds){
   versions.push({id:v.ruleVersionId,ruleId:v.ruleId,eventId:v.eventId,roleId:v.roleId,
    points:v.points,effectiveFrom:v.effectiveFrom});
  }
- const approvals=new Set(),awardIds=new Set(),contribKeys=new Set();
+ const approvals=new Set(),awardIds=new Set(),contribKeys=new Set(),nonStackingKeys=new Set();
  const awards=[];
  let recent=OWN_START_;
  function addAward(a,instanceId){
@@ -116,7 +116,15 @@ function buildOwnerPublicFeed_(raw,originalPublicIds){
   ownCheck_(typeof instanceId==='string'&&instanceId.length>0,'INSTANCE');
   const role=a.roleId==='other-commander'?'commander':a.roleId;
   const key=[a.eventDate,a.eventId,instanceId,a.memberId,role].join('|');
-  ownCheck_(!contribKeys.has(key),'DUPLICATE_CONTRIBUTION');contribKeys.add(key);awardIds.add(a.id);
+  ownCheck_(!contribKeys.has(key),'DUPLICATE_CONTRIBUTION');
+  // Preserve existing no-stacking groups for BFLA, Dragon's End and CM Convergence.
+  const fixed=OWN_RULES_.find(r=>r.id===a.ruleId);
+  if(fixed&&fixed.nonStackingGroup){
+   const groupKey=[a.eventDate,a.eventId,instanceId,a.memberId,fixed.nonStackingGroup].join('|');
+   ownCheck_(!nonStackingKeys.has(groupKey),'NONSTACKING');
+   nonStackingKeys.add(groupKey);
+  }
+  contribKeys.add(key);awardIds.add(a.id);
   if(a.provenanceType==='OWNER_MANUAL_OTHER_COMMANDER'){
    ownCheck_(a.roleId==='other-commander'&&a.ruleId===null&&ownOtherCommander_(a.eventId,a.eventDate,OWN_RULES_,versions),'MANUAL_UNAPPROVED');
   }else{
