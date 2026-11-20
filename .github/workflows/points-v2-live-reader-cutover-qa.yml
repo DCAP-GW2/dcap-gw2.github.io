@@ -1,0 +1,64 @@
+name: DCAP Points v2 live reader controlled cutover QA
+on:
+  push:
+    branches:
+      - release/points-v2-live-reader-cutover-20261120
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: points-v2-controlled-cutover-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  public-live-reader:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Require frozen historical r000, exact public endpoint and no writer
+        run: |
+          node --input-type=module <<'JS'
+          import{readFileSync}from'node:fs';import assert from'node:assert/strict';
+          const sel=JSON.parse(readFileSync('points/data/v2/selection.json'));
+          const cfg=readFileSync('points/v2/live-config.mjs','utf8');
+          const src=readFileSync('points/v2/live-loader.mjs','utf8');
+          const entry=readFileSync('points/v2/entry.mjs','utf8');
+          assert.equal(sel.revision,'r000');
+          assert.equal(sel.lastKnownGood.revision,'r000');
+          assert(cfg.includes('LIVE_FEED_ENABLED = true'));
+          assert(cfg.includes('AKfycbyQv6tisEz0zF6Jv-s0iMGJsL5CxplWyi_tpUle4XD3CK1HLuSjxwJFjDrTedFXDuMH/exec'));
+          assert(src.includes('loadHistorical'));
+          assert(src.includes('validateOwnerFeed'));
+          assert(!src.includes('ownerApplyApprovedBatch_'));
+          assert(entry.includes("target.mode==='production-v2'"));
+          JS
+      - name: Existing public v1/v2 unit regression
+        run: npm test
+      - name: Existing ESM tests
+        run: node --test tests/*.test.mjs
+      - name: Install isolated browser dependencies
+        run: |
+          npm install --no-save --ignore-scripts playwright @axe-core/playwright
+          command -v google-chrome
+          google-chrome --version
+      - name: Start preview server (no publication)
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/dcap-v2-activation-preview.log 2>&1 &
+          sleep 2
+          curl --fail --silent --show-error http://127.0.0.1:8765/points/ > /dev/null
+      - name: Real HTTPS live feed / multi-page Chromium / no-cache and last-known-good fallback
+        run: node tests/points-v2-cutover-live-browser.mjs
+      - name: Retain private preview acceptance results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dcap-points-v2-cutover-${{ github.run_id }}
+          path: test-results/points-v2-cutover-browser.json
+          retention-days: 14
+          if-no-files-found: ignore
