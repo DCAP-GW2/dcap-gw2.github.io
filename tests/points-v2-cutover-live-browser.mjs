@@ -26,7 +26,7 @@ assert.equal(merged.population.candidatePoints,1886);
 assert.equal(merged.population.awardCandidateCount,611);
 assert.equal(merged.members.length,37);assert.equal(merged.rewardsEnabled,false);
 record('real anonymous public feed validates to 1886 points / 611 awards / 37 profiles');
-const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+const browser=await chromium.launch({channel:'chrome',headless:true,args:['--no-sandbox']});
 const cacheKey='dcap.points.public.v2.production.1.continuous';
 const expected='live';
 async function context(width=390){
