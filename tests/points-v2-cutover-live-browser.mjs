@@ -51,7 +51,10 @@ try{
   if(path==='/points/')assert(main.includes(fmt(expectedPoints))&&main.includes(fmt(expectedAwards))&&main.includes(String(valid.publicMembers)));
   if(path==='/points/rewards/')assert(main.includes('Rewards are disabled'));
   assert.equal(await page.locator('.dcap-v2-production').count(),1);
-  record('real HTTPS endpoint renders '+path);
+  assert.equal(await page.locator('.points-hero').count(),1,'v1 hero retained');
+  assert.equal(await page.locator('.points-nav').count(),1,'v1 points navigation retained');
+  assert.equal(await page.locator('.points-nav a').count(),6,'all six points navigation links retained');
+  record('real HTTPS endpoint renders '+path+' with v1 visual shell');
  }
  const name=baseline.members[0].id;
  await page.goto(route('/points/members/profile/?member='+name),{waitUntil:'domcontentloaded'});
@@ -73,6 +76,16 @@ try{
  assert(last.includes(fmt(expectedPoints)));assert(last.includes('Last available validated data'));
  record('network failure retains previously verified public '+expectedPoints+' point payload');
 }finally{await e.ctx.close()}
+// Wide viewport sanity check without extra infrastructure.
+const wide=await context(1280);
+try{
+ await wide.page.goto(start+'/points/?dcapV2Review=private',{waitUntil:'domcontentloaded'});
+ await wide.page.waitForFunction(()=>window.DCAP_V2_STATUS?.revision==='live',{timeout:30000});
+ assert.equal(await wide.page.locator('.points-hero').count(),1);
+ assert.equal(await wide.page.locator('.points-nav').count(),1);
+ assert.equal(await wide.page.locator('.points-kpi-card').count(),4);
+ record('desktop overview retains hero, navigation and four branded KPI cards');
+}finally{await wide.ctx.close()}
 const fresh=await context(320);
 try{
  await fresh.ctx.route('https://script.google.com/macros/s/**',r=>r.abort());
