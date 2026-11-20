@@ -7,12 +7,17 @@ const label=(doc)=>doc.continuing?`Approved contributions through ${doc.continui
 const paths=[['Overview','/points/'],['Leaderboard','/points/leaderboard/'],['Members','/points/members/'],['Statistics','/points/statistics/'],['How Points Work','/points/how-points-work/'],['Rewards','/points/rewards/']];
 const url=(path,id,privatePreview)=>{const u=new URL(path,location.origin);if(privatePreview)u.searchParams.set('dcapV2Review','private');if(id)u.searchParams.set('member',id);return u.href};
 const link=(name,path,id,privatePreview)=>{const x=el('a',name);x.href=url(path,id,privatePreview);return x};
-function table(columns,records){const wrap=el('div',null,'dcap-v2-scroll');wrap.tabIndex=0;wrap.setAttribute('role','region');wrap.setAttribute('aria-label',columns.join(', '));const t=el('table',null,'dcap-v2-table');const thead=el('thead'),hr=el('tr');for(const c of columns){const th=el('th',c);th.scope='col';hr.append(th)}thead.append(hr);t.append(thead);const body=el('tbody');for(const cells of records){const tr=el('tr');for(let i=0;i<cells.length;i++){const td=el(i===0?'th':'td');if(i===0)td.scope='row';const value=cells[i];if(value instanceof Node)td.append(value);else td.textContent=String(value);tr.append(td)}body.append(tr)}t.append(body);wrap.append(t);return wrap}
-const intro=(root,title,doc,result)=>{root.append(el('h1',title));root.append(el('p',label(doc),'dcap-v2-asof'));if(result.state==='last-available')root.append(el('p','Last available validated data — the current feed could not be retrieved.','dcap-v2-warning'));root.append(el('p',`Data source: ${doc.continuing?'Approved public points feed':'Historical backup'} · Rewards: DISABLED`,'dcap-v2-detail'))};
+function table(columns,records){const wrap=el('div',null,'dcap-v2-scroll points-panel glass-panel');wrap.tabIndex=0;wrap.setAttribute('role','region');wrap.setAttribute('aria-label',columns.join(', '));const t=el('table',null,'dcap-v2-table points-table');const thead=el('thead'),hr=el('tr');for(const c of columns){const th=el('th',c);th.scope='col';hr.append(th)}thead.append(hr);t.append(thead);const body=el('tbody');for(const cells of records){const tr=el('tr');for(let i=0;i<cells.length;i++){const td=el(i===0?'th':'td');if(i===0)td.scope='row';const value=cells[i];if(value instanceof Node)td.append(value);else td.textContent=String(value);tr.append(td)}body.append(tr)}t.append(body);wrap.append(t);return wrap}
+const intro=(root,title,doc,result)=>{root.append(el('h2',title));root.append(el('p',label(doc),'dcap-v2-asof'));if(result.state==='last-available')root.append(el('p','Last available validated data — the current feed could not be retrieved.','dcap-v2-warning'));root.append(el('p',`Data source: ${doc.continuing?'Approved public points feed':'Historical backup'} · Rewards: DISABLED`,'dcap-v2-detail'))};
 function view(root,name,doc,result,privatePreview){
  const members=doc.members,awards=doc.awards;
  if(name==='overview'){
-  intro(root,'Points overview — v2.0',doc,result);root.append(el('p',`${fmt(doc.population.candidatePoints)} v2 points · ${fmt(awards.length)} approved awards · ${fmt(members.length)} public profiles`));
+  intro(root,'Season overview',doc,result);
+  const kpis=el('dl',null,'points-kpi-grid');
+  for(const [name,value] of [['Total Points',fmt(doc.population.candidatePoints)],['Approved Awards',fmt(awards.length)],['Contributors',fmt(members.length)],['Rule Version','2.0']]){
+   const card=el('div',null,'points-kpi-card'+(name==='Total Points'?' points-kpi-card-total':''));card.append(el('dt',name),el('dd',value));kpis.append(card);
+  }
+  root.append(kpis);
   root.append(el('p',`${fmt(doc.population.originalPoints)} original v1 historical points preserved; ${fmt(doc.population.confirmedIneligibleCount)} historical ineligible contributions excluded; ${fmt(doc.population.missingPublicIdCount)} missing public identity states retained.`));
   root.append(el('h2','Top contributors'));
   root.append(table(['Member','Points'],[...members].sort((a,b)=>b.candidatePoints-a.candidatePoints||a.id.localeCompare(b.id)).slice(0,10).map(m=>[link(m.displayName,'/points/members/profile/',m.id,privatePreview),fmt(m.candidatePoints)])));
@@ -46,9 +51,28 @@ export async function mount(viewName,{privatePreview=false}={}) {
  // No DOM mutation until the immutable approved snapshot is verified.
  try{
   const result=await loadV2();if(!result.data)return false;
-  const outlet=el('section',null,'dcap-v2-production');outlet.setAttribute('aria-label','DCAP v2.0 verified published data');
+  const outlet=el('section',null,'dcap-v2-production');
+  outlet.setAttribute('aria-label','DCAP v2.0 verified published data');
   view(outlet,viewName,result.data,result,privatePreview);
-  original.replaceChildren(outlet);
+  // Keep the original v1 hero and Points navigation; change only the verified data area.
+  const container=original.querySelector('.points-content');
+  const nav=container?.querySelector('.points-nav');
+  if(!container||!nav)return false;
+  // Hydrate the existing hero after successful validation (never show stale v1 figures).
+  const hero=original.querySelector('.points-hero');
+  if(hero){
+   const season=hero.querySelector('[data-points-season]');
+   if(season)season.textContent=result.data.season.displayLabel;
+   const period=hero.querySelector('[data-points-period]');
+   if(period)period.textContent=result.data.continuing?
+    'Approved contributions through '+result.data.continuing.throughDate:
+    'Historical snapshot: '+new Date(result.data.source.asOf).toLocaleDateString('en-NZ',{timeZone:'Pacific/Auckland'});
+   const rule=hero.querySelector('[data-points-rule-version], [data-points-rule-reference]');
+   if(rule)rule.textContent='2.0';
+   const meta=hero.querySelector('[data-leaderboard-meta], [data-rules-meta], [data-rewards-meta], .points-season-meta');
+   if(meta)meta.hidden=false;
+  }
+  container.replaceChildren(nav,outlet);
   window.DCAP_V2_STATUS={state:result.state,view:viewName,revision:result.revision,source:result.source,rewards:false};
   return true;
  }catch{return false;}
