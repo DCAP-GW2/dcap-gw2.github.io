@@ -12,11 +12,11 @@ assert(sourceText.length<2_000_000);
 for(const field of ['ownerDecisionRef','candidateKey','sourceMessageId','approvalDigest','rowDigest'])assert(!sourceText.includes('"'+field+'"'),'private data escaped');
 const publicFeed=JSON.parse(sourceText);
 const v=validateOwnerFeed(publicFeed,base),combined=combineOwnerFeed(base,publicFeed);
-assert.equal(v.awards,151);
-assert.equal(v.points,469);
+assert.equal(v.awards,164);
+assert.equal(v.points,505);
 assert.equal(v.throughDate,'2026-11-03');
-assert.equal(combined.population.candidatePoints,2163);
-assert.equal(combined.population.awardCandidateCount,702);
+assert.equal(combined.population.candidatePoints,2199);
+assert.equal(combined.population.awardCandidateCount,715);
 assert.equal(combined.members.length,37);
 assert.equal(combined.rewardsEnabled,false);
 console.log('PASS public app JSON schema, anonymity, total 702 awards / 2163 points / 37 members');
@@ -31,12 +31,12 @@ for(const path of ['/points/','/points/leaderboard/','/points/members/','/points
  assert(body.includes('2026-11-03'),'new through-date missing on '+path);
  assert.equal(await page.locator('.dcap-v2-production').count(),1);
  if(path==='/points/'){
-  assert(body.includes('2,163 v2 points'));
-  assert(body.includes('702 approved awards'));
+  assert(body.includes('2,199 v2 points'));
+  assert(body.includes('715 approved awards'));
   assert(body.includes('37 public profiles'));
  }
  console.log('PASS real Pages '+path);
 }
 assert.deepEqual(errors,[]);
 await browser.close();
-console.log('DCAP_V2_8_DAY_POSTWRITE_ACCEPTANCE '+JSON.stringify({state:'PASS',newAwards:91,newPoints:277,continuingAwards:151,continuingPoints:469,combinedAwards:702,combinedPoints:2163,profiles:37,rewards:false}));
+console.log('DCAP_V2_8_DAY_POSTWRITE_ACCEPTANCE '+JSON.stringify({state:'PASS',newAwards:13,newPoints:36,continuingAwards:164,continuingPoints:505,combinedAwards:715,combinedPoints:2199,profiles:37,rewards:false}));
