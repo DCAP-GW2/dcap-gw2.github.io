@@ -21,11 +21,13 @@ assert.equal(new URL(response.url).hostname,'script.googleusercontent.com');
 const publicPayload=await response.json();
 const valid=validateOwnerFeed(publicPayload,baseline);
 const merged=combineOwnerFeed(baseline,publicPayload);
-assert.equal(valid.awards,60);assert.equal(valid.points,192);
-assert.equal(merged.population.candidatePoints,1886);
-assert.equal(merged.population.awardCandidateCount,611);
-assert.equal(merged.members.length,37);assert.equal(merged.rewardsEnabled,false);
-record('real anonymous public feed validates to 1886 points / 611 awards / 37 profiles');
+assert(valid.awards>0&&valid.points>0,'Continuing feed must contain approved awards');
+assert.equal(merged.population.candidatePoints,baseline.population.candidatePoints+valid.points);
+assert.equal(merged.population.awardCandidateCount,baseline.population.awardCandidateCount+valid.awards);
+assert.equal(merged.members.length,valid.publicMembers);assert.equal(merged.rewardsEnabled,false);
+const expectedPoints=merged.population.candidatePoints,expectedAwards=merged.population.awardCandidateCount;
+const fmt=n=>new Intl.NumberFormat('en-NZ').format(n);
+record('real anonymous public feed validates to '+expectedPoints+' points / '+expectedAwards+' awards / '+valid.publicMembers+' profiles');
 const browser=await chromium.launch({channel:'chrome',headless:true,args:['--no-sandbox']});
 const cacheKey='dcap.points.public.v2.production.1.continuous';
 const expected='live';
@@ -45,8 +47,8 @@ try{
   await page.waitForFunction(()=>window.DCAP_V2_STATUS?.revision==='live',{timeout:30000});
   const status=await page.evaluate(()=>window.DCAP_V2_STATUS),main=await page.locator('main').innerText();
   assert.equal(status.rewards,false);
-  assert(main.includes('Approved contributions through 2026-10-26')||main.includes('Approved contributions through 26 Oct'),'Public continuing status');
-  if(path==='/points/')assert(main.includes('1,886 v2 points')&&main.includes('611 approved awards')&&main.includes('37 public profiles'));
+  assert(main.includes('Approved contributions through '+valid.throughDate),'Public continuing status');
+  if(path==='/points/')assert(main.includes(fmt(expectedPoints))&&main.includes(fmt(expectedAwards))&&main.includes(String(valid.publicMembers)));
   if(path==='/points/rewards/')assert(main.includes('Rewards are disabled'));
   assert.equal(await page.locator('.dcap-v2-production').count(),1);
   record('real HTTPS endpoint renders '+path);
@@ -68,8 +70,8 @@ try{
  await page.goto(route('/points/'),{waitUntil:'domcontentloaded'});
  await page.waitForFunction(()=>window.DCAP_V2_STATUS?.state==='last-available',{timeout:30000});
  const last=await page.locator('main').innerText();
- assert(last.includes('1,886 v2 points'));assert(last.includes('Last available validated data'));
- record('network failure retains previously verified public 1886 point payload');
+ assert(last.includes(fmt(expectedPoints)));assert(last.includes('Last available validated data'));
+ record('network failure retains previously verified public '+expectedPoints+' point payload');
 }finally{await e.ctx.close()}
 const fresh=await context(320);
 try{
@@ -77,20 +79,20 @@ try{
  await fresh.page.goto(start+'/points/?dcapV2Review=private',{waitUntil:'domcontentloaded'});
  await fresh.page.waitForFunction(()=>window.DCAP_V2_STATUS?.revision==='r000',{timeout:30000});
  const text=await fresh.page.locator('main').innerText();
- assert(text.includes('1,694 historical v2 points')||text.includes('1,694 v2 points'));
+ assert(text.includes(fmt(baseline.population.candidatePoints)));
  assert(text.includes('Historical snapshot'));
- record('first-visit outage falls back to frozen r000 / 1694 points');
+ record('first-visit outage falls back to frozen r000 / '+baseline.population.candidatePoints+' points');
 }finally{await fresh.ctx.close()}
 await browser.close();
 mkdirSync('test-results',{recursive:true});
 writeFileSync('test-results/points-v2-cutover-browser.json',JSON.stringify({
  state:'PASSED',source:'public-json-and-browser',tests:results,
  realContinuing:{awards:valid.awards,points:valid.points},
- combined:{points:1886,awards:611,profiles:37},
+ combined:{points:expectedPoints,awards:expectedAwards,profiles:valid.publicMembers},
  rewards:false,
  numberedContinuingReleases:0
 },null,2));
 console.log('DCAP_V2_CUTOVER_BROWSER_ACCEPTANCE '+JSON.stringify({
- tests:results.length,passed:results.every(x=>x.passed),totalPoints:1886,totalAwards:611,
- historicalFallback:1694,rewardsEnabled:false
+ tests:results.length,passed:results.every(x=>x.passed),totalPoints:expectedPoints,totalAwards:expectedAwards,
+ historicalFallback:baseline.population.candidatePoints,rewardsEnabled:false
 }));
