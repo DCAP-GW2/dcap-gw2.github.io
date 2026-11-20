@@ -1,0 +1,21 @@
+name: DCAP v2 27 Oct–3 Nov live production readback
+on:
+  push:
+    branches: [test/points-v2-20261027-1103-postwrite-verification]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Use runner Chrome for read-only smoke
+        run: npm install --no-save --ignore-scripts playwright
+      - name: Verify new continuing public totals and Pages rendering
+        run: node tests/points-v2-new-awards-postwrite.mjs
