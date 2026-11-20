@@ -23,7 +23,17 @@ try{
  }finally{clearTimeout(timeout)}
  check('https_status',response.ok,{status:response.status});
  check('redirect_destination',new URL(response.url).protocol==='https:');
+ report.responseMetadata={finalHostname:new URL(response.url).hostname,
+  mimeType:(response.headers.get('content-type')||'').split(';')[0],
+  redirected:response.redirected};
  const text=await response.text();
+ if(text.trim().startsWith('<')){
+  const title=text.match(/<title[^>]*>([^<]{0,120})<\/title>/i)?.[1]||null;
+  report.responseMetadata.htmlTitle=title;
+  report.responseMetadata.signInHint=/sign in|sign-in|accounts.google|login/i.test(text);
+  report.responseMetadata.errorHint=/script function not found|page not found|authorization required|access denied|file you have requested/i.test(text);
+ }
+ report.responseMetadata.length=text.length;
  check('response_size',text.length<2000000);
  if(response.ok && text.length<2000000){
   try{payload=JSON.parse(text)}catch{check('parse_json',false)}
