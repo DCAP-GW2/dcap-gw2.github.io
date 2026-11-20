@@ -1,0 +1,34 @@
+name: DCAP v2 real public endpoint HTTPS CORS diagnostic (no deployment)
+on:
+  push:
+    branches:
+      - test/points-v2-live-https-cors-check-20261120
+permissions:
+  contents: read
+jobs:
+  public-read-only-diagnostic:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      DCAP_V2_PUBLIC_READONLY_URL: https://script.google.com/macros/s/AKfycbyQv6tisEz0zF6Jv-s0iMGJsL5CxplWyi_tpUle4XD3CK1HLuSjxwJFjDrTedFXDuMH/exec
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify website cutover remains disabled
+        run: |
+          node --input-type=module -e "import{readFileSync}from'node:fs';import assert from'node:assert/strict';const s=JSON.parse(readFileSync('points/data/v2/selection.json'));const c=readFileSync('points/v2/live-config.mjs','utf8');assert.equal(s.revision,'r000');assert(c.includes('LIVE_FEED_ENABLED = false'));assert(c.includes(\"LIVE_FEED_URL = ''\"))"
+      - name: Install isolated Chrome
+        run: |
+          npm install --no-save --ignore-scripts playwright
+          npx playwright install --with-deps chromium
+      - name: Start local public read-only test origin
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/dcap-v2-endpoint-smoke.log 2>&1 &
+          sleep 2
+          curl --fail --silent --show-error http://127.0.0.1:8765/points/ > /dev/null
+      - name: Probe HTTPS, contract, PII exclusion and real browser CORS
+        run: node tests/points-v2-public-https-cors.mjs
