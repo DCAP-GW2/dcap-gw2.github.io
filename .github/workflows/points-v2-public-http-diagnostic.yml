@@ -24,6 +24,7 @@ jobs:
             status:resp.status,finalHost:new URL(resp.url).hostname,
             contentType:resp.headers.get('content-type')?.split(';')[0],
             redirected:resp.redirected,length:body.length,
+            corsAllowOrigin:resp.headers.get('access-control-allow-origin')||null,
             isHtml:body.trim().startsWith('<'),
             title,kind,
             signInHint:/sign in|sign-in|accounts.google|login/i.test(body),
