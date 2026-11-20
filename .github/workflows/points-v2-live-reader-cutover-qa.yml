@@ -45,7 +45,8 @@ jobs:
       - name: Install isolated browser dependencies
         run: |
           npm install --no-save --ignore-scripts playwright @axe-core/playwright
-          npx playwright install --with-deps chromium
+          command -v google-chrome
+          google-chrome --version
       - name: Start preview server (no publication)
         run: |
           python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/dcap-v2-activation-preview.log 2>&1 &
