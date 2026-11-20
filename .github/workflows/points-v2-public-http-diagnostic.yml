@@ -18,7 +18,7 @@ jobs:
           const u=process.env.PUBLIC_URL;
           const resp=await fetch(u,{redirect:'follow'});
           const body=await resp.text();
-          const title=body.match(/<title[^>]*>([^<]{0,100})<\\/title>/i)?.[1]||null;
+          const title=body.match(/<title[^>]*>([^<]{0,100})<[/]title>/i)?.[1]||null;
           let kind=null;try{kind=JSON.parse(body).kind||null}catch{}
           console.log('PUBLIC_HTTP_SAFE_DIAGNOSTIC',JSON.stringify({
             status:resp.status,finalHost:new URL(resp.url).hostname,
