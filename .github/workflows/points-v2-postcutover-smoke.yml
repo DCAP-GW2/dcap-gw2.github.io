@@ -1,0 +1,23 @@
+name: DCAP v2 postcutover public website smoke — read-only
+on:
+  push:
+    branches: [test/points-v2-postcutover-public-smoke-20261120]
+permissions:
+  contents: read
+jobs:
+  check-public-pages:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Use hosted Chrome for public read-only browser smoke
+        run: |
+          command -v google-chrome
+          npm install --no-save --ignore-scripts playwright
+      - name: Test real public Pages origin and historical fallback
+        run: node tests/points-v2-postcutover-public-smoke.mjs
