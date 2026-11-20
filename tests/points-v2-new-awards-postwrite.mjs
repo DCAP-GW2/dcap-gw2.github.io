@@ -12,14 +12,25 @@ assert(sourceText.length<2_000_000);
 for(const field of ['ownerDecisionRef','candidateKey','sourceMessageId','approvalDigest','rowDigest'])assert(!sourceText.includes('"'+field+'"'),'private data escaped');
 const publicFeed=JSON.parse(sourceText);
 const v=validateOwnerFeed(publicFeed,base),combined=combineOwnerFeed(base,publicFeed);
-assert.equal(v.awards,164);
-assert.equal(v.points,505);
+assert.equal(v.awards,169);
+assert.equal(v.points,516);
 assert.equal(v.throughDate,'2026-11-03');
-assert.equal(combined.population.candidatePoints,2199);
-assert.equal(combined.population.awardCandidateCount,715);
-assert.equal(combined.members.length,37);
+assert.equal(combined.population.candidatePoints,2210);
+assert.equal(combined.population.awardCandidateCount,720);
+assert.equal(combined.members.length,40);
 assert.equal(combined.rewardsEnabled,false);
-console.log('PASS public app JSON schema, anonymity, total 702 awards / 2163 points / 37 members');
+for(const [name,memberId,expectedPoints] of [
+ ['Gabril','m-d47da88542827987',4],
+ ['Roma','m-58d0da951add8039',2],
+ ['Princess','m-c112e021ebfe6f2d',2],
+ ['Keety','m-4906dde82e46a395',6]
+]){
+ const member=combined.members.find(m=>m.id===memberId);
+ assert(member, 'missing '+name+' public profile');
+ assert.equal(member.displayName,name,'unexpected display name');
+ assert.equal(member.candidatePoints,expectedPoints,'unexpected points '+name);
+}
+console.log('PASS public app JSON schema, anonymity, total 720 awards / 2210 points / 40 members');
 const browser=await chromium.launch({channel:'chrome',headless:true,args:['--no-sandbox']});
 const ctx=await browser.newContext({viewport:{width:390,height:844}});
 const page=await ctx.newPage();
@@ -31,12 +42,17 @@ for(const path of ['/points/','/points/leaderboard/','/points/members/','/points
  assert(body.includes('2026-11-03'),'new through-date missing on '+path);
  assert.equal(await page.locator('.dcap-v2-production').count(),1);
  if(path==='/points/'){
-  assert(body.includes('2,199 v2 points'));
-  assert(body.includes('715 approved awards'));
-  assert(body.includes('37 public profiles'));
+  assert(body.includes('2,210 v2 points'));
+  assert(body.includes('720 approved awards'));
+  assert(body.includes('40 public profiles'));
  }
  console.log('PASS real Pages '+path);
 }
+
+await page.goto('https://dcap-gw2.github.io/points/members/profile/?member=m-d47da88542827987',{waitUntil:'domcontentloaded',timeout:30000});
+await page.waitForFunction(()=>window.DCAP_V2_STATUS?.revision==='live',{timeout:30000});
+assert((await page.locator('main').innerText()).includes('Gabril'),'new member profile missing');
+console.log('PASS actual new Gabril public profile');
 assert.deepEqual(errors,[]);
 await browser.close();
-console.log('DCAP_V2_8_DAY_POSTWRITE_ACCEPTANCE '+JSON.stringify({state:'PASS',newAwards:13,newPoints:36,continuingAwards:164,continuingPoints:505,combinedAwards:715,combinedPoints:2199,profiles:37,rewards:false}));
+console.log('DCAP_V2_8_DAY_POSTWRITE_ACCEPTANCE '+JSON.stringify({state:'PASS',newAwards:5,newPoints:11,continuingAwards:169,continuingPoints:516,combinedAwards:720,combinedPoints:2210,profiles:40,rewards:false}));
