@@ -57,6 +57,10 @@ try{
   const previewLinks=await page.locator('a[href]').evaluateAll(links=>links.filter(a=>new URL(a.href).origin===location.origin&&new URL(a.href).pathname.startsWith('/points/')&&!a.getAttribute('href').startsWith('#')).map(a=>a.href));
   assert(previewLinks.every(href=>new URL(href).searchParams.get('dcapV2Review')==='private'),'local Points links retain the preview');
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth),'no page-wide overflow');
+  if(['/points/','/points/members/','/points/how-points-work/'].includes(path)){
+   const tableFits=await page.locator('.dcap-v2-scroll').evaluate(panel=>panel.scrollWidth<=panel.clientWidth);
+   assert(tableFits,path+' should show all three columns without horizontal scrolling');
+  }
   if(path==='/points/statistics/')assert.equal(await page.locator('.points-daily-chart svg').count(),1);
   record('real HTTPS endpoint renders '+path+' with v1 visual shell');
  }
@@ -65,6 +69,8 @@ try{
  await page.waitForFunction(()=>window.DCAP_V2_STATUS?.revision==='live',{timeout:30000});
  assert((await page.locator('main').innerText()).includes(baseline.members[0].displayName));
  record('live historical member profile preserved');
+ const historyDate=page.locator('#dcap-v2-profile-history tbody th').first();
+ assert.equal(await historyDate.evaluate(cell=>getComputedStyle(cell).whiteSpace),'nowrap','mobile history dates stay on one line');
  const personalCount=merged.awards.filter(a=>a.memberId===name).length;
  if(personalCount>5){
   await page.getByRole('button',{name:'Show more',exact:true}).click();

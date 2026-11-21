@@ -15,4 +15,7 @@
 .dcap-v2-production .dcap-v2-table a{color:var(--text);text-decoration-color:var(--cyan);text-underline-offset:4px}
 .dcap-v2-production .dcap-v2-table a:hover{color:var(--cyan)}
 .dcap-v2-production button{margin-top:.75rem;padding:.5rem 1rem;cursor:pointer}
-@media(max-width:600px){.dcap-v2-production .dcap-v2-table{min-width:520px}}
+.dcap-v2-production #dcap-v2-profile-history tbody th{white-space:nowrap}
+@media(max-width:600px){
+  .dcap-v2-production .dcap-v2-table:has(thead th:nth-child(4)){min-width:520px}
+}
