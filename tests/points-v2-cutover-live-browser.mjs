@@ -25,6 +25,10 @@ assert(valid.awards>0&&valid.points>0,'Continuing feed must contain approved awa
 assert.equal(merged.population.candidatePoints,baseline.population.candidatePoints+valid.points);
 assert.equal(merged.population.awardCandidateCount,baseline.population.awardCandidateCount+valid.awards);
 assert.equal(merged.members.length,valid.publicMembers);assert.equal(merged.rewardsEnabled,false);
+assert.deepEqual(merged.rules.filter(rule=>rule.eventId==='dbs').map(rule=>[rule.roleId,rule.points]).sort(),[
+ ['commander',2],['derv-escort',2],['doordash-feed',2]
+]);
+assert.equal(merged.rules.find(rule=>rule.roleId==='other-commander')?.points,null);
 const expectedPoints=merged.population.candidatePoints,expectedAwards=merged.population.awardCandidateCount;
 const fmt=n=>new Intl.NumberFormat('en-NZ').format(n);
 record('real anonymous public feed validates to '+expectedPoints+' points / '+expectedAwards+' awards / '+valid.publicMembers+' profiles');
@@ -49,8 +53,24 @@ try{
   assert.equal(status.rewards,false);
   assert(main.includes('Latest contributions: '+valid.throughDate),'Latest date derives from verified feed');
   assert(!main.includes('Data source:')&&!main.includes('Refreshed when the page is opened'),'No redundant technical copy');
-  if(path==='/points/')assert(main.includes(fmt(expectedPoints))&&main.includes(fmt(expectedAwards))&&main.includes(String(valid.publicMembers)));
-  if(path==='/points/rewards/')assert(main.includes('Coming Soon')&&!main.includes('Rewards are disabled'));
+  if(path==='/points/'){
+   const hero=page.locator('.points-hero');
+   assert.equal(await hero.locator('[data-points-period]').innerText(),'Latest contributions: '+valid.throughDate);
+   assert.equal(await hero.locator('[data-points-season]').innerText(),merged.season.displayLabel);
+   assert.equal(new URL(await hero.getByRole('link',{name:/Rule 2\.0/}).getAttribute('href')).pathname,'/points/how-points-work/');
+   assert.deepEqual(await page.locator('.points-kpi-card dd').allTextContents(),[fmt(expectedPoints),fmt(expectedAwards),fmt(valid.publicMembers),'2.0']);
+   assert(!/original v1 historical points|excluded;|missing public identity states|Explore role contributions/.test(main));
+  }
+  if(path==='/points/leaderboard/'){
+   assert(!/Ranks are partial|No unverified member routes/.test(main));
+   const rows=await page.locator('.dcap-v2-production tbody tr').evaluateAll(trs=>trs.map(tr=>{
+    const link=tr.querySelector('a');
+    return [[...tr.cells].map(cell=>cell.innerText),new URL(link.href).searchParams.get('member')];
+   }));
+   const ranked=[...merged.members].sort((a,b)=>b.candidatePoints-a.candidatePoints||a.id.localeCompare(b.id));
+   assert.deepEqual(rows,ranked.map(m=>[[String(m.partialRank),m.displayName,fmt(m.candidatePoints),fmt(m.awardCandidateCount)],m.id]));
+  }
+  if(path==='/points/rewards/')assert.equal((await page.locator('.points-rewards-status-card').innerText()).trim(),'Coming Soon');
   assert.equal(await page.locator('.dcap-v2-production').count(),1);
   assert.equal(await page.locator('.points-hero').count(),1,'v1 hero retained');
   assert.equal(await page.locator('.points-nav').count(),1,'v1 points navigation retained');
@@ -64,10 +84,12 @@ try{
   }
   if(path==='/points/statistics/'){
    assert.equal(await page.locator('.points-daily-chart svg').count(),1);
+   assert.equal(await page.locator('.points-stat-bar-fill').count(),merged.aggregates.eventTotals.length);
+   assert.equal(await page.getByRole('heading',{name:'Recent awards',exact:true}).count(),1);
    assert.equal(await page.getByRole('heading',{name:'By role',exact:true}).count(),0);
   }
   if(path==='/points/how-points-work/'){
-   assert(main.includes('DCAP Points Rules'));
+   assert.equal(await page.getByRole('heading',{name:'DCAP Points Rules',exact:true}).count(),1);
    const rows=await page.locator('.dcap-v2-production tbody tr').evaluateAll(trs=>trs.map(tr=>[...tr.querySelectorAll('th,td')].map(c=>c.textContent.trim())));
    assert.deepEqual(rows.filter(row=>row[0]==='DBS'),[['DBS','Commander','2']]);
    assert(rows.some(row=>row[0]==='Other Events'&&row[1]==='Commander'&&row[2]==='TBD'));
@@ -121,6 +143,7 @@ try{
  await page.waitForFunction(()=>window.DCAP_V2_STATUS?.state==='last-available',{timeout:30000});
  const last=await page.locator('main').innerText();
  assert(last.includes(fmt(expectedPoints)));assert(last.includes('Last available validated data'));
+ assert.equal(await page.locator('.dcap-v2-warning').count(),1);
  record('network failure retains previously verified public '+expectedPoints+' point payload');
 }finally{await e.ctx.close()}
 // Wide viewport sanity check without extra infrastructure.
@@ -151,6 +174,7 @@ try{
  const text=await fresh.page.locator('main').innerText();
  assert(text.includes(fmt(baseline.population.candidatePoints)));
  assert(text.includes('Historical snapshot'));
+ assert.match(await fresh.page.locator('.dcap-v2-warning').innerText(),/current contributions are unavailable/);
  record('first-visit outage falls back to frozen r000 / '+baseline.population.candidatePoints+' points');
 }finally{await fresh.ctx.close()}
 await browser.close();

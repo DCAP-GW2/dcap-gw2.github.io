@@ -39,7 +39,13 @@ function view(root,name,doc,result,privatePreview){
   top.querySelector('.dcap-v2-scroll').classList.remove('points-panel','glass-panel');
   const foot=el('p',null,'points-panel-footnote');foot.append(link('View the full leaderboard →','/points/leaderboard/',null,privatePreview));top.append(foot);dashboard.append(top);
   const statistics=document.querySelector('.points-dashboard-grid [aria-labelledby="activity-title"]');
-  if(statistics)dashboard.append(statistics.cloneNode(true));root.append(dashboard);
+  if(statistics){
+   const card=statistics.cloneNode(true);
+   const description=card.querySelector('.points-empty-state > p');
+   if(description)description.textContent='Explore event totals and daily Points activity.';
+   dashboard.append(card);
+  }
+  root.append(dashboard);
  }else if(name==='leaderboard'){
   intro(root,'Leaderboard',doc,result);
   root.append(table(['Partial rank','Member','Points','Awards'],[...members].sort((a,b)=>b.candidatePoints-a.candidatePoints||a.id.localeCompare(b.id)).map(m=>[m.partialRank,link(m.displayName,'/points/members/profile/',m.id,privatePreview),fmt(m.candidatePoints),fmt(m.awardCandidateCount)])));
