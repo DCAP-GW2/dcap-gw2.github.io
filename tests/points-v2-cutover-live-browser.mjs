@@ -47,9 +47,10 @@ try{
   await page.waitForFunction(()=>window.DCAP_V2_STATUS?.revision==='live',{timeout:30000});
   const status=await page.evaluate(()=>window.DCAP_V2_STATUS),main=await page.locator('main').innerText();
   assert.equal(status.rewards,false);
-  assert(main.includes('Approved contributions through '+valid.throughDate),'Public continuing status');
+  assert(main.includes('Latest contributions: '+valid.throughDate),'Latest date derives from verified feed');
+  assert(!main.includes('Data source:')&&!main.includes('Refreshed when the page is opened'),'No redundant technical copy');
   if(path==='/points/')assert(main.includes(fmt(expectedPoints))&&main.includes(fmt(expectedAwards))&&main.includes(String(valid.publicMembers)));
-  if(path==='/points/rewards/')assert(main.includes('Rewards are disabled'));
+  if(path==='/points/rewards/')assert(main.includes('Coming Soon')&&!main.includes('Rewards are disabled'));
   assert.equal(await page.locator('.dcap-v2-production').count(),1);
   assert.equal(await page.locator('.points-hero').count(),1,'v1 hero retained');
   assert.equal(await page.locator('.points-nav').count(),1,'v1 points navigation retained');
@@ -61,7 +62,17 @@ try{
    const tableFits=await page.locator('.dcap-v2-scroll').evaluate(panel=>panel.scrollWidth<=panel.clientWidth);
    assert(tableFits,path+' should show all three columns without horizontal scrolling');
   }
-  if(path==='/points/statistics/')assert.equal(await page.locator('.points-daily-chart svg').count(),1);
+  if(path==='/points/statistics/'){
+   assert.equal(await page.locator('.points-daily-chart svg').count(),1);
+   assert.equal(await page.getByRole('heading',{name:'By role',exact:true}).count(),0);
+  }
+  if(path==='/points/how-points-work/'){
+   assert(main.includes('DCAP Points Rules'));
+   const rows=await page.locator('.dcap-v2-production tbody tr').evaluateAll(trs=>trs.map(tr=>[...tr.querySelectorAll('th,td')].map(c=>c.textContent.trim())));
+   assert.deepEqual(rows.filter(row=>row[0]==='DBS'),[['DBS','Commander','2']]);
+   assert(rows.some(row=>row[0]==='Other Events'&&row[1]==='Commander'&&row[2]==='TBD'));
+   assert.deepEqual(rows.map(row=>row[0]),[...rows.map(row=>row[0])].sort((a,b)=>a.localeCompare(b,'en-NZ')));
+  }
   record('real HTTPS endpoint renders '+path+' with v1 visual shell');
  }
  const name=baseline.members[0].id;
