@@ -1,5 +1,6 @@
 /* Production-specific presentation, strictly scoped to verified v2 roots. */
-.dcap-v2-production{max-width:1100px;margin:0 auto;padding:1.5rem 1rem;color:inherit}
+.points-page:has(.dcap-v2-production){min-width:0}
+.dcap-v2-production{max-width:100%;margin:0;padding:1.5rem 0;color:inherit}
 .dcap-v2-production h1{font-size:clamp(1.5rem,3vw,2.2rem);line-height:1.2}
 .dcap-v2-production h2{margin-top:1.8rem;font-size:1.25rem}
 .dcap-v2-production .dcap-v2-asof{font-weight:600}
@@ -9,6 +10,12 @@
 .dcap-v2-production .dcap-v2-table{width:100%;border-collapse:collapse;text-align:left}
 .dcap-v2-production .dcap-v2-table th,.dcap-v2-production .dcap-v2-table td{border-bottom:1px solid #9996;padding:.5rem .7rem;vertical-align:top}
 .dcap-v2-production .dcap-v2-table thead th{font-weight:700}
-.dcap-v2-production input{width:min(100%,28rem);padding:.5rem;margin:.75rem 0}
+.dcap-v2-production .dcap-v2-table th:first-child,.dcap-v2-production .dcap-v2-table td:first-child{width:auto;min-width:7rem;overflow-wrap:normal}
+.dcap-v2-production .dcap-v2-table th:last-child,.dcap-v2-production .dcap-v2-table td:last-child{white-space:nowrap}
+.dcap-v2-production .dcap-v2-table a{color:var(--text);text-decoration-color:var(--cyan);text-underline-offset:4px}
+.dcap-v2-production .dcap-v2-table a:hover{color:var(--cyan)}
 .dcap-v2-production button{margin-top:.75rem;padding:.5rem 1rem;cursor:pointer}
-@media(max-width:600px){.dcap-v2-production .dcap-v2-table{min-width:520px}}
+.dcap-v2-production #dcap-v2-profile-history tbody th{white-space:nowrap}
+@media(max-width:600px){
+  .dcap-v2-production .dcap-v2-table:has(thead th:nth-child(4)){min-width:520px}
+}

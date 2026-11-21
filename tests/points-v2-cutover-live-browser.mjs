@@ -25,6 +25,10 @@ assert(valid.awards>0&&valid.points>0,'Continuing feed must contain approved awa
 assert.equal(merged.population.candidatePoints,baseline.population.candidatePoints+valid.points);
 assert.equal(merged.population.awardCandidateCount,baseline.population.awardCandidateCount+valid.awards);
 assert.equal(merged.members.length,valid.publicMembers);assert.equal(merged.rewardsEnabled,false);
+assert.deepEqual(merged.rules.filter(rule=>rule.eventId==='dbs').map(rule=>[rule.roleId,rule.points]).sort(),[
+ ['commander',2],['derv-escort',2],['doordash-feed',2]
+]);
+assert.equal(merged.rules.find(rule=>rule.roleId==='other-commander')?.points,null);
 const expectedPoints=merged.population.candidatePoints,expectedAwards=merged.population.awardCandidateCount;
 const fmt=n=>new Intl.NumberFormat('en-NZ').format(n);
 record('real anonymous public feed validates to '+expectedPoints+' points / '+expectedAwards+' awards / '+valid.publicMembers+' profiles');
@@ -47,17 +51,85 @@ try{
   await page.waitForFunction(()=>window.DCAP_V2_STATUS?.revision==='live',{timeout:30000});
   const status=await page.evaluate(()=>window.DCAP_V2_STATUS),main=await page.locator('main').innerText();
   assert.equal(status.rewards,false);
-  assert(main.includes('Approved contributions through '+valid.throughDate),'Public continuing status');
-  if(path==='/points/')assert(main.includes(fmt(expectedPoints))&&main.includes(fmt(expectedAwards))&&main.includes(String(valid.publicMembers)));
-  if(path==='/points/rewards/')assert(main.includes('Rewards are disabled'));
+  assert(main.includes('Latest contributions: '+valid.throughDate),'Latest date derives from verified feed');
+  assert(!main.includes('Data source:')&&!main.includes('Refreshed when the page is opened'),'No redundant technical copy');
+  if(path==='/points/'){
+   const hero=page.locator('.points-hero');
+   assert.equal(await hero.locator('[data-points-period]').innerText(),'Latest contributions: '+valid.throughDate);
+   assert.equal(await hero.locator('[data-points-season]').innerText(),merged.season.displayLabel);
+   assert.equal(new URL(await hero.getByRole('link',{name:/Rule 2\.0/}).getAttribute('href')).pathname,'/points/how-points-work/');
+   assert.deepEqual(await page.locator('.points-kpi-card dd').allTextContents(),[fmt(expectedPoints),fmt(expectedAwards),fmt(valid.publicMembers),'2.0']);
+   assert(!/original v1 historical points|excluded;|missing public identity states|Explore role contributions/.test(main));
+  }
+  if(path==='/points/leaderboard/'){
+   assert(!/Ranks are partial|No unverified member routes/.test(main));
+   const rows=await page.locator('.dcap-v2-production tbody tr').evaluateAll(trs=>trs.map(tr=>{
+    const link=tr.querySelector('a');
+    return [[...tr.cells].map(cell=>cell.innerText),new URL(link.href).searchParams.get('member')];
+   }));
+   const ranked=[...merged.members].sort((a,b)=>b.candidatePoints-a.candidatePoints||a.id.localeCompare(b.id));
+   assert.deepEqual(rows,ranked.map(m=>[[String(m.partialRank),m.displayName,fmt(m.candidatePoints),fmt(m.awardCandidateCount)],m.id]));
+  }
+  if(path==='/points/rewards/')assert.equal((await page.locator('.points-rewards-status-card').innerText()).trim(),'Coming Soon');
   assert.equal(await page.locator('.dcap-v2-production').count(),1);
-  record('real HTTPS endpoint renders '+path);
+  assert.equal(await page.locator('.points-hero').count(),1,'v1 hero retained');
+  assert.equal(await page.locator('.points-nav').count(),1,'v1 points navigation retained');
+  assert.equal(await page.locator('.points-nav a').count(),6,'all six points navigation links retained');
+  const previewLinks=await page.locator('a[href]').evaluateAll(links=>links.filter(a=>new URL(a.href).origin===location.origin&&new URL(a.href).pathname.startsWith('/points/')&&!a.getAttribute('href').startsWith('#')).map(a=>a.href));
+  assert(previewLinks.every(href=>new URL(href).searchParams.get('dcapV2Review')==='private'),'local Points links retain the preview');
+  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth),'no page-wide overflow');
+  if(['/points/','/points/members/','/points/how-points-work/'].includes(path)){
+   const tableFits=await page.locator('.dcap-v2-scroll').evaluate(panel=>panel.scrollWidth<=panel.clientWidth);
+   assert(tableFits,path+' should show all three columns without horizontal scrolling');
+  }
+  if(path==='/points/statistics/'){
+   assert.equal(await page.locator('.points-daily-chart svg').count(),1);
+   assert.equal(await page.locator('.points-stat-bar-fill').count(),merged.aggregates.eventTotals.length);
+   assert.equal(await page.getByRole('heading',{name:'Recent awards',exact:true}).count(),1);
+   assert.equal(await page.getByRole('heading',{name:'By role',exact:true}).count(),0);
+  }
+  if(path==='/points/how-points-work/'){
+   assert.equal(await page.getByRole('heading',{name:'DCAP Points Rules',exact:true}).count(),1);
+   const rows=await page.locator('.dcap-v2-production tbody tr').evaluateAll(trs=>trs.map(tr=>[...tr.querySelectorAll('th,td')].map(c=>c.textContent.trim())));
+   assert.deepEqual(rows.filter(row=>row[0]==='DBS'),[['DBS','Commander','2']]);
+   assert(rows.some(row=>row[0]==='Other Events'&&row[1]==='Commander'&&row[2]==='TBD'));
+   assert.deepEqual(rows.map(row=>row[0]),[...rows.map(row=>row[0])].sort((a,b)=>a.localeCompare(b,'en-NZ')));
+  }
+  record('real HTTPS endpoint renders '+path+' with v1 visual shell');
  }
  const name=baseline.members[0].id;
  await page.goto(route('/points/members/profile/?member='+name),{waitUntil:'domcontentloaded'});
  await page.waitForFunction(()=>window.DCAP_V2_STATUS?.revision==='live',{timeout:30000});
  assert((await page.locator('main').innerText()).includes(baseline.members[0].displayName));
  record('live historical member profile preserved');
+ const historyDate=page.locator('#dcap-v2-profile-history tbody th').first();
+ assert.equal(await historyDate.evaluate(cell=>getComputedStyle(cell).whiteSpace),'nowrap','mobile history dates stay on one line');
+ const personalCount=merged.awards.filter(a=>a.memberId===name).length;
+ if(personalCount>5){
+  await page.getByRole('button',{name:'Show more',exact:true}).click();
+  assert.equal(await page.locator('#dcap-v2-profile-history tbody tr').count(),personalCount);
+  await page.getByRole('button',{name:'Show fewer',exact:true}).click();
+  assert.equal(await page.locator('#dcap-v2-profile-history tbody tr').count(),5);
+ }
+ await page.getByRole('link',{name:'← Back to Members',exact:true}).click();
+ await page.waitForSelector('.dcap-v2-production input');
+ await page.getByRole('searchbox').fill('Nephz');
+ assert.equal(await page.locator('.dcap-v2-production tbody tr').count(),1);
+ await page.getByRole('link',{name:'Nephz',exact:true}).click();
+ assert.equal(new URL(page.url()).searchParams.get('member'),'m-6a45288ea1cbb878');
+ for(const section of ['Overview','Leaderboard','Members','Statistics','How Points Work','Rewards']){
+  await page.getByRole('navigation',{name:'Points navigation',exact:true}).getByRole('link',{name:section,exact:true}).click();
+  await page.waitForSelector('.dcap-v2-production');
+  assert.equal(new URL(page.url()).searchParams.get('dcapV2Review'),'private');
+ }
+ await page.getByRole('button',{name:'Open navigation',exact:true}).click();
+ assert.equal(await page.locator('.menu-toggle').getAttribute('aria-expanded'),'true');
+ await page.keyboard.press('Escape');
+ assert.equal(await page.locator('.menu-toggle').getAttribute('aria-expanded'),'false');
+ record('private navigation, member search, complete history and mobile menu work');
+ // Keep the existing member-profile accessibility acceptance on the profile route.
+ await page.goto(route('/points/members/profile/?member='+name),{waitUntil:'domcontentloaded'});
+ await page.waitForSelector('.dcap-v2-production');
  assert.deepEqual(e.errors,[]);assert.equal(e.numbered.length,0);
  record('no JS page errors and no new r001/r002 HTTP requests');
  const a=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21a','wcag21aa']).analyze();
@@ -71,8 +143,29 @@ try{
  await page.waitForFunction(()=>window.DCAP_V2_STATUS?.state==='last-available',{timeout:30000});
  const last=await page.locator('main').innerText();
  assert(last.includes(fmt(expectedPoints)));assert(last.includes('Last available validated data'));
+ assert.equal(await page.locator('.dcap-v2-warning').count(),1);
  record('network failure retains previously verified public '+expectedPoints+' point payload');
 }finally{await e.ctx.close()}
+// Wide viewport sanity check without extra infrastructure.
+const wide=await context(1440);
+try{
+ await wide.page.goto(start+'/points/?dcapV2Review=private',{waitUntil:'domcontentloaded'});
+ await wide.page.waitForFunction(()=>window.DCAP_V2_STATUS?.revision==='live',{timeout:30000});
+ assert.equal(await wide.page.locator('.points-hero').count(),1);
+ assert.equal(await wide.page.locator('.points-nav').count(),1);
+ assert.equal(await wide.page.locator('.points-kpi-card').count(),4);
+ assert.equal(await wide.page.locator('.points-dashboard-grid > section').count(),2);
+ record('desktop overview retains hero, navigation and four branded KPI cards');
+ for(const width of [768,320]){
+  await wide.page.setViewportSize({width,height:900});
+  for(const path of [...paths,'/points/members/profile/?member=m-6a45288ea1cbb878']){
+   await wide.page.goto(start+path+(path.includes('?')?'&':'?')+'dcapV2Review=private',{waitUntil:'domcontentloaded'});
+   await wide.page.waitForSelector('.dcap-v2-production');
+   assert(await wide.page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth),path+' overflows at '+width);
+  }
+ }
+ record('all seven views fit tablet 768px and small mobile 320px');
+}finally{await wide.ctx.close()}
 const fresh=await context(320);
 try{
  await fresh.ctx.route('https://script.google.com/macros/s/**',r=>r.abort());
@@ -81,6 +174,7 @@ try{
  const text=await fresh.page.locator('main').innerText();
  assert(text.includes(fmt(baseline.population.candidatePoints)));
  assert(text.includes('Historical snapshot'));
+ assert.match(await fresh.page.locator('.dcap-v2-warning').innerText(),/current contributions are unavailable/);
  record('first-visit outage falls back to frozen r000 / '+baseline.population.candidatePoints+' points');
 }finally{await fresh.ctx.close()}
 await browser.close();
