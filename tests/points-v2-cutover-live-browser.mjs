@@ -54,6 +54,10 @@ try{
   assert.equal(await page.locator('.points-hero').count(),1,'v1 hero retained');
   assert.equal(await page.locator('.points-nav').count(),1,'v1 points navigation retained');
   assert.equal(await page.locator('.points-nav a').count(),6,'all six points navigation links retained');
+  const previewLinks=await page.locator('a[href]').evaluateAll(links=>links.filter(a=>new URL(a.href).origin===location.origin&&new URL(a.href).pathname.startsWith('/points/')&&!a.getAttribute('href').startsWith('#')).map(a=>a.href));
+  assert(previewLinks.every(href=>new URL(href).searchParams.get('dcapV2Review')==='private'),'local Points links retain the preview');
+  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth),'no page-wide overflow');
+  if(path==='/points/statistics/')assert.equal(await page.locator('.points-daily-chart svg').count(),1);
   record('real HTTPS endpoint renders '+path+' with v1 visual shell');
  }
  const name=baseline.members[0].id;
@@ -61,6 +65,32 @@ try{
  await page.waitForFunction(()=>window.DCAP_V2_STATUS?.revision==='live',{timeout:30000});
  assert((await page.locator('main').innerText()).includes(baseline.members[0].displayName));
  record('live historical member profile preserved');
+ const personalCount=merged.awards.filter(a=>a.memberId===name).length;
+ if(personalCount>5){
+  await page.getByRole('button',{name:'Show more',exact:true}).click();
+  assert.equal(await page.locator('#dcap-v2-profile-history tbody tr').count(),personalCount);
+  await page.getByRole('button',{name:'Show fewer',exact:true}).click();
+  assert.equal(await page.locator('#dcap-v2-profile-history tbody tr').count(),5);
+ }
+ await page.getByRole('link',{name:'← Back to Members',exact:true}).click();
+ await page.waitForSelector('.dcap-v2-production input');
+ await page.getByRole('searchbox').fill('Nephz');
+ assert.equal(await page.locator('.dcap-v2-production tbody tr').count(),1);
+ await page.getByRole('link',{name:'Nephz',exact:true}).click();
+ assert.equal(new URL(page.url()).searchParams.get('member'),'m-6a45288ea1cbb878');
+ for(const section of ['Overview','Leaderboard','Members','Statistics','How Points Work','Rewards']){
+  await page.getByRole('navigation',{name:'Points navigation',exact:true}).getByRole('link',{name:section,exact:true}).click();
+  await page.waitForSelector('.dcap-v2-production');
+  assert.equal(new URL(page.url()).searchParams.get('dcapV2Review'),'private');
+ }
+ await page.getByRole('button',{name:'Open navigation',exact:true}).click();
+ assert.equal(await page.locator('.menu-toggle').getAttribute('aria-expanded'),'true');
+ await page.keyboard.press('Escape');
+ assert.equal(await page.locator('.menu-toggle').getAttribute('aria-expanded'),'false');
+ record('private navigation, member search, complete history and mobile menu work');
+ // Keep the existing member-profile accessibility acceptance on the profile route.
+ await page.goto(route('/points/members/profile/?member='+name),{waitUntil:'domcontentloaded'});
+ await page.waitForSelector('.dcap-v2-production');
  assert.deepEqual(e.errors,[]);assert.equal(e.numbered.length,0);
  record('no JS page errors and no new r001/r002 HTTP requests');
  const a=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21a','wcag21aa']).analyze();
@@ -84,6 +114,7 @@ try{
  assert.equal(await wide.page.locator('.points-hero').count(),1);
  assert.equal(await wide.page.locator('.points-nav').count(),1);
  assert.equal(await wide.page.locator('.points-kpi-card').count(),4);
+ assert.equal(await wide.page.locator('.points-dashboard-grid > section').count(),2);
  record('desktop overview retains hero, navigation and four branded KPI cards');
 }finally{await wide.ctx.close()}
 const fresh=await context(320);
