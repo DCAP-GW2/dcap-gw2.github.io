@@ -5,6 +5,24 @@ const el=(tag,content='',cls='')=>{const x=document.createElement(tag);if(conten
 const fmt=x=>new Intl.NumberFormat('en-NZ').format(x);
 const url=(path,id,privatePreview)=>{const u=new URL(path,location.origin);if(privatePreview)u.searchParams.set('dcapV2Review','private');if(id)u.searchParams.set('member',id);return u.href};
 const link=(name,path,id,privatePreview)=>{const x=el('a',name);x.href=url(path,id,privatePreview);return x};
+// Public leaderboard views use approved award cycle IDs; no rescoring or new season data.
+function leaderboardRows(doc,viewName){
+ const scores=new Map();
+ if(viewName==='current'){
+  for(const a of doc.awards){
+   if(a.cycleId!==doc.season.rawCycleId)continue;
+   const x=scores.get(a.memberId)||{points:0,count:0};
+   x.points+=a.points;x.count++;scores.set(a.memberId,x);
+  }
+ }
+ const rows=doc.members.map(m=>{
+  const current=scores.get(m.id)||{points:0,count:0};
+  return {member:m,points:viewName==='current'?current.points:m.candidatePoints,
+   count:viewName==='current'?current.count:m.awardCandidateCount};
+ }).filter(row=>row.points>0).sort((a,b)=>b.points-a.points||a.member.id.localeCompare(b.member.id));
+ for(let i=0;i<rows.length;i++)rows[i].rank=viewName==='all-time'?rows[i].member.partialRank:1+rows.filter(r=>r.points>rows[i].points).length;
+ return rows;
+}
 // Reuse the existing Statistics bar and daily-chart presentation with verified v2 awards.
 const statLabel=(name,points,total)=>{const cell=el('span',name),track=el('span',null,'points-stat-bar-track'),fill=el('span',null,'points-stat-bar-fill');track.setAttribute('aria-hidden','true');fill.style.width=(total?points/total*100:0)+'%';track.append(fill);cell.append(track);return cell};
 function dailyActivity(root,awards){
@@ -20,7 +38,7 @@ function dailyActivity(root,awards){
  const coordinates=days.map(([,points],i)=>[days.length===1?400:12+i/(days.length-1)*776,228-(peak?points/peak:0)*216]);
  plot.append(days.length===1?svg('circle',{cx:400,cy:coordinates[0][1],r:5,class:'points-daily-point'}):svg('polyline',{points:coordinates.map(p=>p.join(',')).join(' '),class:'points-daily-line','vector-effect':'non-scaling-stroke'}));
  const dates=el('div',null,'points-daily-dates');dates.append(el('span',days[0][0]),el('span',days.at(-1)[0]));chart.append(plot,dates);root.append(chart);
- const details=el('details'),summary=el('summary','Daily Points totals');details.append(summary,table(['Date','Points'],days.map(([date,points])=>[date,fmt(points)])));root.append(details);
+ const details=el('details',null,'dcap-v2-daily-totals'),summary=el('summary','Daily Points totals');details.append(summary,table(['Date','Points'],days.map(([date,points])=>[date,fmt(points)])));root.append(details);
 }
 function table(columns,records){const wrap=el('div',null,'dcap-v2-scroll points-panel glass-panel');wrap.tabIndex=0;wrap.setAttribute('role','region');wrap.setAttribute('aria-label',columns.join(', '));const t=el('table',null,'dcap-v2-table points-table');const thead=el('thead'),hr=el('tr');for(const c of columns){const th=el('th',c);th.scope='col';hr.append(th)}thead.append(hr);t.append(thead);const body=el('tbody');for(const cells of records){const tr=el('tr');for(let i=0;i<cells.length;i++){const td=el(i===0?'th':'td');if(i===0)td.scope='row';const value=cells[i];if(value instanceof Node)td.append(value);else td.textContent=String(value);tr.append(td)}body.append(tr)}t.append(body);wrap.append(t);return wrap}
 const intro=(root,title,doc,result)=>{root.append(el('h2',title));if(result.state==='last-available')root.append(el('p',doc.continuing?'Last available validated data — the current feed could not be retrieved.':'Historical snapshot — current contributions are unavailable.','dcap-v2-warning'))};
@@ -29,7 +47,7 @@ function view(root,name,doc,result,privatePreview){
  if(name==='overview'){
   intro(root,'Season overview',doc,result);
   const kpis=el('dl',null,'points-kpi-grid');
-  for(const [name,value] of [['Total Points',fmt(doc.population.candidatePoints)],['Approved Awards',fmt(awards.length)],['Contributors',fmt(members.length)],['Rule Version','2.0']]){
+  for(const [name,value] of [['Total Points',fmt(doc.population.candidatePoints)],['Contributions',fmt(awards.length)],['Contributors',fmt(members.length)],['Rule Version','2.0']]){
    const card=el('div',null,'points-kpi-card'+(name==='Total Points'?' points-kpi-card-total':''));card.append(el('dt',name),el('dd',value));kpis.append(card);
   }
   root.append(kpis);
@@ -48,26 +66,46 @@ function view(root,name,doc,result,privatePreview){
   root.append(dashboard);
  }else if(name==='leaderboard'){
   intro(root,'Leaderboard',doc,result);
-  root.append(table(['Partial rank','Member','Points','Awards'],[...members].sort((a,b)=>b.candidatePoints-a.candidatePoints||a.id.localeCompare(b.id)).map(m=>[m.partialRank,link(m.displayName,'/points/members/profile/',m.id,privatePreview),fmt(m.candidatePoints),fmt(m.awardCandidateCount)])));
+  const switcher=el('div',null,'points-view-switcher dcap-v2-leaderboard-switcher');
+  switcher.setAttribute('role','group');switcher.setAttribute('aria-label','Leaderboard view');
+  const results=el('div');results.id='dcap-v2-leaderboard-results';
+  const buttons={};
+  for(const [key,label] of [['current','Current Season'],['all-time','All Time']]){
+   const b=el('button',label);b.type='button';b.setAttribute('aria-controls',results.id);
+   switcher.append(b);buttons[key]=b;
+  }
+  root.append(switcher,results);
+  let active='current';
+  const render=()=>{
+   const rows=leaderboardRows(doc,active);
+   for(const [key,b] of Object.entries(buttons))b.setAttribute('aria-pressed',String(key===active));
+   const note=el('p',active==='current'?doc.season.displayLabel+' — Current Season':'All-Time leaderboard','dcap-v2-leaderboard-label');
+   const content=rows.length?
+    table(['Partial rank','Member','Points','Contributions'],rows.map(r=>[r.rank,link(r.member.displayName,'/points/members/profile/',r.member.id,privatePreview),fmt(r.points),fmt(r.count)])):
+    el('p','No contributions have been recorded for this view.');
+   results.replaceChildren(note,content);
+  };
+  for(const [key,b] of Object.entries(buttons))b.addEventListener('click',()=>{active=key;render()});
+  render();
  }else if(name==='members'){
-  intro(root,'Member directory',doc,result);const input=el('input');input.type='search';input.placeholder='Search published member names';input.setAttribute('aria-label','Search published member names');const search=el('div',null,'points-member-search');search.append(input);root.append(search);const holder=el('div');root.append(holder);
-  const render=()=>{const q=input.value.toLocaleLowerCase();holder.replaceChildren(table(['Member','Points','Awards'],members.filter(m=>m.displayName.toLocaleLowerCase().includes(q)).sort((a,b)=>a.displayName.localeCompare(b.displayName)).map(m=>[link(m.displayName,'/points/members/profile/',m.id,privatePreview),fmt(m.candidatePoints),fmt(m.awardCandidateCount)])))};input.addEventListener('input',render);render();
+  intro(root,'Member directory',doc,result);const input=el('input');input.type='search';input.placeholder='Search member names';input.setAttribute('aria-label','Search member names');const search=el('div',null,'points-member-search');search.append(input);root.append(search);const holder=el('div');root.append(holder);
+  const render=()=>{const q=input.value.toLocaleLowerCase();holder.replaceChildren(table(['Member','Points','Contributions'],members.filter(m=>m.displayName.toLocaleLowerCase().includes(q)).sort((a,b)=>a.displayName.localeCompare(b.displayName)).map(m=>[link(m.displayName,'/points/members/profile/',m.id,privatePreview),fmt(m.candidatePoints),fmt(m.awardCandidateCount)])))};input.addEventListener('input',render);render();
  }else if(name==='profile'){
   const selected=new URL(location.href).searchParams.getAll('member');const member=selected.length===1?members.find(m=>m.id===selected[0]):null;
   if(!member){root.append(el('h1','Profile unavailable'),el('p','No verified public profile exists for this ID.'));return}
-  intro(root,member.displayName,doc,result);root.append(el('p',`${fmt(member.candidatePoints)} points from ${fmt(member.awardCandidateCount)} awards.`));
+  intro(root,member.displayName,doc,result);root.append(el('p',`${fmt(member.candidatePoints)} points from ${fmt(member.awardCandidateCount)} contributions.`));
   const personal=awards.filter(a=>a.memberId===member.id).sort((a,b)=>b.eventDate.localeCompare(a.eventDate)||a.id.localeCompare(b.id));
   const area=el('div');root.append(area);const btn=el('button','Show more','button button-secondary');btn.type='button';btn.setAttribute('aria-expanded','false');const id='dcap-v2-profile-history';area.id=id;btn.setAttribute('aria-controls',id);root.append(btn);
   let expanded=false;const render=()=>{area.replaceChildren(table(['Date','Event','Role','Points','Provenance'],personal.slice(0,expanded?personal.length:5).map(a=>[a.eventDate,doc.events.find(e=>e.id===a.eventId)?.label||a.eventId,a.provenanceType==='OWNER_MANUAL_OTHER_COMMANDER'?'Other Commander':(doc.rules.find(r=>r.id===a.ruleId)?.roleLabel||a.roleId),fmt(a.points),a.provenanceType==='APPROVED_RULE'?'Owner-approved rule':a.provenanceType==='OWNER_MANUAL_OTHER_COMMANDER'?'Owner-assigned Other Commander':'Ratified historical exception'])));btn.hidden=personal.length<=5;btn.textContent=expanded?'Show fewer':'Show more';btn.setAttribute('aria-expanded',String(expanded))};btn.addEventListener('click',()=>{expanded=!expanded;render()});render();
  }else if(name==='statistics'){
-  intro(root,doc.continuing?'Statistics':'Historical statistics',doc,result);root.append(el('h2','By event'));root.append(table(['Event','Points','Awards'],doc.aggregates.eventTotals.map(a=>[statLabel(doc.events.find(e=>e.id===a.eventId)?.label||a.eventId,a.candidatePoints,doc.population.candidatePoints),fmt(a.candidatePoints),a.awardCandidateCount])));
+  intro(root,doc.continuing?'Statistics':'Historical statistics',doc,result);root.append(el('h2','By event'));root.append(table(['Event','Points','Contributions'],doc.aggregates.eventTotals.map(a=>[statLabel(doc.events.find(e=>e.id===a.eventId)?.label||a.eventId,a.candidatePoints,doc.population.candidatePoints),fmt(a.candidatePoints),a.awardCandidateCount])));
   dailyActivity(root,awards);
-  root.append(el('h2',doc.continuing?'Recent awards':'Recent historical awards'));root.append(table(['Date','Event','Member','Points'],[...awards].sort((a,b)=>b.eventDate.localeCompare(a.eventDate)||a.id.localeCompare(b.id)).slice(0,10).map(a=>[a.eventDate,doc.events.find(e=>e.id===a.eventId)?.label||a.eventId,doc.members.find(m=>m.id===a.memberId)?.displayName||'Withheld',a.points])));
+  root.append(el('h2',doc.continuing?'Recent contributions':'Recent historical contributions'));root.append(table(['Date','Event','Member','Points'],[...awards].sort((a,b)=>b.eventDate.localeCompare(a.eventDate)||a.id.localeCompare(b.id)).slice(0,10).map(a=>[a.eventDate,doc.events.find(e=>e.id===a.eventId)?.label||a.eventId,doc.members.find(m=>m.id===a.memberId)?.displayName||'Withheld',a.points])));
  }else if(name==='how'){
   intro(root,'DCAP Points Rules',doc,result);
   // Display-only DBS summary; keep the three approved roles and award records intact.
   const rows=doc.rules.filter(r=>r.eventId!=='dbs').map(r=>[
-   r.eventId==='actual-event-retained'?'Other Events':r.eventLabel,
+   r.eventId==='actual-event-retained'?'Other Events':r.eventId==='all-events'?'All Events':r.eventLabel,
    r.roleId==='other-commander'?'Commander':r.roleLabel,
    r.points===null?'TBD':fmt(r.points)
   ]);
@@ -76,7 +114,9 @@ function view(root,name,doc,result,privatePreview){
    const commander=dbsRules.find(r=>r.roleId==='commander')||dbsRules[0];
    rows.push(['DBS','Commander',commander.points===null?'TBD':fmt(commander.points)]);
   }
-  rows.sort((a,b)=>a[0].localeCompare(b[0],'en-NZ')||a[1].localeCompare(b[1],'en-NZ'));
+  // General rules follow the alphabetised event-specific rows.
+  const group=event=>event==='All Events'?1:event==='Other Events'?2:0;
+  rows.sort((a,b)=>group(a[0])-group(b[0])||a[0].localeCompare(b[0],'en-NZ')||a[1].localeCompare(b[1],'en-NZ'));
   root.append(table(['Event','Role','Points'],rows));
   root.append(el('p','For Other Events, Commander points are assigned case by case.'));
  }else if(name==='rewards'){
@@ -85,9 +125,20 @@ function view(root,name,doc,result,privatePreview){
 }
 export async function mount(viewName,{privatePreview=false}={}) {
  const original=document.querySelector('main');if(!original)return false;
- // No DOM mutation until the immutable approved snapshot is verified.
+ const unavailable=()=>{
+  const container=original.querySelector('.points-content'),nav=container?.querySelector('.points-nav');
+  if(!nav)return false;
+  const outlet=el('section',null,'dcap-v2-production');
+  const panel=el('div',null,'dcap-v2-error points-panel glass-panel');
+  panel.setAttribute('role','status');
+  panel.append(el('h2','Unable to load DCAP Points'),el('p','Please refresh the page and try again.'));
+  outlet.append(panel);container.replaceChildren(nav,outlet);
+  window.DCAP_V2_STATUS={state:'unavailable',view:viewName,rewards:false};
+  return true;
+ };
+ // Only verified public data may replace the page's loading state.
  try{
-  const result=await loadV2();if(!result.data)return false;
+  const result=await loadV2();if(!result.data)return unavailable();
   const outlet=el('section',null,'dcap-v2-production');
   outlet.setAttribute('aria-label','DCAP v2.0 verified published data');
   view(outlet,viewName,result.data,result,privatePreview);
@@ -127,5 +178,5 @@ export async function mount(viewName,{privatePreview=false}={}) {
   if(typeof closeMenu==='function')document.body.classList.add('points-navigation-ready');
   window.DCAP_V2_STATUS={state:result.state,view:viewName,revision:result.revision,source:result.source,rewards:false};
   return true;
- }catch{return false;}
+ }catch{return unavailable();}
 }
