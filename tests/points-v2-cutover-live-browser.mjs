@@ -107,7 +107,7 @@ try{
  record('network failure retains previously verified public '+expectedPoints+' point payload');
 }finally{await e.ctx.close()}
 // Wide viewport sanity check without extra infrastructure.
-const wide=await context(1280);
+const wide=await context(1440);
 try{
  await wide.page.goto(start+'/points/?dcapV2Review=private',{waitUntil:'domcontentloaded'});
  await wide.page.waitForFunction(()=>window.DCAP_V2_STATUS?.revision==='live',{timeout:30000});
@@ -116,6 +116,15 @@ try{
  assert.equal(await wide.page.locator('.points-kpi-card').count(),4);
  assert.equal(await wide.page.locator('.points-dashboard-grid > section').count(),2);
  record('desktop overview retains hero, navigation and four branded KPI cards');
+ for(const width of [768,320]){
+  await wide.page.setViewportSize({width,height:900});
+  for(const path of [...paths,'/points/members/profile/?member=m-6a45288ea1cbb878']){
+   await wide.page.goto(start+path+(path.includes('?')?'&':'?')+'dcapV2Review=private',{waitUntil:'domcontentloaded'});
+   await wide.page.waitForSelector('.dcap-v2-production');
+   assert(await wide.page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth),path+' overflows at '+width);
+  }
+ }
+ record('all seven views fit tablet 768px and small mobile 320px');
 }finally{await wide.ctx.close()}
 const fresh=await context(320);
 try{

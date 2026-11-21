@@ -1,4 +1,5 @@
 /* Production-specific presentation, strictly scoped to verified v2 roots. */
+.points-page:has(.dcap-v2-production){min-width:0}
 .dcap-v2-production{max-width:100%;margin:0;padding:1.5rem 0;color:inherit}
 .dcap-v2-production h1{font-size:clamp(1.5rem,3vw,2.2rem);line-height:1.2}
 .dcap-v2-production h2{margin-top:1.8rem;font-size:1.25rem}
