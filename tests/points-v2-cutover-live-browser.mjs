@@ -30,6 +30,12 @@ assert.deepEqual(merged.rules.filter(rule=>rule.eventId==='dbs').map(rule=>[rule
 ]);
 assert.equal(merged.rules.find(rule=>rule.roleId==='other-commander')?.points,null);
 const expectedPoints=merged.population.candidatePoints,expectedAwards=merged.population.awardCandidateCount;
+// Static loading copy stays visitor-friendly while the verified feed is pending.
+for(const path of ['leaderboard','members','members/profile','statistics','how-points-work','rewards']){
+ const html=read('points/'+path+'/index.html');
+ assert(html.includes('Loading DCAP Points…'),path+' should show simple loading copy');
+ assert(/data-(leaderboard|member|statistics|rules|rewards)-links hidden/.test(html),path+' must hide fallback links');
+}
 const fmt=n=>new Intl.NumberFormat('en-NZ').format(n);
 record('real anonymous public feed validates to '+expectedPoints+' points / '+expectedAwards+' awards / '+valid.publicMembers+' profiles');
 const browser=await chromium.launch({channel:'chrome',headless:true,args:['--no-sandbox']});
@@ -59,16 +65,31 @@ try{
    assert.equal(await hero.locator('[data-points-season]').innerText(),merged.season.displayLabel);
    assert.equal(new URL(await hero.getByRole('link',{name:/Rule 2\.0/}).getAttribute('href')).pathname,'/points/how-points-work/');
    assert.deepEqual(await page.locator('.points-kpi-card dd').allTextContents(),[fmt(expectedPoints),fmt(expectedAwards),fmt(valid.publicMembers),'2.0']);
+   assert.equal(await page.locator('.points-kpi-card dt').nth(1).innerText(),'Contributions');
+   assert.equal(await page.locator('.points-kpi-grid').first().evaluate(x=>getComputedStyle(x).marginBottom),'24px');
    assert(!/original v1 historical points|excluded;|missing public identity states|Explore role contributions/.test(main));
   }
   if(path==='/points/leaderboard/'){
    assert(!/Ranks are partial|No unverified member routes/.test(main));
-   const rows=await page.locator('.dcap-v2-production tbody tr').evaluateAll(trs=>trs.map(tr=>{
+   assert.equal(await page.getByRole('button',{name:'Current Season',exact:true}).getAttribute('aria-pressed'),'true');
+   const readRows=()=>page.locator('.dcap-v2-production tbody tr').evaluateAll(trs=>trs.map(tr=>{
     const link=tr.querySelector('a');
     return [[...tr.cells].map(cell=>cell.innerText),new URL(link.href).searchParams.get('member')];
    }));
-   const ranked=[...merged.members].sort((a,b)=>b.candidatePoints-a.candidatePoints||a.id.localeCompare(b.id));
-   assert.deepEqual(rows,ranked.map(m=>[[String(m.partialRank),m.displayName,fmt(m.candidatePoints),fmt(m.awardCandidateCount)],m.id]));
+   assert.equal(await page.locator('.dcap-v2-production thead').innerText().then(x=>x.includes('Contributions')),true);
+   const current=merged.awards.filter(a=>a.cycleId===merged.season.rawCycleId);
+   const byMember=new Map();
+   for(const a of current){const old=byMember.get(a.memberId)||{points:0,count:0};old.points+=a.points;old.count++;byMember.set(a.memberId,old)}
+   const currentRanked=merged.members.map(m=>({m,...(byMember.get(m.id)||{points:0,count:0})})).filter(x=>x.points>0).sort((a,b)=>b.points-a.points||a.m.id.localeCompare(b.m.id));
+   assert.deepEqual(await readRows(),currentRanked.map(x=>[[String(1+currentRanked.filter(y=>y.points>x.points).length),x.m.displayName,fmt(x.points),fmt(x.count)],x.m.id]));
+   await page.getByRole('button',{name:'All Time',exact:true}).click();
+   assert.equal(await page.getByRole('button',{name:'All Time',exact:true}).getAttribute('aria-pressed'),'true');
+   assert.equal(await page.getByRole('button',{name:'Current Season',exact:true}).getAttribute('aria-pressed'),'false');
+   const ranked=[...merged.members].filter(m=>m.candidatePoints>0).sort((a,b)=>b.candidatePoints-a.candidatePoints||a.id.localeCompare(b.id));
+   assert.deepEqual(await readRows(),ranked.map(m=>[[String(m.partialRank),m.displayName,fmt(m.candidatePoints),fmt(m.awardCandidateCount)],m.id]));
+   await page.getByRole('button',{name:'Current Season',exact:true}).click();
+   assert.equal(await page.getByRole('button',{name:'Current Season',exact:true}).getAttribute('aria-pressed'),'true');
+
   }
   if(path==='/points/rewards/')assert.equal((await page.locator('.points-rewards-status-card').innerText()).trim(),'Coming Soon');
   assert.equal(await page.locator('.dcap-v2-production').count(),1);
@@ -85,7 +106,7 @@ try{
   if(path==='/points/statistics/'){
    assert.equal(await page.locator('.points-daily-chart svg').count(),1);
    assert.equal(await page.locator('.points-stat-bar-fill').count(),merged.aggregates.eventTotals.length);
-   assert.equal(await page.getByRole('heading',{name:'Recent awards',exact:true}).count(),1);
+   assert.equal(await page.getByRole('heading',{name:'Recent contributions',exact:true}).count(),1);
    assert.equal(await page.getByRole('heading',{name:'By role',exact:true}).count(),0);
   }
   if(path==='/points/how-points-work/'){
@@ -93,7 +114,13 @@ try{
    const rows=await page.locator('.dcap-v2-production tbody tr').evaluateAll(trs=>trs.map(tr=>[...tr.querySelectorAll('th,td')].map(c=>c.textContent.trim())));
    assert.deepEqual(rows.filter(row=>row[0]==='DBS'),[['DBS','Commander','2']]);
    assert(rows.some(row=>row[0]==='Other Events'&&row[1]==='Commander'&&row[2]==='TBD'));
-   assert.deepEqual(rows.map(row=>row[0]),[...rows.map(row=>row[0])].sort((a,b)=>a.localeCompare(b,'en-NZ')));
+   assert.deepEqual(rows.slice(-2),[['All Events','Student','2'],['Other Events','Commander','TBD']]);
+   const specific=rows.slice(0,-2).map(row=>row[0]);
+   assert.deepEqual(specific,[...specific].sort((a,b)=>a.localeCompare(b,'en-NZ')));
+  }
+  if(path==='/points/members/'){
+   assert.equal(await page.locator('input[type=search]').getAttribute('placeholder'),'Search member names');
+   assert((await page.locator('.dcap-v2-production thead').innerText()).includes('Contributions'));
   }
   record('real HTTPS endpoint renders '+path+' with v1 visual shell');
  }
@@ -166,6 +193,16 @@ try{
  }
  record('all seven views fit tablet 768px and small mobile 320px');
 }finally{await wide.ctx.close()}
+const unavailable=await context(390);
+try{
+ await unavailable.ctx.route('**/points/data/v2/**',route=>route.abort());
+ await unavailable.page.goto(start+'/points/leaderboard/?dcapV2Review=private',{waitUntil:'domcontentloaded'});
+ await unavailable.page.waitForFunction(()=>window.DCAP_V2_STATUS?.state==='unavailable',{timeout:30000});
+ const msg=await unavailable.page.locator('.dcap-v2-production').innerText();
+ assert(msg.includes('Unable to load DCAP Points')&&msg.includes('Please refresh the page'));
+ assert.equal(await unavailable.page.locator('.dcap-v2-production a').count(),0);
+ record('no validated source shows simple failure message without fallback links');
+}finally{await unavailable.ctx.close()}
 const fresh=await context(320);
 try{
  await fresh.ctx.route('https://script.google.com/macros/s/**',r=>r.abort());
