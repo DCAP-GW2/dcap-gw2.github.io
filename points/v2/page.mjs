@@ -3,7 +3,6 @@ import {loadV2} from './live-loader.mjs';
 import {PATHS} from './config.mjs';
 const el=(tag,content='',cls='')=>{const x=document.createElement(tag);if(content!==null)x.textContent=String(content);if(cls)x.className=cls;return x};
 const fmt=x=>new Intl.NumberFormat('en-NZ').format(x);
-const label=(doc)=>doc.continuing?`Approved contributions through ${doc.continuing.throughDate} (NZ date). Cycle 0: ${doc.season.displayLabel}. Refreshed when the page is opened, not pushed live.`:`Historical snapshot — data through ${new Date(doc.source.asOf).toLocaleString('en-NZ',{timeZone:'Pacific/Auckland',dateStyle:'medium',timeStyle:'short'})} (Auckland). Cycle 0: ${doc.season.displayLabel}. Not live data.`;
 const url=(path,id,privatePreview)=>{const u=new URL(path,location.origin);if(privatePreview)u.searchParams.set('dcapV2Review','private');if(id)u.searchParams.set('member',id);return u.href};
 const link=(name,path,id,privatePreview)=>{const x=el('a',name);x.href=url(path,id,privatePreview);return x};
 // Reuse the existing Statistics bar and daily-chart presentation with verified v2 awards.
@@ -24,7 +23,7 @@ function dailyActivity(root,awards){
  const details=el('details'),summary=el('summary','Daily Points totals');details.append(summary,table(['Date','Points'],days.map(([date,points])=>[date,fmt(points)])));root.append(details);
 }
 function table(columns,records){const wrap=el('div',null,'dcap-v2-scroll points-panel glass-panel');wrap.tabIndex=0;wrap.setAttribute('role','region');wrap.setAttribute('aria-label',columns.join(', '));const t=el('table',null,'dcap-v2-table points-table');const thead=el('thead'),hr=el('tr');for(const c of columns){const th=el('th',c);th.scope='col';hr.append(th)}thead.append(hr);t.append(thead);const body=el('tbody');for(const cells of records){const tr=el('tr');for(let i=0;i<cells.length;i++){const td=el(i===0?'th':'td');if(i===0)td.scope='row';const value=cells[i];if(value instanceof Node)td.append(value);else td.textContent=String(value);tr.append(td)}body.append(tr)}t.append(body);wrap.append(t);return wrap}
-const intro=(root,title,doc,result)=>{root.append(el('h2',title));root.append(el('p',label(doc),'dcap-v2-asof'));if(result.state==='last-available')root.append(el('p','Last available validated data — the current feed could not be retrieved.','dcap-v2-warning'));root.append(el('p',`Data source: ${doc.continuing?'Approved public points feed':'Historical backup'} · Rewards: DISABLED`,'dcap-v2-detail'))};
+const intro=(root,title,doc,result)=>{root.append(el('h2',title));if(result.state==='last-available')root.append(el('p',doc.continuing?'Last available validated data — the current feed could not be retrieved.':'Historical snapshot — current contributions are unavailable.','dcap-v2-warning'))};
 function view(root,name,doc,result,privatePreview){
  const members=doc.members,awards=doc.awards;
  if(name==='overview'){
@@ -34,7 +33,6 @@ function view(root,name,doc,result,privatePreview){
    const card=el('div',null,'points-kpi-card'+(name==='Total Points'?' points-kpi-card-total':''));card.append(el('dt',name),el('dd',value));kpis.append(card);
   }
   root.append(kpis);
-  root.append(el('p',`${fmt(doc.population.originalPoints)} original v1 historical points preserved; ${fmt(doc.population.confirmedIneligibleCount)} historical ineligible contributions excluded; ${fmt(doc.population.missingPublicIdCount)} missing public identity states retained.`));
   const dashboard=el('div',null,'points-dashboard-grid'),top=el('section',null,'points-panel glass-panel');
   const heading=el('div',null,'points-panel-heading');heading.append(el('h2','Top contributors'));top.append(heading);
   top.append(table(['Rank','Member','Points'],[...members].sort((a,b)=>b.candidatePoints-a.candidatePoints||a.id.localeCompare(b.id)).slice(0,10).map(m=>[m.partialRank,link(m.displayName,'/points/members/profile/',m.id,privatePreview),fmt(m.candidatePoints)])));
@@ -43,7 +41,7 @@ function view(root,name,doc,result,privatePreview){
   const statistics=document.querySelector('.points-dashboard-grid [aria-labelledby="activity-title"]');
   if(statistics)dashboard.append(statistics.cloneNode(true));root.append(dashboard);
  }else if(name==='leaderboard'){
-  intro(root,doc.continuing?'Leaderboard':'Historical leaderboard',doc,result);root.append(el('p','Ranks are partial where public identities are missing. No unverified member routes are generated.'));
+  intro(root,'Leaderboard',doc,result);
   root.append(table(['Partial rank','Member','Points','Awards'],[...members].sort((a,b)=>b.candidatePoints-a.candidatePoints||a.id.localeCompare(b.id)).map(m=>[m.partialRank,link(m.displayName,'/points/members/profile/',m.id,privatePreview),fmt(m.candidatePoints),fmt(m.awardCandidateCount)])));
  }else if(name==='members'){
   intro(root,'Member directory',doc,result);const input=el('input');input.type='search';input.placeholder='Search published member names';input.setAttribute('aria-label','Search published member names');const search=el('div',null,'points-member-search');search.append(input);root.append(search);const holder=el('div');root.append(holder);
@@ -57,15 +55,26 @@ function view(root,name,doc,result,privatePreview){
   let expanded=false;const render=()=>{area.replaceChildren(table(['Date','Event','Role','Points','Provenance'],personal.slice(0,expanded?personal.length:5).map(a=>[a.eventDate,doc.events.find(e=>e.id===a.eventId)?.label||a.eventId,a.provenanceType==='OWNER_MANUAL_OTHER_COMMANDER'?'Other Commander':(doc.rules.find(r=>r.id===a.ruleId)?.roleLabel||a.roleId),fmt(a.points),a.provenanceType==='APPROVED_RULE'?'Owner-approved rule':a.provenanceType==='OWNER_MANUAL_OTHER_COMMANDER'?'Owner-assigned Other Commander':'Ratified historical exception'])));btn.hidden=personal.length<=5;btn.textContent=expanded?'Show fewer':'Show more';btn.setAttribute('aria-expanded',String(expanded))};btn.addEventListener('click',()=>{expanded=!expanded;render()});render();
  }else if(name==='statistics'){
   intro(root,doc.continuing?'Statistics':'Historical statistics',doc,result);root.append(el('h2','By event'));root.append(table(['Event','Points','Awards'],doc.aggregates.eventTotals.map(a=>[statLabel(doc.events.find(e=>e.id===a.eventId)?.label||a.eventId,a.candidatePoints,doc.population.candidatePoints),fmt(a.candidatePoints),a.awardCandidateCount])));
-  root.append(el('h2','By role'));root.append(table(['Role','Points','Awards'],doc.aggregates.roleTotals.map(a=>[statLabel(doc.rules.find(r=>r.roleId===a.roleId)?.roleLabel||a.roleId,a.candidatePoints,doc.population.candidatePoints),fmt(a.candidatePoints),a.awardCandidateCount])));
   dailyActivity(root,awards);
   root.append(el('h2',doc.continuing?'Recent awards':'Recent historical awards'));root.append(table(['Date','Event','Member','Points'],[...awards].sort((a,b)=>b.eventDate.localeCompare(a.eventDate)||a.id.localeCompare(b.id)).slice(0,10).map(a=>[a.eventDate,doc.events.find(e=>e.id===a.eventId)?.label||a.eventId,doc.members.find(m=>m.id===a.memberId)?.displayName||'Withheld',a.points])));
  }else if(name==='how'){
-  intro(root,'Owner-approved v2.0 rules',doc,result);
-  root.append(table(['Event','Role','Points'],doc.rules.map(r=>[r.eventLabel,r.roleLabel,r.points===null?'TBD':fmt(r.points)])));
-  root.append(el('p','Other Commander has no default points. The owner assigns a numerical value separately for every eligible Commander contribution outside the event-specific rules. Previously recorded awards retain their original values.'));
+  intro(root,'DCAP Points Rules',doc,result);
+  // Display-only DBS summary; keep the three approved roles and award records intact.
+  const rows=doc.rules.filter(r=>r.eventId!=='dbs').map(r=>[
+   r.eventId==='actual-event-retained'?'Other Events':r.eventLabel,
+   r.roleId==='other-commander'?'Commander':r.roleLabel,
+   r.points===null?'TBD':fmt(r.points)
+  ]);
+  const dbsRules=doc.rules.filter(r=>r.eventId==='dbs');
+  if(dbsRules.length){
+   const commander=dbsRules.find(r=>r.roleId==='commander')||dbsRules[0];
+   rows.push(['DBS','Commander',commander.points===null?'TBD':fmt(commander.points)]);
+  }
+  rows.sort((a,b)=>a[0].localeCompare(b[0],'en-NZ')||a[1].localeCompare(b[1],'en-NZ'));
+  root.append(table(['Event','Role','Points'],rows));
+  root.append(el('p','For Other Events, Commander points are assigned case by case.'));
  }else if(name==='rewards'){
-  intro(root,'Rewards',doc,result);const card=el('div',null,'points-rewards-status-card glass-panel');card.append(el('p','Rewards are disabled. Points do not establish a reward entitlement.'));root.append(card);
+  intro(root,'Rewards',doc,result);const card=el('div',null,'points-rewards-status-card glass-panel');card.append(el('p','Coming Soon'));root.append(card);
  }
 }
 export async function mount(viewName,{privatePreview=false}={}) {
@@ -86,9 +95,10 @@ export async function mount(viewName,{privatePreview=false}={}) {
    const season=hero.querySelector('[data-points-season]');
    if(season)season.textContent=result.data.season.displayLabel;
    const period=hero.querySelector('[data-points-period]');
-   if(period)period.textContent=result.data.continuing?
-    'Approved contributions through '+result.data.continuing.throughDate:
-    'Historical snapshot: '+new Date(result.data.source.asOf).toLocaleDateString('en-NZ',{timeZone:'Pacific/Auckland'});
+   if(period){
+    const latest=result.data.continuing?.throughDate||result.data.awards.reduce((max,a)=>a.eventDate>max?a.eventDate:max,'');
+    period.textContent='Latest contributions: '+(latest||'Not available');
+   }
    const rule=hero.querySelector('[data-points-rule-version], [data-points-rule-reference]');
    if(rule)rule.textContent='2.0';
    const meta=hero.querySelector('[data-leaderboard-meta], [data-rules-meta], [data-rewards-meta], .points-season-meta');
