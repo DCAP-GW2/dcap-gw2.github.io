@@ -146,7 +146,7 @@ function renderOverview(now) {
       weekday: "long", day: "numeric", month: "short",
       timeZone: mode === "utc" ? "UTC" : undefined,
     }).format(day));
-    if (index === 0) heading.prepend(element("span", "events-overview-today", "Today · "));
+    if (index === 0) heading.textContent = `Today · ${heading.textContent}`;
     card.append(heading, element("p", "events-seven-day-count",
       `${matches.length} planned ${matches.length === 1 ? "activity" : "activities"}`));
     const items = element("ul", "events-seven-day-events");
