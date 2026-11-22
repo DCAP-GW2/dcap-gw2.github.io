@@ -30,6 +30,14 @@ assert.deepEqual(merged.rules.filter(rule=>rule.eventId==='dbs').map(rule=>[rule
 ]);
 assert.equal(merged.rules.find(rule=>rule.roleId==='other-commander')?.points,null);
 const expectedPoints=merged.population.candidatePoints,expectedAwards=merged.population.awardCandidateCount;
+// Accept v2.1 only when all four owner-final effective-dated versions reach the live feed.
+for(const [id,eventId,roleId,points] of [
+ ['V21-01','bfla','squad-4',1],['V21-02','all-events','map-spammer',2],
+ ['V2-02','triple-trouble','map-spammer',4],['V2-15','gyala-delve','map-spammer',2]
+]){
+ assert(merged.rules.some(r=>r.id===id&&r.eventId===eventId&&r.roleId===roleId&&
+  r.points===points&&r.effectiveFrom==='2026-11-04'),id+' v2.1 rule not active on public feed');
+}
 // Static loading copy stays visitor-friendly while the verified feed is pending.
 for(const path of ['leaderboard','members','members/profile','statistics','how-points-work','rewards']){
  const html=read('points/'+path+'/index.html');
@@ -63,8 +71,8 @@ try{
    const hero=page.locator('.points-hero');
    assert.equal(await hero.locator('[data-points-period]').innerText(),'Latest contributions: '+valid.throughDate);
    assert.equal(await hero.locator('[data-points-season]').innerText(),merged.season.displayLabel);
-   assert.equal(new URL(await hero.getByRole('link',{name:/Rule 2\.0/}).getAttribute('href')).pathname,'/points/how-points-work/');
-   assert.deepEqual(await page.locator('.points-kpi-card dd').allTextContents(),[fmt(expectedPoints),fmt(expectedAwards),fmt(valid.publicMembers),'2.0']);
+   assert.equal(new URL(await hero.getByRole('link',{name:/Rule 2\.1/}).getAttribute('href')).pathname,'/points/how-points-work/');
+   assert.deepEqual(await page.locator('.points-kpi-card dd').allTextContents(),[fmt(expectedPoints),fmt(expectedAwards),fmt(valid.publicMembers),'2.1']);
    assert.equal(await page.locator('.points-kpi-card dt').nth(1).innerText(),'Contributions');
    assert.equal(await page.locator('.points-kpi-grid').first().evaluate(x=>getComputedStyle(x).marginBottom),'24px');
    assert(!/original v1 historical points|excluded;|missing public identity states|Explore role contributions/.test(main));
@@ -114,7 +122,7 @@ try{
    const rows=await page.locator('.dcap-v2-production tbody tr').evaluateAll(trs=>trs.map(tr=>[...tr.querySelectorAll('th,td')].map(c=>c.textContent.trim())));
    assert.deepEqual(rows.filter(row=>row[0]==='DBS'),[['DBS','Commander','2']]);
    assert(rows.some(row=>row[0]==='Other Events'&&row[1]==='Commander'&&row[2]==='TBD'));
-   const hasV21=merged.rules.some(r=>r.id==='V21-02'&&r.points===2);
+   const hasV21=true;
    const trailer=hasV21?[['All Events','Map Spammer','2'],['All Events','Student','2'],['Other Events','Commander','TBD']]:
     [['All Events','Student','2'],['Other Events','Commander','TBD']];
    assert.deepEqual(rows.slice(-trailer.length),trailer);
