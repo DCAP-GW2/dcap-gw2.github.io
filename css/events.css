@@ -1,0 +1,82 @@
+/* Events page — deliberately separate from the DCAP Points application. */
+.events-page { background: #0b1020; }
+.events-hero { position: relative; padding: calc(var(--header-height) + 92px) 0 88px; background: linear-gradient(90deg, rgba(7,11,23,.97), rgba(9,14,27,.91) 56%, rgba(9,14,27,.64)), url("../assets/images/dcap-hero.webp") center / cover; }
+.events-hero-inner { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(300px, .75fr); align-items: center; gap: clamp(32px, 6vw, 90px); }
+.events-hero h1 { font-size: clamp(3.3rem, 7vw, 6rem); line-height: 1.02; letter-spacing: -.055em; }
+.events-hero h1 span { color: var(--cyan); }
+.events-subtitle { margin: 26px 0 10px; font-size: clamp(1.18rem, 2.4vw, 1.6rem); font-weight: 700; line-height: 1.35; }
+.events-intro { max-width: 650px; margin: 0; color: #c7d2df; }
+.events-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.events-next { min-width: 0; padding: 28px; border-radius: var(--radius); }
+.events-next .eyebrow { margin-bottom: 8px; }
+.events-next h2 { padding-bottom: 19px; border-bottom: 1px solid var(--border); font-size: 1.28rem; }
+.events-next-name { margin: 20px 0 6px; font-size: 1.5rem; font-weight: 750; line-height: 1.3; }
+.events-next-time { margin: 0 0 16px; color: #c8eaff; font-size: 1rem; }
+.events-next-note { margin: 0; color: var(--muted); font-size: .83rem; }
+.events-section-main { padding: clamp(58px, 8vw, 95px) 0 100px; }
+.events-section-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 28px; }
+.events-section-heading h2 { font-size: clamp(2rem, 4vw, 3rem); }
+.events-section-heading p:not(.eyebrow) { margin: 12px 0 0; color: var(--muted); }
+.events-zone-control { text-align: right; }
+.events-zone-buttons { display: inline-flex; gap: 5px; margin: 0; padding: 5px; border: 1px solid var(--border); border-radius: 12px; }
+.events-zone-buttons legend { padding: 0 4px; color: var(--muted); font-size: .72rem; }
+.events-zone-buttons button { min-height: 38px; padding: 6px 13px; border: 0; border-radius: 8px; color: var(--muted); background: transparent; cursor: pointer; font-size: .83rem; font-weight: 700; }
+.events-zone-buttons button[aria-pressed="true"] { color: #07101c; background: var(--cyan); }
+.events-zone-label { margin: 6px 0 0 !important; font-size: .74rem; color: var(--muted); }
+.events-schedule-panel { overflow: hidden; padding: clamp(18px, 3vw, 32px); border-radius: var(--radius); }
+.events-week-tabs { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+.events-week-tabs button { min-width: 0; min-height: 76px; padding: 12px 6px; border: 1px solid var(--border); border-radius: 12px; color: var(--text); background: rgba(255,255,255,.035); cursor: pointer; transition: background .2s, border-color .2s; }
+.events-week-tabs button:hover { background: rgba(125,211,252,.1); }
+.events-week-tabs button[aria-pressed="true"] { border-color: var(--cyan); background: rgba(125,211,252,.16); }
+.events-week-tabs .events-tab-day { display: block; font-size: .92rem; font-weight: 800; }
+.events-week-tabs .events-tab-date { display: block; margin-top: 4px; color: var(--muted); font-size: .72rem; }
+.events-week-tabs button[aria-pressed="true"] .events-tab-date { color: #e3f7ff; }
+.events-week-tabs .events-today { display: block; color: var(--gold); font-size: .63rem; font-weight: 700; }
+.events-day-heading { display: flex; align-items: end; justify-content: space-between; gap: 15px; margin: 27px 0 5px; }
+.events-day-heading .eyebrow { margin-bottom: 6px; font-size: .65rem; }
+.events-day-heading h3 { margin: 0; font-size: clamp(1.35rem, 2.7vw, 1.9rem); }
+.events-count { margin: 0; color: var(--muted); font-size: .82rem; text-align: right; }
+.events-timeline { min-height: 170px; }
+.events-row { display: grid; grid-template-columns: 105px 40px minmax(0,1fr); align-items: start; gap: 20px; padding: 22px 0; border-bottom: 1px solid var(--border); }
+.events-row:last-child { border-bottom: 0; }
+.events-row-time { padding-top: 3px; color: #e1f5ff; font-size: .96rem; font-weight: 750; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.events-row-icon { display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid rgba(125,211,252,.18); border-radius: 10px; background: rgba(125,211,252,.08); font-size: 1.35rem; }
+.events-row-body h4 { margin: 0; font-size: 1.05rem; line-height: 1.4; }
+.events-row-kind { display: block; margin: 4px 0; color: var(--cyan); font-size: .72rem; font-weight: 700; }
+.events-row-body p { margin: 3px 0 0; color: var(--muted); font-size: .83rem; }
+.events-row-utc { margin-top: 8px !important; color: #9daec4 !important; font-size: .72rem !important; }
+.events-row-body a, .events-info-card a { color: var(--cyan); text-underline-offset: 3px; font-weight: 700; }
+.events-state-message, .events-noscript { color: var(--muted); }
+.events-info-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; margin-top: 22px; }
+.events-info-card { min-width: 0; padding: 24px; border: 1px solid var(--border); border-radius: 16px; background: rgba(30,41,59,.44); }
+.events-info-card h3 { margin: 0 0 11px; font-size: 1.03rem; }
+.events-info-card p { margin: 0; color: var(--muted); font-size: .9rem; }
+.events-info-card a { display: inline-block; margin-top: 11px; font-size: .86rem; }
+@media (max-width: 960px) {
+  .events-hero-inner { grid-template-columns: 1fr; }
+  .events-next { max-width: 690px; }
+  .events-info-grid { grid-template-columns: 1fr 1fr; }
+  .events-info-card:last-child { grid-column: 1 / -1; }
+}
+@media (max-width: 640px) {
+  .events-hero { padding: calc(var(--header-height) + 56px) 0 55px; }
+  .events-hero-actions { display: grid; }
+  .events-next { padding: 22px; }
+  .events-section-heading { align-items: start; flex-direction: column; }
+  .events-zone-control { text-align: left; }
+  .events-week-tabs { grid-template-columns: repeat(4, minmax(0,1fr)); gap: 7px; padding-bottom: 20px; }
+  .events-week-tabs button { min-height: 65px; }
+  .events-row { grid-template-columns: 74px 32px minmax(0,1fr); gap: 10px; }
+  .events-row-time { font-size: .83rem; }
+  .events-row-icon { width: 32px; height: 32px; font-size: 1.05rem; }
+  .events-row-body h4 { font-size: .95rem; }
+  .events-day-heading { align-items: start; flex-direction: column; }
+  .events-info-grid { grid-template-columns: 1fr; }
+  .events-info-card:last-child { grid-column: auto; }
+}
+@media (max-width: 370px) {
+  .events-week-tabs { grid-template-columns: repeat(4, minmax(0,1fr)); }
+  .events-week-tabs .events-tab-day { font-size: .78rem; }
+  .events-row { grid-template-columns: 69px 28px minmax(0,1fr); gap: 8px; }
+  .events-row-icon { width: 28px; height: 28px; }
+}
