@@ -18,4 +18,24 @@
 .dcap-v2-production #dcap-v2-profile-history tbody th{white-space:nowrap}
 @media(max-width:600px){
   .dcap-v2-production .dcap-v2-table:has(thead th:nth-child(4)){min-width:520px}
+  .dcap-v2-production #dcap-v2-leaderboard-results .dcap-v2-table{min-width:0;table-layout:fixed}
+  .dcap-v2-production #dcap-v2-leaderboard-results :is(th,td){padding-inline:.3rem;overflow-wrap:anywhere;white-space:normal}
+  .dcap-v2-production #dcap-v2-leaderboard-results :is(th,td):first-child{width:18%;min-width:0}
+  .dcap-v2-production #dcap-v2-leaderboard-results th:nth-child(3){width:18%}
+  .dcap-v2-production #dcap-v2-leaderboard-results th:last-child{width:34%}
 }
+
+/* Small presentation spacing improvements scoped to rendered v2 content. */
+.dcap-v2-production > h2{margin:0 0 1rem}
+.dcap-v2-production > h2:not(:first-child){margin-top:1.75rem}
+.dcap-v2-production > .points-kpi-grid{margin-bottom:1.5rem}
+.dcap-v2-production > .points-member-search{margin:0 0 1rem}
+.dcap-v2-production > .dcap-v2-scroll{margin-top:.75rem}
+.dcap-v2-production .dcap-v2-leaderboard-switcher{margin:.5rem 0 1rem}
+.dcap-v2-production .dcap-v2-leaderboard-label{margin:0 0 .75rem;color:var(--muted)}
+.dcap-v2-production .dcap-v2-daily-totals{margin-top:1rem}
+.dcap-v2-production .dcap-v2-daily-totals > summary{cursor:pointer;padding:.5rem 0}
+.dcap-v2-production .dcap-v2-daily-totals > .dcap-v2-scroll{margin-top:.75rem}
+.dcap-v2-production .dcap-v2-error{padding:1.5rem}
+.dcap-v2-production .dcap-v2-error h2{margin:0 0 .75rem}
+.dcap-v2-production .dcap-v2-error p{margin:0}
