@@ -126,7 +126,6 @@ function view(root,name,doc,result,privatePreview){
   rows.sort((a,b)=>group(a[0])-group(b[0])||a[0].localeCompare(b[0],'en-NZ')||a[1].localeCompare(b[1],'en-NZ'));
   root.append(table(['Event','Role','Points'],rows));
   root.append(el('p','For Other Events, Commander points are assigned case by case.'));
-  if(ruleVersion(doc)==='2.1')root.append(el('p','Rule v2.1 applies to events from 4 November 2026. Earlier awards retain their approved v2.0 points. Triple Trouble Map Spammer awards 4 points; other events use the general 2-point Map Spammer rule.'));
  }else if(name==='rewards'){
   intro(root,'Rewards',doc,result);const card=el('div',null,'points-rewards-status-card glass-panel');card.append(el('p','Coming Soon'));root.append(card);
  }
