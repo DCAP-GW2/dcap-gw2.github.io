@@ -84,7 +84,7 @@ test("rolling day picker centres today and compact overview starts today", () =>
       "2026-11-23");
     assert.equal(currentWeekSelection(rollover, "local", "2026-11-23").selectedKey,
       "2026-11-23");
-    assert.equal(currentWeekSelection(rollover, "local", "2026-12-02", 7).selectedKey,
+    assert.equal(currentWeekSelection(rollover, "local", "2026-12-09", 7).selectedKey,
       "2026-11-30");
   } finally {
     if (oldTZ === undefined) delete process.env.TZ;
