@@ -98,6 +98,7 @@ a.card-action:hover { text-decoration: underline; text-underline-offset: 4px; }
 .events-layout { display: grid; grid-template-columns: minmax(0,.75fr) minmax(520px,1.25fr); gap: clamp(45px,8vw,110px); align-items: center; }
 .events-layout .section-heading { margin: 0; }
 .future-action { display: inline-block; margin-top: 26px; color: var(--muted); font-size: .78rem; font-weight: 750; letter-spacing: .04em; }
+.events-home-link { display: inline-block; margin-top: 24px; }
 .events-board { overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius); background: rgba(30,41,59,.52); box-shadow: var(--shadow); }
 .events-board article { display: grid; grid-template-columns: 62px 1fr; gap: 19px; align-items: center; min-height: 125px; padding: 22px 26px; border-bottom: 1px solid var(--border); }
 .events-board article:last-child { border: 0; }
