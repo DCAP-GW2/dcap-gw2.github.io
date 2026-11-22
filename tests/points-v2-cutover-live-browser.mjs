@@ -99,9 +99,9 @@ try{
   const previewLinks=await page.locator('a[href]').evaluateAll(links=>links.filter(a=>new URL(a.href).origin===location.origin&&new URL(a.href).pathname.startsWith('/points/')&&!a.getAttribute('href').startsWith('#')).map(a=>a.href));
   assert(previewLinks.every(href=>new URL(href).searchParams.get('dcapV2Review')==='private'),'local Points links retain the preview');
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth),'no page-wide overflow');
-  if(['/points/','/points/members/','/points/how-points-work/'].includes(path)){
+  if(['/points/','/points/leaderboard/','/points/members/','/points/how-points-work/'].includes(path)){
    const tableFits=await page.locator('.dcap-v2-scroll').evaluate(panel=>panel.scrollWidth<=panel.clientWidth);
-   assert(tableFits,path+' should show all three columns without horizontal scrolling');
+   assert(tableFits,path+' should show every column without horizontal scrolling');
   }
   if(path==='/points/statistics/'){
    assert.equal(await page.locator('.points-daily-chart svg').count(),1);
@@ -189,6 +189,10 @@ try{
    await wide.page.goto(start+path+(path.includes('?')?'&':'?')+'dcapV2Review=private',{waitUntil:'domcontentloaded'});
    await wide.page.waitForSelector('.dcap-v2-production');
    assert(await wide.page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth),path+' overflows at '+width);
+   if(path==='/points/leaderboard/'){
+    const tableFits=await wide.page.locator('#dcap-v2-leaderboard-results .dcap-v2-scroll').evaluate(panel=>panel.scrollWidth<=panel.clientWidth);
+    assert(tableFits,'Leaderboard scores and contributions must fit at '+width);
+   }
   }
  }
  record('all seven views fit tablet 768px and small mobile 320px');

@@ -18,6 +18,10 @@
 .dcap-v2-production #dcap-v2-profile-history tbody th{white-space:nowrap}
 @media(max-width:600px){
   .dcap-v2-production .dcap-v2-table:has(thead th:nth-child(4)){min-width:520px}
+  .dcap-v2-production #dcap-v2-leaderboard-results .dcap-v2-table{min-width:0}
+  .dcap-v2-production #dcap-v2-leaderboard-results :is(th,td){padding-inline:.4rem}
+  .dcap-v2-production #dcap-v2-leaderboard-results :is(th,td):first-child{width:1%;min-width:0}
+  .dcap-v2-production #dcap-v2-leaderboard-results td:nth-child(2){overflow-wrap:anywhere}
 }
 
 /* Small presentation spacing improvements scoped to rendered v2 content. */
