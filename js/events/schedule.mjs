@@ -37,16 +37,26 @@ export function calendarKey(date, mode = "local") {
   return `${year}-${pad(month)}-${pad(day)}`;
 }
 
-export function weekDates(now = new Date(), mode = "local") {
+// Construct calendar days at noon in the display zone so a DST midnight
+// change never shortens a day or changes its local calendar key.
+export function calendarDates(now = new Date(), mode = "local", firstOffset = 0, count = 7) {
   const utc = mode === "utc";
-  const weekday = utc ? now.getUTCDay() : now.getDay();
-  const mondayOffset = (weekday + 6) % 7;
   const year = utc ? now.getUTCFullYear() : now.getFullYear();
   const month = utc ? now.getUTCMonth() : now.getMonth();
-  const date = (utc ? now.getUTCDate() : now.getDate()) - mondayOffset;
-  return Array.from({ length: 7 }, (_, i) =>
+  const date = (utc ? now.getUTCDate() : now.getDate()) + firstOffset;
+  return Array.from({ length: count }, (_, i) =>
     utc ? new Date(Date.UTC(year, month, date + i, 12)) : new Date(year, month, date + i, 12)
   );
+}
+
+// The picker centres on today by default; moving by seven days is optional.
+export function weekDates(now = new Date(), mode = "local", viewOffset = 0) {
+  return calendarDates(now, mode, viewOffset - 3, 7);
+}
+
+// The compact overview always starts today, independent of picker navigation.
+export function overviewDates(now = new Date(), mode = "local") {
+  return calendarDates(now, mode, 0, 7);
 }
 
 export function occurrencesAround(now = new Date(), weeksBefore = 1, weeksAfter = 2) {
@@ -83,14 +93,15 @@ export function formattedTimeZone() {
 }
 
 
-// Keep the selected date inside the seven days currently displayed.
-// On a new week, an old selected date is replaced with today in the chosen time zone.
-export function currentWeekSelection(now, mode, requestedKey) {
-  const dates = weekDates(now, mode);
+// Keep selection and agenda inside the same rolling seven-day window.
+// With navigation, default to the centre of the currently displayed window.
+export function currentWeekSelection(now, mode, requestedKey, viewOffset = 0) {
+  const dates = weekDates(now, mode, viewOffset);
   const todayKey = calendarKey(now, mode);
   const weekKey = calendarKey(dates[0], mode);
+  const centreKey = calendarKey(dates[3], mode);
   const selectedKey = dates.some(date => calendarKey(date, mode) === requestedKey)
-    ? requestedKey : todayKey;
+    ? requestedKey : centreKey;
   return { weekKey, todayKey, selectedKey };
 }
 
