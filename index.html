@@ -17,6 +17,7 @@
   <link rel="preload" href="assets/images/dcap-hero.webp" as="image" type="image/webp" fetchpriority="high">
   <link rel="stylesheet" href="css/style.css">
   <script src="js/main.js" defer></script>
+  <script src="js/events/home.mjs" type="module"></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -33,7 +34,7 @@
       <nav class="primary-nav" id="primary-navigation" aria-label="Primary navigation">
         <ul>
           <li><a class="is-active" href="#home" aria-current="page">Home</a></li>
-          <li><a href="#events">Events</a></li>
+          <li><a href="events/">Events</a></li>
           <li><a href="points/">Points</a></li>
           <li><a href="#resources">Resources</a></li>
           <li><a href="#about">About</a></li>
@@ -54,7 +55,7 @@
           <p class="hero-intro">DCAP is a Guild Wars 2 community built around organised events, player development, teamwork and community projects.</p>
           <div class="button-row">
             <a class="button button-gold" href="points/">DCAP Points <span aria-hidden="true">→</span></a>
-            <a class="button button-secondary" href="#events">Upcoming Events</a>
+            <a class="button button-secondary" href="events/">Upcoming Events</a>
             <a class="button button-secondary" href="https://discord.gg/A2TQJNvNqa" target="_blank" rel="noopener noreferrer">Join Discord<span class="sr-only"> (opens in a new tab)</span></a>
           </div>
         </div>
@@ -62,21 +63,10 @@
         <aside class="week-panel glass-panel reveal" aria-labelledby="week-title">
           <div class="panel-heading">
             <p class="eyebrow">On the agenda</p>
-            <h2 id="week-title">This Week at DCAP</h2>
+            <h2 id="week-title">Coming Up at DCAP</h2>
           </div>
           <div class="event-list" data-event-list>
-            <article class="event-brief">
-              <span class="event-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3v3m10-3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/></svg></span>
-              <div><h3>Gyala Delve</h3><p class="event-time">Friday · 8:00 PM</p><p>Weekly organised meta</p></div>
-            </article>
-            <article class="event-brief">
-              <span class="event-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0-14v5l3 2"/></svg></span>
-              <div><h3>Triple Trouble</h3><p class="event-time">Community organised</p><p>Commanders · Blockers · Support</p></div>
-            </article>
-            <article class="event-brief">
-              <span class="event-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 3 6 6 .9-4.5 4.5 1 6.3-5.5-3-5.5 3 1-6.3L3 9.9 9 9l3-6Z"/></svg></span>
-              <div><h3>Training &amp; Development</h3><p class="event-time">Build your skills</p><p>Commander and role development</p></div>
-            </article>
+            <article class="event-brief"><span class="event-icon" aria-hidden="true">📅</span><div><h3>Weekly community schedule</h3><p class="event-time">Events in your local time</p><p><a href="events/">View the full programme</a></p></div></article>
           </div>
         </aside>
       </div>
@@ -94,7 +84,7 @@
           </article>
           <article class="feature-card reveal">
             <span class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3v3m10-3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v13h-16V6a1 1 0 0 1 1-1Z"/></svg></span>
-            <p class="card-kicker">Gather together</p><h3>Events</h3><p>See organised events, schedules and joining information.</p><span class="card-action unavailable">View Events <small>Coming soon</small></span>
+            <p class="card-kicker">Gather together</p><h3>Events</h3><p>See organised events, schedules and joining information.</p><a class="card-action" href="events/">View Events <span aria-hidden="true">→</span></a>
           </article>
           <article class="feature-card reveal" id="resources">
             <span class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11v17H6.5A2.5 2.5 0 0 0 4 22V5.5ZM20 5.5A2.5 2.5 0 0 0 17.5 3H13v17h4.5A2.5 2.5 0 0 1 20 22V5.5Z"/></svg></span>
@@ -125,11 +115,9 @@
 
     <section class="section events-section" id="events" aria-labelledby="events-title">
       <div class="container events-layout">
-        <div class="section-heading reveal"><p class="eyebrow">Join the action</p><h2 id="events-title">Happening at DCAP</h2><p>Community activities bring us together. Here is a preview of what is happening.</p><span class="future-action" aria-disabled="true">View All Events · Coming soon</span></div>
-        <div class="events-board reveal">
-          <article><div class="date-badge"><strong>FRI</strong><span>8 PM</span></div><div><h3>Gyala Delve</h3><p>Friday · 8:00 PM</p><span>Weekly organised meta</span></div></article>
-          <article><div class="date-badge"><strong>TT</strong><span>DCAP</span></div><div><h3>Triple Trouble</h3><p>Community organised</p><span>Commanders · Blockers · Support</span></div></article>
-          <article><div class="date-badge"><strong>+</strong><span>MORE</span></div><div><h3>More Events</h3><p>Check Discord for the latest activities, including raffles, training and community runs.</p></div></article>
+        <div class="section-heading reveal"><p class="eyebrow">Join the action</p><h2 id="events-title">Happening at DCAP</h2><p>Community activities bring us together. Upcoming times are shown in your local time zone.</p><a class="card-action events-home-link" href="events/">View Full Schedule <span aria-hidden="true">→</span></a></div>
+        <div class="events-board reveal" data-home-events>
+          <article><div class="date-badge"><strong>DCAP</strong><span>UTC</span></div><div><h3>Weekly programme</h3><p>See every event in your local time zone.</p><span><a href="events/">Open the Events page</a></span></div></article>
         </div>
       </div>
     </section>
@@ -146,7 +134,7 @@
   <footer class="site-footer">
     <div class="container footer-grid">
       <div class="footer-brand"><img src="assets/brand/dcap-logo-horizontal.png" width="2172" height="724" alt="DCAP — Guild Wars 2 Community" loading="lazy"><p>Play together. Learn together.<br>Build the community together.</p></div>
-      <nav class="footer-nav" aria-label="Footer navigation"><h2>Navigate</h2><ul><li><a href="#home">Home</a></li><li><a href="#events">Events</a></li><li><a href="points/">Points</a></li><li><span>Rules <small>Coming soon</small></span></li><li><a href="https://discord.gg/A2TQJNvNqa" target="_blank" rel="noopener noreferrer">Discord<span class="sr-only"> (opens in a new tab)</span></a></li></ul></nav>
+      <nav class="footer-nav" aria-label="Footer navigation"><h2>Navigate</h2><ul><li><a href="#home">Home</a></li><li><a href="events/">Events</a></li><li><a href="points/">Points</a></li><li><span>Rules <small>Coming soon</small></span></li><li><a href="https://discord.gg/A2TQJNvNqa" target="_blank" rel="noopener noreferrer">Discord<span class="sr-only"> (opens in a new tab)</span></a></li></ul></nav>
       <div class="footer-note"><h2>Community first</h2><p>DCAP is a player-run Guild Wars 2 community and is not affiliated with ArenaNet or NCSOFT.</p></div>
     </div>
     <div class="container footer-bottom"><p>© DCAP Community</p><a href="#home">Back to top <span aria-hidden="true">↑</span></a></div>
