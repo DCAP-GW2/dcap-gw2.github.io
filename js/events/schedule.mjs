@@ -81,3 +81,22 @@ export function formatDay(date, mode = "local") {
 export function formattedTimeZone() {
   return Intl.DateTimeFormat().resolvedOptions().timeZone || "your device's time zone";
 }
+
+
+// Keep the selected date inside the seven days currently displayed.
+// On a new week, an old selected date is replaced with today in the chosen time zone.
+export function currentWeekSelection(now, mode, requestedKey) {
+  const dates = weekDates(now, mode);
+  const todayKey = calendarKey(now, mode);
+  const weekKey = calendarKey(dates[0], mode);
+  const selectedKey = dates.some(date => calendarKey(date, mode) === requestedKey)
+    ? requestedKey : todayKey;
+  return { weekKey, todayKey, selectedKey };
+}
+
+// A fixed UTC schedule can cross a visitor's local midnight on a different day.
+export function nextDisplayMidnight(now, mode = "local") {
+  return mode === "utc"
+    ? new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1))
+    : new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+}
