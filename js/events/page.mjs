@@ -1,6 +1,7 @@
 import {
   WEEKDAYS, RAID_CHANNEL_URL, calendarKey, weekDates,
   occurrencesAround, nextEvents, formatDay, formatTime, formattedTimeZone,
+  currentWeekSelection, nextDisplayMidnight,
 } from "./schedule.mjs";
 
 const dayButtons = document.querySelector("[data-week-days]");
@@ -13,6 +14,10 @@ const zoneButtons = [...document.querySelectorAll("[data-zone]")];
 
 let mode = "local";
 let selectedDateKey = calendarKey(new Date(), mode);
+let displayedWeekKey = null;
+let displayedTodayKey = null;
+let activityTimer = null;
+let midnightTimer = null;
 
 function element(tag, className, text) {
   const node = document.createElement(tag);
@@ -27,18 +32,24 @@ function utcReference(event) {
   return `UTC ${WEEKDAYS[event.weekday]} ${hour}:${minute}`;
 }
 
-function renderNext() {
-  const event = nextEvents(new Date(), 1)[0];
-  if (!event) return;
+function renderNext(now) {
+  const event = nextEvents(now, 1)[0];
+  if (!event) return null;
   const name = element("p", "events-next-name", `${event.icon} ${event.label}`);
   const time = element("p", "events-next-time", `${formatDay(event.start, mode)} · ${formatTime(event.start, mode)}`);
   const source = element("p", "events-row-utc", utcReference(event));
   nextContainer.replaceChildren(name, time, source);
+  return event;
 }
 
 function renderDayContents(now) {
   const dayDate = weekDates(now, mode).find(date => calendarKey(date, mode) === selectedDateKey);
-  if (!dayDate) return;
+  if (!dayDate) {
+    // Defensive fallback: never show an old agenda under a newly-selected day.
+    selectedDateKey = calendarKey(now, mode);
+    refreshSelectedButton();
+    return renderDayContents(now);
+  }
   const formatted = new Intl.DateTimeFormat(undefined, {
     weekday: "long", month: "long", day: "numeric", timeZone: mode === "utc" ? "UTC" : undefined,
   }).format(dayDate);
@@ -103,17 +114,53 @@ function renderWeek(now) {
     );
     if (key === todayKey) button.append(element("span", "events-today", "Today"));
     button.addEventListener("click", () => {
+      const now = new Date();
+      // A suspended tab may still have buttons from the previous week.
+      reconcileWeek(now);
+      if (currentWeekSelection(now, mode, key).selectedKey !== key) return;
       selectedDateKey = key;
       refreshSelectedButton();
-      renderDayContents(new Date());
+      renderDayContents(now);
     });
     return button;
   });
   dayButtons.replaceChildren(...buttons);
 }
 
-function render() {
+function reconcileWeek(now, force = false) {
+  const { weekKey, todayKey, selectedKey } = currentWeekSelection(now, mode, selectedDateKey);
+  const dayChanged = todayKey !== displayedTodayKey;
+  const weekChanged = weekKey !== displayedWeekKey;
+  const selectionChanged = selectedKey !== selectedDateKey;
+  selectedDateKey = selectedKey;
+
+  if (force || dayChanged || weekChanged || selectionChanged) {
+    displayedWeekKey = weekKey;
+    displayedTodayKey = todayKey;
+    renderWeek(now);
+    renderDayContents(now);
+  }
+}
+
+function refreshClock() {
   const now = new Date();
+  const next = renderNext(now);
+  reconcileWeek(now);
+
+  // A delayed timer (e.g. in a background tab) is corrected on visibility/focus.
+  window.clearTimeout(activityTimer);
+  if (next) {
+    activityTimer = window.setTimeout(
+      refreshClock, Math.max(50, next.start.getTime() - now.getTime() + 100)
+    );
+  }
+  window.clearTimeout(midnightTimer);
+  midnightTimer = window.setTimeout(
+    refreshClock, Math.max(50, nextDisplayMidnight(now, mode).getTime() - now.getTime() + 100)
+  );
+}
+
+function render() {
   zoneButtons.forEach(button => {
     const active = button.dataset.zone === mode;
     button.setAttribute("aria-pressed", String(active));
@@ -122,9 +169,8 @@ function render() {
   zoneLabel.textContent = mode === "utc"
     ? "Showing UTC weekdays and clock times"
     : `Showing local dates and times (${formattedTimeZone()})`;
-  renderNext();
-  renderWeek(now);
-  renderDayContents(now);
+  reconcileWeek(new Date(), true);
+  refreshClock();
 }
 
 zoneButtons.forEach(button => button.addEventListener("click", () => {
@@ -132,5 +178,10 @@ zoneButtons.forEach(button => button.addEventListener("click", () => {
   selectedDateKey = calendarKey(new Date(), mode);
   render();
 }));
+
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) refreshClock();
+});
+window.addEventListener("focus", refreshClock);
 
 render();
