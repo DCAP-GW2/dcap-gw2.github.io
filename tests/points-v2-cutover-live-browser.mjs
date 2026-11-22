@@ -114,8 +114,16 @@ try{
    const rows=await page.locator('.dcap-v2-production tbody tr').evaluateAll(trs=>trs.map(tr=>[...tr.querySelectorAll('th,td')].map(c=>c.textContent.trim())));
    assert.deepEqual(rows.filter(row=>row[0]==='DBS'),[['DBS','Commander','2']]);
    assert(rows.some(row=>row[0]==='Other Events'&&row[1]==='Commander'&&row[2]==='TBD'));
-   assert.deepEqual(rows.slice(-2),[['All Events','Student','2'],['Other Events','Commander','TBD']]);
-   const specific=rows.slice(0,-2).map(row=>row[0]);
+   const hasV21=merged.rules.some(r=>r.id==='V21-02'&&r.points===2);
+   const trailer=hasV21?[['All Events','Map Spammer','2'],['All Events','Student','2'],['Other Events','Commander','TBD']]:
+    [['All Events','Student','2'],['Other Events','Commander','TBD']];
+   assert.deepEqual(rows.slice(-trailer.length),trailer);
+   if(hasV21){
+    assert(rows.some(row=>row[0]==='BFLA'&&row[1]==='Squad 4'&&row[2]==='1'));
+    assert(rows.some(row=>row[0]==='Triple Trouble'&&row[1]==='Map Spammer'&&row[2]==='4'));
+    assert(rows.some(row=>row[0]==='Gyala Delve'&&row[1]==='Map Spammer'&&row[2]==='2'));
+   }
+   const specific=rows.slice(0,-trailer.length).map(row=>row[0]);
    assert.deepEqual(specific,[...specific].sort((a,b)=>a.localeCompare(b,'en-NZ')));
   }
   if(path==='/points/members/'){
