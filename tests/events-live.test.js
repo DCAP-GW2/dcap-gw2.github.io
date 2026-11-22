@@ -90,7 +90,7 @@ test("Events page refreshes at an event start and reconciles a stale-week click"
     // Focus recovery after missed timer while hidden.
     setClock("2026-11-13T13:01:00Z");
     winListeners.focus();
-    assert.match(nodes["[data-next-event]"].children[0].textContent, /Battle for Lion's Arch/);
+    assert.match(nodes["[data-next-event]"].children[0].textContent, /Guild Missions/);
     assert.equal(typeof docListeners.visibilitychange, "function");
 
     // Switch to Auckland local weekdays; capture an old week's Monday button.
