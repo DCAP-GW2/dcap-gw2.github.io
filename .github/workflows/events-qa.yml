@@ -8,7 +8,7 @@ on:
       - 'css/events.css'
       - 'css/style.css'
       - 'index.html'
-      - 'tests/events.test.js'
+      - 'tests/events*.test.js'
       - '.github/workflows/events-qa.yml'
   push:
     branches:
@@ -19,7 +19,7 @@ on:
       - 'css/events.css'
       - 'css/style.css'
       - 'index.html'
-      - 'tests/events.test.js'
+      - 'tests/events*.test.js'
       - '.github/workflows/events-qa.yml'
 permissions:
   contents: read
