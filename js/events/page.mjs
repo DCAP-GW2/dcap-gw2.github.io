@@ -132,6 +132,14 @@ function renderWeek(now) {
     return button;
   });
   dayButtons.replaceChildren(...buttons);
+  // Keep the central day visible inside the narrow-screen scroller without
+  // scrolling the whole page vertically.
+  if (typeof window.matchMedia === "function" && window.matchMedia("(max-width: 640px)").matches) {
+    dayButtons.scrollLeft = Math.max(0,
+      buttons[3].offsetLeft - buttons[0].offsetLeft -
+      (dayButtons.clientWidth - buttons[3].clientWidth) / 2
+    );
+  }
 }
 
 function renderOverview(now) {
@@ -141,6 +149,7 @@ function renderOverview(now) {
     const key = calendarKey(day, mode);
     const matches = events.filter(event => calendarKey(event.start, mode) === key);
     const card = element("article", "events-seven-day-card");
+    card.dataset.day = key;
     card.hidden = !overviewExpanded && index >= 3;
     const heading = element("h3", "", new Intl.DateTimeFormat(undefined, {
       weekday: "long", day: "numeric", month: "short",
