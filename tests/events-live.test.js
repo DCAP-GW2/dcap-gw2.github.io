@@ -123,7 +123,7 @@ test("Events page refreshes at an event start and reconciles a stale-week click"
     assert.equal(currentWindow[3].getAttribute("aria-pressed"), "true");
     assert.match(nodes["[data-day-title]"].textContent, /Monday/);
     assert.equal(nodes["[data-seven-day-list]"].children[0].children[0].textContent.startsWith("Today"), true);
-    assert.equal(nodes["[data-seven-day-list]"].children[0].children[0].textContent.includes("23 Nov"), true);
+    assert.equal(nodes["[data-seven-day-list]"].children[0].dataset.day, "2026-11-23");
     const agenda = nodes["[data-day-events]"].children
       .map(row => row.children[2].children[0].textContent);
     assert(agenda.includes("CM Convergence"), "Local Monday must include UTC Sunday follow-up");
@@ -144,7 +144,7 @@ test("Events page refreshes at an event start and reconciles a stale-week click"
     nodes["[data-next-week]"].click();
     assert.equal(nodes["[data-week-days]"].children[3].dataset.day, "2026-12-07");
     assert.equal(nodes["[data-week-days]"].children[3].getAttribute("aria-pressed"), "true");
-    assert.equal(nodes["[data-seven-day-list]"].children[0].children[0].textContent.includes("30 Nov"), true);
+    assert.equal(nodes["[data-seven-day-list]"].children[0].dataset.day, "2026-11-30");
     nodes["[data-prev-week]"].click();
     assert.equal(nodes["[data-week-days]"].children[3].dataset.day, "2026-11-30");
     nodes["[data-today]"].click();
