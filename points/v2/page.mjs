@@ -2,6 +2,14 @@
 import {loadV2} from './live-loader.mjs';
 const el=(tag,content='',cls='')=>{const x=document.createElement(tag);if(content!==null)x.textContent=String(content);if(cls)x.className=cls;return x};
 const fmt=x=>new Intl.NumberFormat('en-NZ').format(x);
+// Only advertise v2.1 once all four owner-approved, effective-dated rules are active.
+const ruleVersion=doc=>[
+ ['V21-01','bfla','squad-4',1],
+ ['V21-02','all-events','map-spammer',2],
+ ['V2-02','triple-trouble','map-spammer',4],
+ ['V2-15','gyala-delve','map-spammer',2]
+].every(([id,eventId,roleId,points])=>doc.rules.some(r=>
+ r.id===id&&r.eventId===eventId&&r.roleId===roleId&&r.points===points&&r.effectiveFrom==='2026-11-04'))?'2.1':'2.0';
 const url=(path,id,privatePreview)=>{const u=new URL(path,location.origin);if(privatePreview)u.searchParams.set('dcapV2Review','private');if(id)u.searchParams.set('member',id);return u.href};
 const link=(name,path,id,privatePreview)=>{const x=el('a',name);x.href=url(path,id,privatePreview);return x};
 // Public leaderboard views use approved award cycle IDs; no rescoring or new season data.
@@ -46,7 +54,7 @@ function view(root,name,doc,result,privatePreview){
  if(name==='overview'){
   intro(root,'Season overview',doc,result);
   const kpis=el('dl',null,'points-kpi-grid');
-  for(const [name,value] of [['Total Points',fmt(doc.population.candidatePoints)],['Contributions',fmt(awards.length)],['Contributors',fmt(members.length)],['Rule Version','2.0']]){
+  for(const [name,value] of [['Total Points',fmt(doc.population.candidatePoints)],['Contributions',fmt(awards.length)],['Contributors',fmt(members.length)],['Rule Version',ruleVersion(doc)]]){
    const card=el('div',null,'points-kpi-card'+(name==='Total Points'?' points-kpi-card-total':''));card.append(el('dt',name),el('dd',value));kpis.append(card);
   }
   root.append(kpis);
@@ -118,6 +126,7 @@ function view(root,name,doc,result,privatePreview){
   rows.sort((a,b)=>group(a[0])-group(b[0])||a[0].localeCompare(b[0],'en-NZ')||a[1].localeCompare(b[1],'en-NZ'));
   root.append(table(['Event','Role','Points'],rows));
   root.append(el('p','For Other Events, Commander points are assigned case by case.'));
+  if(ruleVersion(doc)==='2.1')root.append(el('p','Rule v2.1 applies to events from 4 November 2026. Earlier awards retain their approved v2.0 points. Triple Trouble Map Spammer awards 4 points; other events use the general 2-point Map Spammer rule.'));
  }else if(name==='rewards'){
   intro(root,'Rewards',doc,result);const card=el('div',null,'points-rewards-status-card glass-panel');card.append(el('p','Coming Soon'));root.append(card);
  }
@@ -127,7 +136,7 @@ export async function mount(viewName,{privatePreview=false}={}) {
  // Only verified public data may replace the page's loading state.
   const result=await loadV2();if(!result.data)return false;
   const outlet=el('section',null,'dcap-v2-production');
-  outlet.setAttribute('aria-label','DCAP v2.0 verified published data');
+  outlet.setAttribute('aria-label','DCAP v'+ruleVersion(result.data)+' verified published data');
   view(outlet,viewName,result.data,result,privatePreview);
   // Keep the original v1 hero and Points navigation; change only the verified data area.
   const container=original.querySelector('.points-content');
@@ -144,7 +153,7 @@ export async function mount(viewName,{privatePreview=false}={}) {
     period.textContent='Latest contributions: '+(latest||'Not available');
    }
    const rule=hero.querySelector('[data-points-rule-version], [data-points-rule-reference]');
-   if(rule)rule.textContent='2.0';
+   if(rule)rule.textContent=ruleVersion(result.data);
    const meta=hero.querySelector('[data-leaderboard-meta], [data-rules-meta], [data-rewards-meta], .points-season-meta');
    if(meta)meta.hidden=false;
   }
