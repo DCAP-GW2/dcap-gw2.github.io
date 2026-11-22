@@ -106,6 +106,13 @@ export function validateOwnerFeed(feed,baseline){
    const original=rules.get(a.ruleId),v=latestFor(versions,a.ruleId,a.eventDate);
    check((v||original).points===a.points&&
     (v||original).roleId===a.roleId&&scoped((v||original),a.eventId),'AWARD_POINTS_DATE');
+   // Prospective v2.1: event-specific Map Spammer awards override the general rule.
+   // Historical awards before 4 November 2026 remain governed by their existing rule IDs.
+   if(a.eventDate>='2026-11-04'&&a.roleId==='map-spammer'){
+    const expected=a.eventId==='triple-trouble'?{ruleId:'V2-02',points:4}:
+     a.eventId==='gyala-delve'?{ruleId:'V2-15',points:2}:{ruleId:'V21-02',points:2};
+    check(a.ruleId===expected.ruleId&&a.points===expected.points,'V21_MAP_SPAMMER_OVERRIDE');
+   }
    normalCount++;normalPoints+=a.points;
   }else if(a.provenanceType===OWNER_MANUAL){
    check(a.ruleId===null&&a.roleId===OTHER_COMMANDER,'MANUAL_ROLE');
@@ -160,7 +167,7 @@ export function combineOwnerFeed(baseline,feed){
    match.points=v.points;match.effectiveFrom=v.effectiveFrom;match.status='OWNER_APPROVED';}}
   else activeRules.push({id:v.ruleId,version:'DCAP Points v2.0',eventId:v.eventId,roleId:v.roleId,
    eventLabel:([ ...baseline.events, ...feed.events].find(e=>e.id===v.eventId)?.label)||v.eventId,
-   roleLabel:v.roleId==='commander'?'Commander':v.roleId,points:v.points,status:'OWNER_APPROVED',
+   roleLabel:v.roleId==='commander'?'Commander':v.roleId==='map-spammer'?'Map Spammer':v.roleId==='squad-4'?'Squad 4':v.roleId,points:v.points,status:'OWNER_APPROVED',
    nonStackingGroup:null,effectiveFrom:v.effectiveFrom});
  }
  return {...baseline,members,events:baseline.events.concat(feed.events.map(e=>({...e,eligibility:'OWNER_MANUAL_OR_RULE'}))),
