@@ -80,3 +80,44 @@
   .events-row { grid-template-columns: 69px 28px minmax(0,1fr); gap: 8px; }
   .events-row-icon { width: 28px; height: 28px; }
 }
+
+
+/* Rolling seven-day selector and compact, expandable upcoming programme. */
+.events-week-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+.events-week-toolbar button { min-height: 38px; padding: 7px 13px; border: 1px solid rgba(125,211,252,.25); border-radius: 9px; color: #d9edfd; background: rgba(125,211,252,.07); cursor: pointer; font-size: .81rem; font-weight: 700; }
+.events-week-toolbar button:hover, .events-week-toolbar button:focus-visible { border-color: var(--cyan); background: rgba(125,211,252,.15); }
+.events-week-toolbar [data-today] { color: #111827; background: var(--cyan); }
+.events-week-toolbar [data-today]:hover { color: #07101c; background: #b2e9ff; }
+.events-week-tabs button:has(.events-today) { border-color: rgba(245,158,11,.55); }
+.events-week-tabs button:has(.events-today)[aria-pressed="true"] { border-color: var(--cyan); }
+.events-seven-day { padding-top: clamp(38px, 5vw, 60px); }
+.events-seven-day-heading { margin-bottom: 20px; }
+.events-seven-day-heading h2 { font-size: clamp(1.7rem, 3vw, 2.45rem); }
+.events-seven-day-heading .eyebrow { margin-bottom: 10px; }
+.events-seven-day-heading p:not(.eyebrow) { margin: 10px 0 0; color: var(--muted); font-size: .92rem; }
+.events-seven-day-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 15px; }
+.events-seven-day-card { min-width: 0; padding: 23px; border: 1px solid var(--border); border-radius: 15px; background: linear-gradient(145deg, rgba(30,41,59,.78), rgba(17,24,39,.82)); }
+.events-seven-day-card:first-child { border-color: rgba(125,211,252,.36); }
+.events-seven-day-card[hidden], .events-seven-day-toggle[hidden] { display: none !important; }
+.events-seven-day-card h3 { margin: 0 0 2px; font-size: 1.08rem; line-height: 1.35; }
+.events-seven-day-count { margin: 0 0 14px; color: var(--muted); font-size: .77rem; }
+.events-seven-day-events { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.events-seven-day-events li { display: grid; grid-template-columns: minmax(70px, 86px) 24px minmax(0, 1fr); align-items: baseline; gap: 8px; color: #e3eaf4; font-size: .87rem; line-height: 1.45; }
+.events-seven-day-events time { color: #d8f3ff; font-size: .82rem; font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.events-seven-day-icon { font-size: 1.03rem; text-align: center; }
+.events-seven-day-toggle { display: block; width: min(100%, 370px); min-height: 44px; margin: 22px auto 0; padding: 10px 18px; border: 1px solid rgba(125,211,252,.34); border-radius: 11px; color: var(--cyan); background: rgba(125,211,252,.07); cursor: pointer; font-weight: 800; }
+.events-seven-day-toggle:hover { border-color: var(--cyan); background: rgba(125,211,252,.14); }
+@media (max-width: 640px) {
+  .events-week-tabs { display: grid; grid-template-columns: repeat(7, minmax(66px,1fr)); overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; gap: 6px; }
+  .events-week-tabs button { scroll-snap-align: center; }
+  .events-week-toolbar { gap: 6px; }
+  .events-week-toolbar button { padding: 6px 9px; font-size: .75rem; }
+  .events-seven-day-list { grid-template-columns: 1fr; }
+  .events-seven-day-card { padding: 20px 16px; }
+  .events-seven-day-events li { grid-template-columns: 77px 22px minmax(0,1fr); gap: 7px; font-size: .82rem; }
+  .events-seven-day-events time { font-size: .77rem; }
+}
+@media (max-width: 370px) {
+  .events-week-tabs { grid-template-columns: repeat(7, minmax(61px,1fr)); }
+  .events-seven-day-events li { grid-template-columns: 73px 19px minmax(0,1fr); gap: 6px; }
+}
