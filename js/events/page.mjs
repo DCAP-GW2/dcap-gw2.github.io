@@ -1,7 +1,7 @@
 import {
   WEEKDAYS, RAID_CHANNEL_URL, calendarKey, weekDates,
   occurrencesAround, nextEvents, formatDay, formatTime, formattedTimeZone,
-  currentWeekSelection, nextDisplayMidnight,
+  currentWeekSelection, nextDisplayMidnight, overviewDates,
 } from "./schedule.mjs";
 
 const dayButtons = document.querySelector("[data-week-days]");
@@ -11,8 +11,16 @@ const dayCount = document.querySelector("[data-day-count]");
 const nextContainer = document.querySelector("[data-next-event]");
 const zoneLabel = document.querySelector("[data-zone-label]");
 const zoneButtons = [...document.querySelectorAll("[data-zone]")];
+const overviewList = document.querySelector("[data-seven-day-list]");
+const overviewToggle = document.querySelector("[data-seven-day-toggle]");
+const overviewZone = document.querySelector("[data-seven-day-zone]");
+const previousButton = document.querySelector("[data-prev-week]");
+const nextButton = document.querySelector("[data-next-week]");
+const todayButton = document.querySelector("[data-today]");
 
 let mode = "local";
+let viewOffset = 0; // Whole seven-day pages relative to today's centred window.
+let overviewExpanded = false;
 let selectedDateKey = calendarKey(new Date(), mode);
 let displayedWeekKey = null;
 let displayedTodayKey = null;
@@ -43,12 +51,11 @@ function renderNext(now) {
 }
 
 function renderDayContents(now) {
-  const dayDate = weekDates(now, mode).find(date => calendarKey(date, mode) === selectedDateKey);
-  if (!dayDate) {
-    // Defensive fallback: never show an old agenda under a newly-selected day.
-    selectedDateKey = calendarKey(now, mode);
+  const dates = weekDates(now, mode, viewOffset);
+  const dayDate = dates.find(date => calendarKey(date, mode) === selectedDateKey) || dates[3];
+  if (selectedDateKey !== calendarKey(dayDate, mode)) {
+    selectedDateKey = calendarKey(dayDate, mode);
     refreshSelectedButton();
-    return renderDayContents(now);
   }
   const formatted = new Intl.DateTimeFormat(undefined, {
     weekday: "long", month: "long", day: "numeric", timeZone: mode === "utc" ? "UTC" : undefined,
@@ -56,7 +63,7 @@ function renderDayContents(now) {
   dayTitle.textContent = formatted;
 
   // Include the prior UTC week so events crossing midnight into Monday are present.
-  const matches = occurrencesAround(now, 1, 2).filter(event => calendarKey(event.start, mode) === selectedDateKey);
+  const matches = occurrencesAround(dayDate, 1, 2).filter(event => calendarKey(event.start, mode) === selectedDateKey);
   dayCount.textContent = `${matches.length} planned ${matches.length === 1 ? "activity" : "activities"}`;
 
   const rows = matches.map(event => {
@@ -97,7 +104,7 @@ function refreshSelectedButton() {
 
 function renderWeek(now) {
   const todayKey = calendarKey(now, mode);
-  const buttons = weekDates(now, mode).map(day => {
+  const buttons = weekDates(now, mode, viewOffset).map(day => {
     const key = calendarKey(day, mode);
     const button = element("button", "");
     button.type = "button";
@@ -117,7 +124,7 @@ function renderWeek(now) {
       const now = new Date();
       // A suspended tab may still have buttons from the previous week.
       reconcileWeek(now);
-      if (currentWeekSelection(now, mode, key).selectedKey !== key) return;
+      if (currentWeekSelection(now, mode, key, viewOffset).selectedKey !== key) return;
       selectedDateKey = key;
       refreshSelectedButton();
       renderDayContents(now);
@@ -127,18 +134,58 @@ function renderWeek(now) {
   dayButtons.replaceChildren(...buttons);
 }
 
+function renderOverview(now) {
+  const dates = overviewDates(now, mode);
+  const events = occurrencesAround(now, 1, 2);
+  const cards = dates.map((day, index) => {
+    const key = calendarKey(day, mode);
+    const matches = events.filter(event => calendarKey(event.start, mode) === key);
+    const card = element("article", "events-seven-day-card");
+    card.hidden = !overviewExpanded && index >= 3;
+    const heading = element("h3", "", new Intl.DateTimeFormat(undefined, {
+      weekday: "long", day: "numeric", month: "short",
+      timeZone: mode === "utc" ? "UTC" : undefined,
+    }).format(day));
+    if (index === 0) heading.prepend(element("span", "events-overview-today", "Today · "));
+    card.append(heading, element("p", "events-seven-day-count",
+      `${matches.length} planned ${matches.length === 1 ? "activity" : "activities"}`));
+    const items = element("ul", "events-seven-day-events");
+    for (const event of matches) {
+      const item = element("li", "");
+      const time = element("time", "", formatTime(event.start, mode));
+      time.dateTime = event.start.toISOString();
+      item.append(time, element("span", "events-seven-day-icon", event.icon),
+        element("span", "", event.label));
+      items.append(item);
+    }
+    card.append(items);
+    return card;
+  });
+  overviewList.replaceChildren(...cards);
+  overviewZone.textContent = `Next 7 calendar days · ${formatDay(dates[0], mode)}–${formatDay(dates[6], mode)} · ${mode === "utc" ? "UTC" : formattedTimeZone()}`;
+  overviewToggle.hidden = false;
+  overviewToggle.setAttribute("aria-expanded", String(overviewExpanded));
+  overviewToggle.textContent = overviewExpanded ? "Show fewer days ↑" : "Show all 7 days ↓";
+}
+
 function reconcileWeek(now, force = false) {
-  const { weekKey, todayKey, selectedKey } = currentWeekSelection(now, mode, selectedDateKey);
+  // Follow today across midnight only when the visitor had selected today.
+  const todayKey = calendarKey(now, mode);
   const dayChanged = todayKey !== displayedTodayKey;
-  const weekChanged = weekKey !== displayedWeekKey;
-  const selectionChanged = selectedKey !== selectedDateKey;
-  selectedDateKey = selectedKey;
+  if (dayChanged && viewOffset === 0 && selectedDateKey === displayedTodayKey) {
+    selectedDateKey = todayKey;
+  }
+  const selection = currentWeekSelection(now, mode, selectedDateKey, viewOffset);
+  const weekChanged = selection.weekKey !== displayedWeekKey;
+  const selectionChanged = selection.selectedKey !== selectedDateKey;
+  selectedDateKey = selection.selectedKey;
 
   if (force || dayChanged || weekChanged || selectionChanged) {
-    displayedWeekKey = weekKey;
-    displayedTodayKey = todayKey;
+    displayedWeekKey = selection.weekKey;
+    displayedTodayKey = selection.todayKey;
     renderWeek(now);
     renderDayContents(now);
+    if (force || dayChanged) renderOverview(now);
   }
 }
 
@@ -175,9 +222,29 @@ function render() {
 
 zoneButtons.forEach(button => button.addEventListener("click", () => {
   mode = button.dataset.zone;
+  viewOffset = 0;
   selectedDateKey = calendarKey(new Date(), mode);
   render();
 }));
+
+function browse(offset) {
+  const now = new Date();
+  viewOffset += offset;
+  selectedDateKey = calendarKey(weekDates(now, mode, viewOffset)[3], mode);
+  reconcileWeek(now, true);
+}
+previousButton.addEventListener("click", () => browse(-7));
+nextButton.addEventListener("click", () => browse(7));
+todayButton.addEventListener("click", () => {
+  viewOffset = 0;
+  selectedDateKey = calendarKey(new Date(), mode);
+  reconcileWeek(new Date(), true);
+});
+overviewToggle.addEventListener("click", () => {
+  overviewExpanded = !overviewExpanded;
+  refreshClock();
+  renderOverview(new Date());
+});
 
 document.addEventListener("visibilitychange", () => {
   if (!document.hidden) refreshClock();
