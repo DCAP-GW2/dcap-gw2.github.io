@@ -85,7 +85,12 @@
           </div>
         </div>
         <div class="events-schedule-panel glass-panel">
-          <div class="events-week-tabs" data-week-days role="group" aria-label="Choose a day of the week"></div>
+          <div class="events-week-toolbar" aria-label="Browse dates">
+            <button type="button" data-prev-week aria-label="Previous seven days">← Previous</button>
+            <button type="button" data-today>Today</button>
+            <button type="button" data-next-week aria-label="Next seven days">Next →</button>
+          </div>
+          <div class="events-week-tabs" data-week-days role="group" aria-label="Choose a date"></div>
           <div class="events-day-heading">
             <div>
               <p class="eyebrow">Planned activities</p>
@@ -100,6 +105,18 @@
             <p class="events-noscript">Enable JavaScript to see the full schedule and local-time conversion. The recurring UTC programme starts daily at 11:30 (Setup), 12:00 (Triple Trouble) and 13:00 (Death-Branded Shatterer), with further events at 13:30 UTC. Gyala Delve is Friday 07:00 UTC. See Discord for updates.</p>
           </noscript>
         </div>
+        <section class="events-seven-day" aria-labelledby="seven-day-title">
+          <div class="events-seven-day-heading">
+            <div>
+              <p class="eyebrow">The week ahead</p>
+              <h2 id="seven-day-title">7-Day Schedule</h2>
+              <p data-seven-day-zone>Today and the next six calendar days, in your local time.</p>
+            </div>
+          </div>
+          <div id="events-seven-day-list" class="events-seven-day-list" data-seven-day-list></div>
+          <button type="button" class="events-seven-day-toggle" data-seven-day-toggle aria-expanded="false" aria-controls="events-seven-day-list" hidden>Show all 7 days ↓</button>
+          <noscript><p class="events-noscript">Enable JavaScript to view the seven-day schedule in your local time.</p></noscript>
+        </section>
         <div class="events-info-grid">
           <article class="events-info-card">
             <h3>📅 About the schedule</h3>
