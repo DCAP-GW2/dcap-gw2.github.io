@@ -41,14 +41,14 @@ record('real anonymous public feed validates to '+expectedPoints+' points / '+ex
 const browser=await chromium.launch({channel:'chrome',headless:true,args:['--no-sandbox']});
 const cacheKey='dcap.points.public.v2.production.1.continuous';
 const expected='live';
-async function context(width=390){
- const ctx=await browser.newContext({viewport:{width,height:850},reducedMotion:'reduce'});
+async function context(width=390,hasTouch=false){
+ const ctx=await browser.newContext({viewport:{width,height:850},reducedMotion:'reduce',hasTouch});
  const page=await ctx.newPage(),errors=[],numbered=[];
  page.on('pageerror',e=>errors.push(String(e)));
  page.on('request',request=>{if(/\/points\/data\/v2\/releases\/r00[1-9]/.test(request.url()))numbered.push(request.url())});
  return{ctx,page,errors,numbered};
 }
-const e=await context(390);
+const e=await context(390,true);
 try{
  const page=e.page;
  const route=path=>start+path+(path.includes('?')?'&':'?')+'dcapV2Review=private';
@@ -82,12 +82,12 @@ try{
    for(const a of current){const old=byMember.get(a.memberId)||{points:0,count:0};old.points+=a.points;old.count++;byMember.set(a.memberId,old)}
    const currentRanked=merged.members.map(m=>({m,...(byMember.get(m.id)||{points:0,count:0})})).filter(x=>x.points>0).sort((a,b)=>b.points-a.points||a.m.id.localeCompare(b.m.id));
    assert.deepEqual(await readRows(),currentRanked.map(x=>[[String(1+currentRanked.filter(y=>y.points>x.points).length),x.m.displayName,fmt(x.points),fmt(x.count)],x.m.id]));
-   await page.getByRole('button',{name:'All Time',exact:true}).click();
+   await page.getByRole('button',{name:'All Time',exact:true}).tap();
    assert.equal(await page.getByRole('button',{name:'All Time',exact:true}).getAttribute('aria-pressed'),'true');
    assert.equal(await page.getByRole('button',{name:'Current Season',exact:true}).getAttribute('aria-pressed'),'false');
    const ranked=[...merged.members].filter(m=>m.candidatePoints>0).sort((a,b)=>b.candidatePoints-a.candidatePoints||a.id.localeCompare(b.id));
    assert.deepEqual(await readRows(),ranked.map(m=>[[String(m.partialRank),m.displayName,fmt(m.candidatePoints),fmt(m.awardCandidateCount)],m.id]));
-   await page.getByRole('button',{name:'Current Season',exact:true}).click();
+   await page.getByRole('button',{name:'Current Season',exact:true}).press('Space');
    assert.equal(await page.getByRole('button',{name:'Current Season',exact:true}).getAttribute('aria-pressed'),'true');
 
   }
@@ -140,7 +140,7 @@ try{
  }
  await page.getByRole('link',{name:'← Back to Members',exact:true}).click();
  await page.waitForSelector('.dcap-v2-production input');
- await page.getByRole('searchbox').fill('Nephz');
+ await page.getByRole('searchbox').fill('nEpHz');
  assert.equal(await page.locator('.dcap-v2-production tbody tr').count(),1);
  await page.getByRole('link',{name:'Nephz',exact:true}).click();
  assert.equal(new URL(page.url()).searchParams.get('member'),'m-6a45288ea1cbb878');
@@ -203,6 +203,31 @@ try{
  assert.equal(await unavailable.page.locator('.dcap-v2-production a').count(),0);
  record('no validated source shows simple failure message without fallback links');
 }finally{await unavailable.ctx.close()}
+const brokenClient=await context(390);
+try{
+ let releaseModule;
+ const pending=new Promise(resolve=>{releaseModule=resolve});
+ let requestedLegacy=false;
+ brokenClient.page.on('request',request=>{
+  if(new URL(request.url()).pathname.startsWith('/js/points/'))requestedLegacy=true;
+ });
+ await brokenClient.ctx.route('**/points/v2/page.mjs',async route=>{await pending;await route.abort();});
+ try{
+  await brokenClient.page.goto(start+'/points/leaderboard/?dcapV2Review=private',{waitUntil:'commit'});
+  await brokenClient.page.getByText('Loading DCAP Points…',{exact:true}).waitFor();
+  assert.equal(await brokenClient.page.getByRole('link',{name:/Previous DCAP Points site/}).count(),0);
+ }finally{releaseModule()}
+ await brokenClient.page.waitForFunction(()=>window.DCAP_V2_STATUS?.state==='unavailable');
+ const panel=brokenClient.page.locator('.dcap-v2-error');
+ assert.equal(await panel.getByRole('heading',{name:'Unable to load DCAP Points'}).count(),1);
+ assert.match(await panel.innerText(),/Please refresh the page and try again/);
+ assert.equal(await panel.getByRole('link').count(),0);
+ assert.equal(requestedLegacy,false);
+ const membersLink=brokenClient.page.getByRole('navigation',{name:'Points navigation'}).getByRole('link',{name:'Members'});
+ assert.equal(new URL(await membersLink.getAttribute('href')).searchParams.get('dcapV2Review'),'private');
+ assert.equal(await brokenClient.page.getByRole('button',{name:'Open navigation',exact:true}).isVisible(),true);
+ record('delayed and failed v2 module shows simple status and never starts v1');
+}finally{await brokenClient.ctx.close()}
 const fresh=await context(320);
 try{
  await fresh.ctx.route('https://script.google.com/macros/s/**',r=>r.abort());

@@ -1,6 +1,5 @@
 /** Production-shaped seven-view client. Never rescoring; only verified public awards. */
 import {loadV2} from './live-loader.mjs';
-import {PATHS} from './config.mjs';
 const el=(tag,content='',cls='')=>{const x=document.createElement(tag);if(content!==null)x.textContent=String(content);if(cls)x.className=cls;return x};
 const fmt=x=>new Intl.NumberFormat('en-NZ').format(x);
 const url=(path,id,privatePreview)=>{const u=new URL(path,location.origin);if(privatePreview)u.searchParams.set('dcapV2Review','private');if(id)u.searchParams.set('member',id);return u.href};
@@ -125,20 +124,8 @@ function view(root,name,doc,result,privatePreview){
 }
 export async function mount(viewName,{privatePreview=false}={}) {
  const original=document.querySelector('main');if(!original)return false;
- const unavailable=()=>{
-  const container=original.querySelector('.points-content'),nav=container?.querySelector('.points-nav');
-  if(!nav)return false;
-  const outlet=el('section',null,'dcap-v2-production');
-  const panel=el('div',null,'dcap-v2-error points-panel glass-panel');
-  panel.setAttribute('role','status');
-  panel.append(el('h2','Unable to load DCAP Points'),el('p','Please refresh the page and try again.'));
-  outlet.append(panel);container.replaceChildren(nav,outlet);
-  window.DCAP_V2_STATUS={state:'unavailable',view:viewName,rewards:false};
-  return true;
- };
  // Only verified public data may replace the page's loading state.
- try{
-  const result=await loadV2();if(!result.data)return unavailable();
+  const result=await loadV2();if(!result.data)return false;
   const outlet=el('section',null,'dcap-v2-production');
   outlet.setAttribute('aria-label','DCAP v2.0 verified published data');
   view(outlet,viewName,result.data,result,privatePreview);
@@ -164,19 +151,6 @@ export async function mount(viewName,{privatePreview=false}={}) {
   container.replaceChildren(nav,outlet);
   const ruleLink=hero?.querySelector('a[href="#points-rule"]');
   if(ruleLink)ruleLink.href=url('/points/how-points-work/',null,privatePreview);
-  // Retain existing queries (including member IDs) only in the local private preview.
-  if(privatePreview && ['localhost','127.0.0.1','[::1]'].includes(location.hostname)){
-   for(const anchor of document.querySelectorAll('a[href]')){
-    if(anchor.getAttribute('href').startsWith('#'))continue;
-    const target=new URL(anchor.href);
-    if(target.origin===location.origin && Object.hasOwn(PATHS,target.pathname)){
-     target.searchParams.set('dcapV2Review','private');anchor.href=target.href;
-    }
-   }
-  }
-  // The v1 page clients normally enable the shared progressive mobile menu.
-  if(typeof closeMenu==='function')document.body.classList.add('points-navigation-ready');
   window.DCAP_V2_STATUS={state:result.state,view:viewName,revision:result.revision,source:result.source,rewards:false};
   return true;
- }catch{return unavailable();}
 }
