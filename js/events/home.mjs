@@ -15,23 +15,6 @@ function element(tag, className, text) {
   return node;
 }
 
-const list = document.querySelector("[data-event-list]");
-if (list) {
-  list.replaceChildren(...choices.map(event => {
-    const article = element("article", "event-brief");
-    const icon = element("span", "event-icon", event.icon);
-    icon.setAttribute("aria-hidden", "true");
-    const text = element("div");
-    text.append(
-      element("h3", "", event.label),
-      element("p", "event-time", `${formatDay(event.start)} · ${formatTime(event.start)} local`),
-      element("p", "", event.category),
-    );
-    article.append(icon, text);
-    return article;
-  }));
-}
-
 const board = document.querySelector("[data-home-events]");
 if (board) {
   board.replaceChildren(...choices.map(event => {

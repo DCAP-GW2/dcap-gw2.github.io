@@ -151,7 +151,7 @@ function renderOverview(now) {
     const matches = events.filter(event => calendarKey(event.start, mode) === key);
     const card = element("article", "events-seven-day-card");
     card.dataset.day = key;
-    card.hidden = !overviewExpanded && index >= 3;
+    card.hidden = !overviewExpanded && index >= 4;
     const heading = element("h3", "", new Intl.DateTimeFormat(undefined, {
       weekday: "long", day: "numeric", month: "short",
       timeZone: mode === "utc" ? "UTC" : undefined,

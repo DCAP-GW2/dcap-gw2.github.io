@@ -7,7 +7,7 @@ export const DISCORD_URL = "https://discord.gg/A2TQJNvNqa";
 const events = [];
 for (let weekday = 0; weekday < 7; weekday += 1) {
   events.push(
-    { id: `setup-${weekday}`, weekday, minute: 11 * 60 + 30, icon: "📋", label: "Setup", category: "Daily programme", detail: "Prepare the map and squad for Triple Trouble." },
+    { id: `setup-${weekday}`, weekday, minute: 11 * 60 + 30, icon: "📋", label: "Triple Trouble Setup", category: "Daily programme", detail: "Prepare the map and squad for Triple Trouble." },
     { id: `tt-${weekday}`, weekday, minute: 12 * 60, icon: "🐍", label: "Triple Trouble", category: "Daily programme", detail: "Commander, blockers, defence and support." },
     { id: `dbs-${weekday}`, weekday, minute: 13 * 60, icon: "🐉", label: "Death-Branded Shatterer", category: "Daily programme", detail: "Follow-up world boss." },
   );
