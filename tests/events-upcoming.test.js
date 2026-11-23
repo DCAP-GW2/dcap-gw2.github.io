@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
-  calendarKey, occurrencesAround, upcomingDayProgramme, UPCOMING_DAY_GRACE_MS,
+  calendarKey, programmeDayKey, occurrencesAround, upcomingDayProgramme, UPCOMING_DAY_GRACE_MS,
 } from "../js/events/schedule.mjs";
 
 test("90-minute cutoff uses last scheduled start, not an invented end time", () => {
@@ -52,7 +52,7 @@ test("Auckland local calendar has tomorrow after cutoff even while the UTC date 
   }
 });
 
-test("local-day assignment stays grounded to real instants across Auckland DST changes", () => {
+test("session-day assignment stays grounded to real instants across Auckland DST changes", () => {
   const original = process.env.TZ;
   process.env.TZ = "Pacific/Auckland";
   try {
@@ -60,10 +60,10 @@ test("local-day assignment stays grounded to real instants across Auckland DST c
       const now = new Date(iso);
       const plan = upcomingDayProgramme(now, "local");
       assert(plan.events.length > 0);
-      assert(plan.events.every(event => calendarKey(event.start, "local") === plan.dayKey));
+      assert(plan.events.every(event => programmeDayKey(event, "local") === plan.dayKey));
       assert(plan.events.every(event => Number.isFinite(event.start.getTime())));
       const expected = occurrencesAround(now, 1, 2)
-        .filter(event => calendarKey(event.start, "local") === plan.dayKey);
+        .filter(event => programmeDayKey(event, "local") === plan.dayKey);
       assert.deepEqual(plan.events.map(event => event.start.getTime()), expected.map(event => event.start.getTime()));
     }
   } finally {
