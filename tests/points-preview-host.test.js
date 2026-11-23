@@ -9,6 +9,8 @@ test('Points v2 remains enabled on its exact GitHub Pages production hostname', 
   assert.equal(view('https://dcap-gw2.github.io/points/'), 'production-v2');
   assert.equal(view('https://dcap-gw2.github.io/points/leaderboard/'), 'production-v2');
   assert.equal(view('http://dcap-gw2.github.io/points/'), 'v1');
+  assert.equal(view('https://dcap-gw2.github.io/points/?pointsPreview=1'), 'v1');
+  assert.equal(view('https://dcap-gw2.github.io.evil.example/points/'), 'v1');
 });
 
 test('Points v2 activates only on this Cloudflare Worker preview host pattern', () => {
