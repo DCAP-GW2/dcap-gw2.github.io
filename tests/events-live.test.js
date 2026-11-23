@@ -209,6 +209,36 @@ test("Events page refreshes at an event start and reconciles a stale-week click"
     setClock("2026-11-23T15:00:00.000Z");
     runDueTimers();
     assert.match(nodes["[data-next-event]"].children[0].textContent, /^Tomorrow/);
+
+    // Sydney crosses midnight inside Monday's TT-to-follow-up run.
+    // Both the seven-day cards and detailed agenda must follow session start dates.
+    process.env.TZ = "Australia/Sydney";
+    setClock("2026-11-23T12:59:59Z"); // Monday 23:59:59 AEDT.
+    local.click();
+    const mondayCard = nodes["[data-seven-day-list]"].children[0];
+    assert.equal(mondayCard.dataset.day, "2026-11-23");
+    assert.match(mondayCard.children[0].textContent, /^Today · Monday/);
+    assert.equal(mondayCard.children[1].textContent, "4 planned activities");
+    assert.deepEqual(mondayCard.children[2].children.map(item => item.children[2].textContent), [
+      "Triple Trouble Setup", "Triple Trouble", "Death-Branded Shatterer",
+      "Battle for Lion's Arch → Twisted Marionette",
+    ]);
+    assert.match(mondayCard.children[2].children[2].children[0].textContent, /^Tue\n12:00\s?am$/i);
+    assert.match(mondayCard.children[2].children[3].children[0].textContent, /^Tue\n12:30\s?am$/i);
+    assert.equal(nodes["[data-day-count]"].textContent, "4 planned activities");
+    assert.deepEqual(nodes["[data-day-events]"].children.map(row => row.children[2].children[0].textContent), [
+      "Triple Trouble Setup", "Triple Trouble", "Death-Branded Shatterer",
+      "Battle for Lion's Arch → Twisted Marionette",
+    ]);
+    assert.match(nodes["[data-next-event]"].children[0].textContent, /^Today/);
+    setClock("2026-11-23T13:00:00Z"); // Tuesday midnight AEDT.
+    runDueTimers();
+    assert.match(nodes["[data-next-event]"].children[0].textContent, /^Yesterday/);
+    assert.equal(nodes["[data-seven-day-list]"].children[0].dataset.day, "2026-11-24");
+    setClock("2026-11-23T15:00:00.000Z"); // Tuesday 02:00, exact cutoff.
+    runDueTimers();
+    assert.match(nodes["[data-next-event]"].children[0].textContent, /^Today/);
+    assert.match(highlightedLabel(), /Triple Trouble Setup/);
   } finally {
     globalThis.Date = realDate;
     if (realDocument === undefined) delete globalThis.document;

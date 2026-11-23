@@ -19,7 +19,7 @@
 .events-upcoming-item { display: grid; grid-template-columns: 78px 22px minmax(0,1fr); align-items: start; gap: 9px; padding: 9px 10px; border: 1px solid transparent; border-radius: 11px; }
 .events-upcoming-item.is-started { opacity: .54; }
 .events-upcoming-item.is-highlighted { border-color: rgba(125,211,252,.36); background: rgba(125,211,252,.09); }
-.events-upcoming-time { color: #daefff; font-size: .78rem; font-weight: 750; font-variant-numeric: tabular-nums; white-space: nowrap; padding-top: 2px; }
+.events-upcoming-time { color: #daefff; font-size: .78rem; font-weight: 750; font-variant-numeric: tabular-nums; white-space: pre-line; padding-top: 2px; }
 .events-upcoming-icon { text-align: center; font-size: 1.05rem; line-height: 1.35; }
 .events-upcoming-description { display: flex; align-items: baseline; flex-wrap: wrap; gap: 5px 8px; min-width: 0; }
 .events-upcoming-name { color: #f0f6ff; font-size: .86rem; font-weight: 650; line-height: 1.4; overflow-wrap: anywhere; }
@@ -54,7 +54,7 @@
 .events-timeline { min-height: 170px; }
 .events-row { display: grid; grid-template-columns: 105px 40px minmax(0,1fr); align-items: start; gap: 20px; padding: 22px 0; border-bottom: 1px solid var(--border); }
 .events-row:last-child { border-bottom: 0; }
-.events-row-time { padding-top: 3px; color: #e1f5ff; font-size: .96rem; font-weight: 750; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.events-row-time { padding-top: 3px; color: #e1f5ff; font-size: .96rem; font-weight: 750; font-variant-numeric: tabular-nums; white-space: pre-line; }
 .events-row-icon { display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid rgba(125,211,252,.18); border-radius: 10px; background: rgba(125,211,252,.08); font-size: 1.35rem; }
 .events-row-body h4 { margin: 0; font-size: 1.05rem; line-height: 1.4; }
 .events-row-kind { display: block; margin: 4px 0; color: var(--cyan); font-size: .72rem; font-weight: 700; }
@@ -118,7 +118,7 @@
 .events-seven-day-count { margin: 0 0 14px; color: var(--muted); font-size: .77rem; }
 .events-seven-day-events { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
 .events-seven-day-events li { display: grid; grid-template-columns: minmax(70px, 86px) 24px minmax(0, 1fr); align-items: baseline; gap: 8px; color: #e3eaf4; font-size: .87rem; line-height: 1.45; }
-.events-seven-day-events time { color: #d8f3ff; font-size: .82rem; font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.events-seven-day-events time { color: #d8f3ff; font-size: .82rem; font-weight: 700; white-space: pre-line; font-variant-numeric: tabular-nums; }
 .events-seven-day-icon { font-size: 1.03rem; text-align: center; }
 .events-seven-day-toggle { display: block; width: min(100%, 370px); min-height: 44px; margin: 22px auto 0; padding: 10px 18px; border: 1px solid rgba(125,211,252,.34); border-radius: 11px; color: var(--cyan); background: rgba(125,211,252,.07); cursor: pointer; font-weight: 800; }
 .events-seven-day-toggle:hover { border-color: var(--cyan); background: rgba(125,211,252,.14); }

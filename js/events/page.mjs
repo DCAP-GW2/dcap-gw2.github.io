@@ -1,7 +1,7 @@
 import {
   WEEKDAYS, RAID_CHANNEL_URL, calendarKey, weekDates,
-  occurrencesAround, nextEvents, upcomingDayProgramme, formatDay, formatTime, formattedTimeZone,
-  currentWeekSelection, nextDisplayMidnight, overviewDates,
+  occurrencesAround, nextEvents, upcomingDayProgramme, formatDay, formattedTimeZone,
+  currentWeekSelection, nextDisplayMidnight, overviewDates, programmeDayKey, formatProgrammeTime,
 } from "./schedule.mjs";
 
 const dayButtons = document.querySelector("[data-week-days]");
@@ -50,7 +50,7 @@ function renderUpcoming(now) {
     const highlighted = index === programme.highlightedIndex;
     const started = event.start.getTime() <= now.getTime();
     const item = element("li", `events-upcoming-item${started && !highlighted ? " is-started" : ""}${highlighted ? " is-highlighted" : ""}`);
-    const time = element("time", "events-upcoming-time", formatTime(event.start, mode));
+    const time = element("time", "events-upcoming-time", formatProgrammeTime(event, mode));
     time.dateTime = event.start.toISOString();
     const icon = element("span", "events-upcoming-icon", event.icon);
     icon.setAttribute("aria-hidden", "true");
@@ -79,13 +79,13 @@ function renderDayContents(now) {
   }).format(dayDate);
   dayTitle.textContent = formatted;
 
-  // Include the prior UTC week so events crossing midnight into Monday are present.
-  const matches = occurrencesAround(dayDate, 1, 2).filter(event => calendarKey(event.start, mode) === selectedDateKey);
+  // Resolve programme dates from each session's local starting day, not individual event dates.
+  const matches = occurrencesAround(dayDate, 1, 2).filter(event => programmeDayKey(event, mode) === selectedDateKey);
   dayCount.textContent = `${matches.length} planned ${matches.length === 1 ? "activity" : "activities"}`;
 
   const rows = matches.map(event => {
     const row = element("article", "events-row");
-    const time = element("time", "events-row-time", formatTime(event.start, mode));
+    const time = element("time", "events-row-time", formatProgrammeTime(event, mode));
     time.dateTime = event.start.toISOString();
     const icon = element("span", "events-row-icon", event.icon);
     icon.setAttribute("aria-hidden", "true");
@@ -165,7 +165,7 @@ function renderOverview(now) {
   const events = occurrencesAround(now, 1, 2);
   const cards = dates.map((day, index) => {
     const key = calendarKey(day, mode);
-    const matches = events.filter(event => calendarKey(event.start, mode) === key);
+    const matches = events.filter(event => programmeDayKey(event, mode) === key);
     const card = element("article", "events-seven-day-card");
     card.dataset.day = key;
     card.hidden = !overviewExpanded && index >= 4;
@@ -179,7 +179,7 @@ function renderOverview(now) {
     const items = element("ul", "events-seven-day-events");
     for (const event of matches) {
       const item = element("li", "");
-      const time = element("time", "", formatTime(event.start, mode));
+      const time = element("time", "", formatProgrammeTime(event, mode));
       time.dateTime = event.start.toISOString();
       item.append(time, element("span", "events-seven-day-icon", event.icon),
         element("span", "", event.label));
@@ -189,7 +189,7 @@ function renderOverview(now) {
     return card;
   });
   overviewList.replaceChildren(...cards);
-  overviewZone.textContent = `Next 7 calendar days · ${formatDay(dates[0], mode)}–${formatDay(dates[6], mode)} · ${mode === "utc" ? "UTC" : formattedTimeZone()}`;
+  overviewZone.textContent = `Next 7 programme dates · ${formatDay(dates[0], mode)}–${formatDay(dates[6], mode)} · ${mode === "utc" ? "UTC" : formattedTimeZone()}`;
   overviewToggle.hidden = false;
   overviewToggle.setAttribute("aria-expanded", String(overviewExpanded));
   overviewToggle.textContent = overviewExpanded ? "Show fewer days ↑" : "Show all 7 days ↓";

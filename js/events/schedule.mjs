@@ -7,21 +7,21 @@ export const DISCORD_URL = "https://discord.gg/A2TQJNvNqa";
 const events = [];
 for (let weekday = 0; weekday < 7; weekday += 1) {
   events.push(
-    { id: `setup-${weekday}`, weekday, minute: 11 * 60 + 30, icon: "📋", label: "Triple Trouble Setup", category: "Daily programme", detail: "Prepare the map and squad for Triple Trouble." },
-    { id: `tt-${weekday}`, weekday, minute: 12 * 60, icon: "🐍", label: "Triple Trouble", category: "Daily programme", detail: "Commander, blockers, defence and support." },
-    { id: `dbs-${weekday}`, weekday, minute: 13 * 60, icon: "🐉", label: "Death-Branded Shatterer", category: "Daily programme", detail: "Follow-up world boss." },
+    { id: `setup-${weekday}`, weekday, session: "daily-train", minute: 11 * 60 + 30, icon: "📋", label: "Triple Trouble Setup", category: "Daily programme", detail: "Prepare the map and squad for Triple Trouble." },
+    { id: `tt-${weekday}`, weekday, session: "daily-train", minute: 12 * 60, icon: "🐍", label: "Triple Trouble", category: "Daily programme", detail: "Commander, blockers, defence and support." },
+    { id: `dbs-${weekday}`, weekday, session: "daily-train", minute: 13 * 60, icon: "🐉", label: "Death-Branded Shatterer", category: "Daily programme", detail: "Follow-up world boss." },
   );
 }
 // Sequences (→) are successive activities; alternatives (or) are not confirmed simultaneously.
 events.push(
-  { id: "mon-late", weekday: 1, minute: 13 * 60 + 30, icon: "🦁", label: "Battle for Lion's Arch → Twisted Marionette", category: "Follow-up", detail: "Two activities in sequence." },
-  { id: "tue-late", weekday: 2, minute: 13 * 60 + 30, icon: "🐲", label: "Dragonstorm → Dragon's Stand", category: "Follow-up", detail: "Two activities in sequence." },
-  { id: "wed-late", weekday: 3, minute: 13 * 60 + 30, icon: "⚔️", label: "WvW or 🆓 Free Day", category: "Alternative activities", detail: "Choice depends on commander availability." },
-  { id: "thu-late", weekday: 4, minute: 13 * 60 + 30, icon: "🔥", label: "Path of Fire Meta Train", category: "Follow-up", detail: "Community meta train." },
-  { id: "fri-gyala", weekday: 5, minute: 7 * 60, icon: "🪏", label: "Gyala Delve", category: "Weekly meta", detail: "End of Dragons and a Jade Bot (any tier) required." },
-  { id: "fri-late", weekday: 5, minute: 13 * 60 + 30, icon: "🏰", label: "Guild Missions or ⚔️ Raids or 🆓 Free Day", category: "Alternative activities", detail: "Check Discord for the chosen activity.", raidLink: true },
-  { id: "sat-late", weekday: 6, minute: 13 * 60 + 30, icon: "🏴‍☠️", label: "Aetherblade Assault → Dragon's End", category: "Follow-up", detail: "Two activities in sequence." },
-  { id: "sun-late", weekday: 0, minute: 13 * 60 + 30, icon: "🌀", label: "CM Convergence", category: "Follow-up", detail: "Challenge Mode Convergence." },
+  { id: "mon-late", weekday: 1, session: "daily-train", minute: 13 * 60 + 30, icon: "🦁", label: "Battle for Lion's Arch → Twisted Marionette", category: "Follow-up", detail: "Two activities in sequence." },
+  { id: "tue-late", weekday: 2, session: "daily-train", minute: 13 * 60 + 30, icon: "🐲", label: "Dragonstorm → Dragon's Stand", category: "Follow-up", detail: "Two activities in sequence." },
+  { id: "wed-late", weekday: 3, session: "daily-train", minute: 13 * 60 + 30, icon: "⚔️", label: "WvW or 🆓 Free Day", category: "Alternative activities", detail: "Choice depends on commander availability." },
+  { id: "thu-late", weekday: 4, session: "daily-train", minute: 13 * 60 + 30, icon: "🔥", label: "Path of Fire Meta Train", category: "Follow-up", detail: "Community meta train." },
+  { id: "fri-gyala", weekday: 5, session: "standalone", minute: 7 * 60, icon: "🪏", label: "Gyala Delve", category: "Weekly meta", detail: "End of Dragons and a Jade Bot (any tier) required." },
+  { id: "fri-late", weekday: 5, session: "daily-train", minute: 13 * 60 + 30, icon: "🏰", label: "Guild Missions or ⚔️ Raids or 🆓 Free Day", category: "Alternative activities", detail: "Check Discord for the chosen activity.", raidLink: true },
+  { id: "sat-late", weekday: 6, session: "daily-train", minute: 13 * 60 + 30, icon: "🏴‍☠️", label: "Aetherblade Assault → Dragon's End", category: "Follow-up", detail: "Two activities in sequence." },
+  { id: "sun-late", weekday: 0, session: "daily-train", minute: 13 * 60 + 30, icon: "🌀", label: "CM Convergence", category: "Follow-up", detail: "Challenge Mode Convergence." },
 );
 export const EVENTS = Object.freeze(events.map(event => Object.freeze(event)));
 
@@ -66,14 +66,35 @@ export function occurrencesAround(now = new Date(), weeksBefore = 1, weeksAfter 
   for (let week = -weeksBefore; week <= weeksAfter; week += 1) {
     for (const event of EVENTS) {
       const start = new Date(utcSunday + week * WEEK_MS + event.weekday * DAY_MS + event.minute * 60000);
-      result.push({ ...event, start });
+      // The UTC occurrence remains authoritative; the session starts at TT Setup.
+      // Independent metas, such as Gyala Delve, use their own start instant.
+      const anchorMinute = event.session === "daily-train" ? 11 * 60 + 30 : event.minute;
+      const sessionStart = new Date(start.getTime() - (event.minute - anchorMinute) * 60000);
+      result.push({ ...event, start, sessionStart });
     }
   }
   return result.sort((a, b) => a.start - b.start || a.id.localeCompare(b.id));
 }
 
 
-// An event day remains visible until 90 minutes after its last scheduled
+// Associate a whole run with the local date on which that run begins.
+// UTC mode is anchored to the original UTC programme weekday.
+export function programmeDayKey(event, mode = "local") {
+  return calendarKey(event.sessionStart, mode);
+}
+
+// Only annotate the weekday when an event falls after the session's local midnight.
+// The newline keeps narrow screens readable without widening the time column.
+export function formatProgrammeTime(event, mode = "local") {
+  const clock = formatTime(event.start, mode);
+  if (calendarKey(event.start, mode) === programmeDayKey(event, mode)) return clock;
+  const weekday = new Intl.DateTimeFormat(undefined, {
+    weekday: "short", timeZone: mode === "utc" ? "UTC" : undefined,
+  }).format(event.start);
+  return `${weekday}\n${clock}`;
+}
+
+// A programme date remains visible until 90 minutes after its last scheduled
 // start, even when that period crosses the visitor's local midnight.
 // This is a display cutoff, not a claim about individual event durations.
 export const UPCOMING_DAY_GRACE_MS = 90 * 60 * 1000;
@@ -83,7 +104,7 @@ export function upcomingDayProgramme(now = new Date(), mode = "local") {
   const all = occurrencesAround(now, 1, 2);
   const days = dates.map((day, index) => {
     const dayKey = calendarKey(day, mode);
-    const events = all.filter(event => calendarKey(event.start, mode) === dayKey);
+    const events = all.filter(event => programmeDayKey(event, mode) === dayKey);
     const last = events.at(-1);
     const cutoff = last ? new Date(last.start.getTime() + UPCOMING_DAY_GRACE_MS) : null;
     return { day, dayKey, dayOffset: index - 1, events, cutoff };
