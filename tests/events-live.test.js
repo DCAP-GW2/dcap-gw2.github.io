@@ -183,6 +183,32 @@ test("Events page refreshes at an event start and reconciles a stale-week click"
     nodes["[data-today]"].click();
     assert.equal(nodes["[data-week-days]"].children[3].dataset.day, "2026-11-30");
     assert.equal(nodes["[data-seven-day-toggle]"].getAttribute("aria-expanded"), "false");
+    // Cross midnight in Brisbane during Monday's 90-minute tail.
+    process.env.TZ = "Australia/Brisbane";
+    setClock("2026-11-23T13:45:00Z"); // Mon 23:45 Brisbane
+    local.click();
+    assert.match(nodes["[data-next-event]"].children[0].textContent, /^Today/);
+    assert.match(highlightedLabel(), /Battle for Lion/);
+    setClock("2026-11-23T14:00:00Z"); // Tue 00:00 Brisbane
+    runDueTimers();
+    assert.match(nodes["[data-next-event]"].children[0].textContent, /^Yesterday/);
+    assert.match(highlightedLabel(), /Battle for Lion/);
+    setClock("2026-11-23T14:59:59.999Z"); // Tue 00:59:59.999 Brisbane
+    runDueTimers();
+    assert.match(nodes["[data-next-event]"].children[0].textContent, /^Yesterday/);
+    setClock("2026-11-23T15:00:00.000Z"); // Tue 01:00 exactly
+    runDueTimers();
+    assert.match(nodes["[data-next-event]"].children[0].textContent, /^Today/);
+    assert.match(highlightedLabel(), /Triple Trouble Setup/);
+
+    // Auckland's own 04:00 cutoff must likewise update at the exact instant.
+    process.env.TZ = "Pacific/Auckland";
+    setClock("2026-11-23T14:59:59.999Z");
+    local.click();
+    assert.match(nodes["[data-next-event]"].children[0].textContent, /^Today/);
+    setClock("2026-11-23T15:00:00.000Z");
+    runDueTimers();
+    assert.match(nodes["[data-next-event]"].children[0].textContent, /^Tomorrow/);
   } finally {
     globalThis.Date = realDate;
     if (realDocument === undefined) delete globalThis.document;

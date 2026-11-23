@@ -73,33 +73,35 @@ export function occurrencesAround(now = new Date(), weeksBefore = 1, weeksAfter 
 }
 
 
-// A visitor sees the complete local calendar day's programme until 90 minutes
-// after its last scheduled start, then sees the next day's programme.
-// The grace period is a display cutoff, not a claim about event duration.
+// An event day remains visible until 90 minutes after its last scheduled
+// start, even when that period crosses the visitor's local midnight.
+// This is a display cutoff, not a claim about individual event durations.
 export const UPCOMING_DAY_GRACE_MS = 90 * 60 * 1000;
 
 export function upcomingDayProgramme(now = new Date(), mode = "local") {
-  const dates = calendarDates(now, mode, 0, 2);
+  const dates = calendarDates(now, mode, -1, 3); // yesterday, today, tomorrow
   const all = occurrencesAround(now, 1, 2);
-  const todayKey = calendarKey(dates[0], mode);
-  const today = all.filter(event => calendarKey(event.start, mode) === todayKey);
-  const last = today.at(-1);
-  const cutoff = last ? new Date(last.start.getTime() + UPCOMING_DAY_GRACE_MS) : null;
-  const tomorrow = !cutoff || now.getTime() >= cutoff.getTime();
-  const day = dates[tomorrow ? 1 : 0];
-  const dayKey = calendarKey(day, mode);
-  const events = tomorrow
-    ? all.filter(event => calendarKey(event.start, mode) === dayKey)
-    : today;
-  const nextIndex = events.findIndex(event => event.start.getTime() > now.getTime());
+  const days = dates.map((day, index) => {
+    const dayKey = calendarKey(day, mode);
+    const events = all.filter(event => calendarKey(event.start, mode) === dayKey);
+    const last = events.at(-1);
+    const cutoff = last ? new Date(last.start.getTime() + UPCOMING_DAY_GRACE_MS) : null;
+    return { day, dayKey, dayOffset: index - 1, events, cutoff };
+  });
+
+  // Check yesterday first to preserve an unfinished grace window across
+  // midnight; otherwise use today until its cutoff, then tomorrow.
+  const yesterday = days[0];
+  const today = days[1];
+  const chosen = yesterday.cutoff && now < yesterday.cutoff
+    ? yesterday
+    : today.cutoff && now < today.cutoff ? today : days[2];
+  const nextIndex = chosen.events.findIndex(event => event.start > now);
   return {
-    day,
-    dayKey,
-    dayOffset: tomorrow ? 1 : 0,
-    events,
+    ...chosen,
     nextIndex,
-    highlightedIndex: nextIndex < 0 ? events.length - 1 : nextIndex,
-    cutoff: tomorrow ? null : cutoff,
+    highlightedIndex: nextIndex < 0 ? chosen.events.length - 1 : nextIndex,
+    cutoff: chosen.dayOffset === 1 ? null : chosen.cutoff,
   };
 }
 

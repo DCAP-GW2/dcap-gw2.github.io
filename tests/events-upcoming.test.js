@@ -71,3 +71,46 @@ test("local-day assignment stays grounded to real instants across Auckland DST c
     else process.env.TZ = original;
   }
 });
+
+
+test("Brisbane retains yesterday's programme across midnight until exactly 01:00 AEST", () => {
+  const original = process.env.TZ;
+  process.env.TZ = "Australia/Brisbane";
+  try {
+    const samples = [
+      ["2026-11-23T13:45:00Z", "2026-11-23", 0],  // Monday 23:45 AEST
+      ["2026-11-23T13:59:59Z", "2026-11-23", 0],  // Monday 23:59:59
+      ["2026-11-23T14:00:00Z", "2026-11-23", -1], // Tuesday 00:00
+      ["2026-11-23T14:59:59.999Z", "2026-11-23", -1], // Tuesday 00:59:59.999
+      ["2026-11-23T15:00:00.000Z", "2026-11-24", 0], // Tuesday 01:00 precisely
+    ];
+    for (const [instant, key, offset] of samples) {
+      const plan = upcomingDayProgramme(new Date(instant), "local");
+      assert.equal(plan.dayKey, key, instant);
+      assert.equal(plan.dayOffset, offset, instant);
+      if (offset === -1) {
+        assert.equal(plan.events.at(-1).id, "mon-late");
+        assert.equal(plan.cutoff?.toISOString(), "2026-11-23T15:00:00.000Z");
+      }
+    }
+  } finally {
+    if (original === undefined) delete process.env.TZ;
+    else process.env.TZ = original;
+  }
+});
+
+test("UTC and Auckland cutoff change at precisely 90 minutes, without 100 ms delay", () => {
+  const original = process.env.TZ;
+  process.env.TZ = "Pacific/Auckland";
+  try {
+    const justBefore = upcomingDayProgramme(new Date("2026-11-23T14:59:59.999Z"), "local");
+    const exact = upcomingDayProgramme(new Date("2026-11-23T15:00:00.000Z"), "local");
+    assert.equal(justBefore.dayKey, "2026-11-24");
+    assert.equal(justBefore.dayOffset, 0);
+    assert.equal(exact.dayKey, "2026-11-25");
+    assert.equal(exact.dayOffset, 1);
+  } finally {
+    if (original === undefined) delete process.env.TZ;
+    else process.env.TZ = original;
+  }
+});

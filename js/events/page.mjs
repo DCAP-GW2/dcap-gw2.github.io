@@ -42,7 +42,7 @@ function utcReference(event) {
 
 function renderUpcoming(now) {
   const programme = upcomingDayProgramme(now, mode);
-  const dayText = programme.dayOffset === 0 ? "Today" : "Tomorrow";
+  const dayText = programme.dayOffset < 0 ? "Yesterday" : programme.dayOffset === 0 ? "Today" : "Tomorrow";
   const day = element("p", "events-upcoming-date",
     `${dayText} · ${formatDay(programme.day, mode)} · ${mode === "utc" ? "UTC" : "Local time"}`);
   const list = element("ol", "events-upcoming-list");
@@ -221,8 +221,8 @@ function refreshClock() {
   const programme = renderUpcoming(now);
   reconcileWeek(now);
 
-  // Refresh when an event starts or the day's last-start + 90-minute cutoff
-  // is reached; separate midnight refresh handles date and DST rollover.
+  // Refresh at event starts and at the exact 90-minute cutoff.
+  // Midnight reconciliation must not truncate a grace window.
   // A delayed timer (e.g. in a background tab) is corrected on visibility/focus.
   window.clearTimeout(activityTimer);
   const next = nextEvents(now, 1)[0];
@@ -230,12 +230,12 @@ function refreshClock() {
     .filter(date => date && date.getTime() > now.getTime());
   if (upcomingChanges.length) {
     activityTimer = window.setTimeout(
-      refreshClock, Math.max(50, Math.min(...upcomingChanges.map(date => date.getTime())) - now.getTime() + 100)
+      refreshClock, Math.max(1, Math.min(...upcomingChanges.map(date => date.getTime())) - now.getTime())
     );
   }
   window.clearTimeout(midnightTimer);
   midnightTimer = window.setTimeout(
-    refreshClock, Math.max(50, nextDisplayMidnight(now, mode).getTime() - now.getTime() + 100)
+    refreshClock, Math.max(1, nextDisplayMidnight(now, mode).getTime() - now.getTime())
   );
 }
 
