@@ -1,12 +1,10 @@
-import { occurrencesAround, formatDay, formatTime } from "./schedule.mjs";
+import { nextEvents, formatDay, formatTime } from "./schedule.mjs";
 
-const now = new Date();
-const upcoming = occurrencesAround(now, 0, 2).filter(event => event.start > now);
-const choices = [
-  upcoming.find(event => event.category === "Daily programme"),
-  upcoming.find(event => event.category === "Follow-up" || event.category === "Alternative activities"),
-  upcoming.find(event => event.id === "fri-gyala"),
-].filter(Boolean).sort((a, b) => a.start - b.start);
+// This board is a chronological preview, not a curated set of categories.
+// Read from the same UTC recurrence rules as the full Events page.
+export function upcomingHomepageEvents(now = new Date()) {
+  return nextEvents(now, 3);
+}
 
 function element(tag, className, text) {
   const node = document.createElement(tag);
@@ -16,7 +14,12 @@ function element(tag, className, text) {
 }
 
 const board = document.querySelector("[data-home-events]");
-if (board) {
+let refreshTimer = null;
+
+function renderHomepageEvents() {
+  if (!board) return;
+  const now = new Date();
+  const choices = upcomingHomepageEvents(now);
   board.replaceChildren(...choices.map(event => {
     const article = element("article");
     const badge = element("div", "date-badge");
@@ -33,4 +36,20 @@ if (board) {
     article.append(badge, detail);
     return article;
   }));
+
+  // Update on the first event start, so a page left open doesn't stay stale.
+  window.clearTimeout(refreshTimer);
+  if (choices.length) {
+    refreshTimer = window.setTimeout(renderHomepageEvents,
+      Math.max(50, choices[0].start.getTime() - now.getTime() + 100));
+  }
+}
+
+if (board) {
+  renderHomepageEvents();
+  // Background tabs can throttle timers; catch up when the tab is revisited.
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) renderHomepageEvents();
+  });
+  window.addEventListener("focus", renderHomepageEvents);
 }
