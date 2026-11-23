@@ -30,7 +30,12 @@ export function releaseRoute(url) {
   if (marker.length!==1 || marker[0]!=='private' || u.searchParams.has('pointsPreview')) return Object.freeze({mode:'invalid',view});
   return Object.freeze({mode:'private-v2',view});
  }
- if (PUBLIC_V2_ENABLED && u.protocol==='https:' && u.hostname===EXPECTED_PUBLIC_HOST && !u.searchParams.has('pointsPreview')) {
+ // Only this Cloudflare Worker account's per-branch/deployment preview hosts.
+ // The unprefixed workers.dev production URL deliberately remains v1.
+ const isTrustedPreview = /^[a-z0-9]+(?:-[a-z0-9]+)*-dcap-pr-preview\.hal-intania92\.workers\.dev$/.test(u.hostname);
+ if (PUBLIC_V2_ENABLED && u.protocol==='https:' &&
+     (u.hostname===EXPECTED_PUBLIC_HOST || isTrustedPreview) &&
+     !u.searchParams.has('pointsPreview')) {
   return Object.freeze({mode:'production-v2',view});
  }
  return Object.freeze({mode:'v1',view});

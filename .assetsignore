@@ -1,0 +1,24 @@
+# Files required to run the DCAP site (index.html, css/, js/, assets/,
+# events/, points/ including its public JSON data) are intentionally included.
+
+# Build artefacts, dependencies and repository internals are not public assets.
+.git/
+.github/
+node_modules/
+.wrangler/
+tests/
+
+# Source/configuration files not used by visitors.
+.gitignore
+.assetsignore
+README.md
+LICENSE
+package.json
+package-lock.json
+bun.lock
+bun.lockb
+pnpm-lock.yaml
+yarn.lock
+wrangler.json
+wrangler.jsonc
+wrangler.toml
