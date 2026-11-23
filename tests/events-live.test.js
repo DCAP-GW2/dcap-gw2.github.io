@@ -94,13 +94,13 @@ test("Events page refreshes at an event start and reconciles a stale-week click"
     }
     assert.equal(initialDateButtons[3].children[2].textContent, "Today");
     assert.equal(nodes["[data-seven-day-list]"].children.length, 7);
-    assert.equal(nodes["[data-seven-day-list]"].children.filter(card => !card.hidden).length, 3);
+    assert.equal(nodes["[data-seven-day-list]"].children.filter(card => !card.hidden).length, 4);
     assert.equal(nodes["[data-seven-day-toggle]"].getAttribute("aria-expanded"), "false");
     nodes["[data-seven-day-toggle]"].click();
     assert.equal(nodes["[data-seven-day-list]"].children.filter(card => !card.hidden).length, 7);
     assert.equal(nodes["[data-seven-day-toggle]"].getAttribute("aria-expanded"), "true");
     nodes["[data-seven-day-toggle]"].click();
-    assert.equal(nodes["[data-seven-day-list]"].children.filter(card => !card.hidden).length, 3);
+    assert.equal(nodes["[data-seven-day-list]"].children.filter(card => !card.hidden).length, 4);
 
     utc.click();
     assert.equal(nodes["[data-week-days]"].children[3].children[2].textContent, "Today");
@@ -150,7 +150,7 @@ test("Events page refreshes at an event start and reconciles a stale-week click"
     assert.equal(nodes["[data-week-days]"].children[3].dataset.day, "2026-11-30");
     assert.equal(nodes["[data-week-days]"].children[3].getAttribute("aria-pressed"), "true");
     assert.match(nodes["[data-day-title]"].textContent, /Monday/);
-    assert.equal(nodes["[data-seven-day-list]"].children.filter(card => !card.hidden).length, 3);
+    assert.equal(nodes["[data-seven-day-list]"].children.filter(card => !card.hidden).length, 4);
 
     // Browse a shifted window and return directly to today.
     nodes["[data-next-week]"].click();
