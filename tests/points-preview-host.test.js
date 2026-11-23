@@ -45,3 +45,12 @@ test('Cloudflare asset exclusion rules keep repository-only files out of uploads
     assert.ok(!text.split(/\r?\n/).includes(published), `Site asset excluded: ${published}`);
   }
 });
+
+test('Wrangler defines a static-assets Worker and preview configuration', () => {
+  const config = JSON.parse(readFileSync(new URL('../wrangler.jsonc', import.meta.url), 'utf8'));
+  assert.equal(config.name, 'dcap-pr-preview');
+  assert.equal(config.assets.directory, '.');
+  assert.ok(Object.hasOwn(config, 'previews'));
+  assert.deepEqual(config.previews, {});
+  assert.ok(/^\d{4}-\d{2}-\d{2}$/.test(config.compatibility_date));
+});
