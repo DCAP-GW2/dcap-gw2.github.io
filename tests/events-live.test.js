@@ -223,8 +223,8 @@ test("Events page refreshes at an event start and reconciles a stale-week click"
       "Triple Trouble Setup", "Triple Trouble", "Death-Branded Shatterer",
       "Battle for Lion's Arch → Twisted Marionette",
     ]);
-    assert.match(mondayCard.children[2].children[2].children[0].textContent, /^Tue\\n12:00\\s?am$/i);
-    assert.match(mondayCard.children[2].children[3].children[0].textContent, /^Tue\\n12:30\\s?am$/i);
+    assert.match(mondayCard.children[2].children[2].children[0].textContent, /^Tue\n12:00\s?am$/i);
+    assert.match(mondayCard.children[2].children[3].children[0].textContent, /^Tue\n12:30\s?am$/i);
     assert.equal(nodes["[data-day-count]"].textContent, "4 planned activities");
     assert.deepEqual(nodes["[data-day-events]"].children.map(row => row.children[2].children[0].textContent), [
       "Triple Trouble Setup", "Triple Trouble", "Death-Branded Shatterer",
