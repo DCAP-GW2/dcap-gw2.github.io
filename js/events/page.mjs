@@ -110,7 +110,8 @@ function renderWeek(now) {
     button.type = "button";
     button.dataset.day = key;
     button.setAttribute("aria-pressed", String(key === selectedDateKey));
-    button.setAttribute("aria-label", `View ${formatDay(day, mode)} events`);
+    // Use the button’s visible weekday, date and Today text as its native accessible name.
+    // A separate aria-label can differ from the visible label and fail label-in-name checks.
     button.append(
       element("span", "events-tab-day", new Intl.DateTimeFormat(undefined, {
         weekday: "short", timeZone: mode === "utc" ? "UTC" : undefined,
