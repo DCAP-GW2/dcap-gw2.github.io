@@ -83,6 +83,16 @@ test("Events page refreshes at an event start and reconciles a stale-week click"
 
   try {
     await import("../js/events/page.mjs?rollover-regression=1");
+    // Native button text is the accessible name: weekday, date, then Today.
+    // An overriding aria-label previously made axe flag all seven buttons.
+    const initialDateButtons = nodes["[data-week-days]"].children;
+    assert.equal(initialDateButtons.length, 7);
+    for (const button of initialDateButtons) {
+      assert.equal(button.getAttribute("aria-label"), undefined);
+      assert.match(button.children[0].textContent, /\w/);
+      assert.match(button.children[1].textContent, /\d/);
+    }
+    assert.equal(initialDateButtons[3].children[2].textContent, "Today");
     assert.equal(nodes["[data-seven-day-list]"].children.length, 7);
     assert.equal(nodes["[data-seven-day-list]"].children.filter(card => !card.hidden).length, 3);
     assert.equal(nodes["[data-seven-day-toggle]"].getAttribute("aria-expanded"), "false");
@@ -93,6 +103,8 @@ test("Events page refreshes at an event start and reconciles a stale-week click"
     assert.equal(nodes["[data-seven-day-list]"].children.filter(card => !card.hidden).length, 3);
 
     utc.click();
+    assert.equal(nodes["[data-week-days]"].children[3].children[2].textContent, "Today");
+    assert(nodes["[data-week-days]"].children.every(button => button.getAttribute("aria-label") === undefined));
     assert.match(nodes["[data-seven-day-zone]"].textContent, /UTC/);
     assert.match(nodes["[data-next-event]"].children[0].textContent, /Triple Trouble/);
     setClock("2026-11-13T12:00:01Z");
