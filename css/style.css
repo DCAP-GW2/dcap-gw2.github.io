@@ -104,10 +104,10 @@ a.card-action:hover { text-decoration: underline; text-underline-offset: 4px; }
 .events-board article:last-child { border: 0; }
 .date-badge { width: 58px; height: 62px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid rgba(125,211,252,.22); border-radius: 10px; color: var(--cyan); background: rgba(125,211,252,.06); }
 .date-badge strong { font-size: 1rem; line-height: 1.1; }
-.date-badge span { color: var(--muted); font-size: .58rem; font-weight: 800; letter-spacing: .08em; }
+.date-badge span { color: var(--muted); font-size: .58rem; font-weight: 800; letter-spacing: .08em; white-space: nowrap; }
 .events-board h3 { margin: 0 0 3px; font-size: 1.07rem; }
-.events-board p, .events-board article > div > span { margin: 0; color: var(--muted); font-size: .87rem; }
-.events-board article > div > span { color: #d5deea; }
+.events-board p, .events-board article > div:not(.date-badge) > span { margin: 0; color: var(--muted); font-size: .87rem; }
+.events-board article > div:not(.date-badge) > span { color: #d5deea; }
 .points-section { padding-top: 30px; background: #0d1425; }
 .points-feature { position: relative; min-height: 380px; display: grid; grid-template-columns: minmax(160px,190px) minmax(0,1fr) minmax(180px,.62fr); align-items: center; gap: clamp(28px,3.5vw,48px); overflow: hidden; padding: clamp(35px,5vw,64px); border: 1px solid rgba(245,158,11,.25); border-radius: 28px; background: radial-gradient(circle at 14% 45%, rgba(245,158,11,.15), transparent 27%), radial-gradient(circle at 80% 10%, rgba(96,165,250,.14), transparent 30%), linear-gradient(135deg,#192336,#0c1323); box-shadow: var(--shadow); }
 .points-feature::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(110deg, transparent 35%, rgba(255,255,255,.025) 50%, transparent 65%); }
