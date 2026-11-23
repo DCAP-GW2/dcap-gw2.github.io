@@ -94,27 +94,48 @@ test("Events page refreshes at an event start and reconciles a stale-week click"
     }
     assert.equal(initialDateButtons[3].children[2].textContent, "Today");
     assert.equal(nodes["[data-seven-day-list]"].children.length, 7);
-    assert.equal(nodes["[data-seven-day-list]"].children.filter(card => !card.hidden).length, 3);
+    assert.equal(nodes["[data-seven-day-list]"].children.filter(card => !card.hidden).length, 4);
     assert.equal(nodes["[data-seven-day-toggle]"].getAttribute("aria-expanded"), "false");
     nodes["[data-seven-day-toggle]"].click();
     assert.equal(nodes["[data-seven-day-list]"].children.filter(card => !card.hidden).length, 7);
     assert.equal(nodes["[data-seven-day-toggle]"].getAttribute("aria-expanded"), "true");
     nodes["[data-seven-day-toggle]"].click();
-    assert.equal(nodes["[data-seven-day-list]"].children.filter(card => !card.hidden).length, 3);
+    assert.equal(nodes["[data-seven-day-list]"].children.filter(card => !card.hidden).length, 4);
 
     utc.click();
     assert.equal(nodes["[data-week-days]"].children[3].children[2].textContent, "Today");
     assert(nodes["[data-week-days]"].children.every(button => button.getAttribute("aria-label") === undefined));
     assert.match(nodes["[data-seven-day-zone]"].textContent, /UTC/);
-    assert.match(nodes["[data-next-event]"].children[0].textContent, /Triple Trouble/);
+    const upcomingRows = () => nodes["[data-next-event]"].children[1].children;
+    const highlightedRow = () => upcomingRows().find(row => row.className.includes("is-highlighted"));
+    const highlightedLabel = () => highlightedRow()?.children[2].children[0].textContent;
+    assert.match(highlightedLabel(), /Triple Trouble/);
+    assert.equal(upcomingRows().length, 5); // Gyala + daily events + follow-up.
     setClock("2026-11-13T12:00:01Z");
     runDueTimers();
-    assert.match(nodes["[data-next-event]"].children[0].textContent, /Death-Branded Shatterer/);
+    assert.match(highlightedLabel(), /Death-Branded Shatterer/);
 
     // Focus recovery after missed timer while hidden.
     setClock("2026-11-13T13:01:00Z");
     winListeners.focus();
-    assert.match(nodes["[data-next-event]"].children[0].textContent, /Guild Missions/);
+    assert.match(highlightedLabel(), /Guild Missions/);
+    // The final activity started; it remains visible until 90 minutes later.
+    setClock("2026-11-13T13:30:01Z");
+    runDueTimers();
+    assert.match(highlightedLabel(), /Guild Missions/);
+    assert.equal(highlightedRow().children[2].children[1].textContent, "Recently started");
+    setClock("2026-11-13T14:59:59Z");
+    winListeners.focus();
+    assert.match(nodes["[data-next-event]"].children[0].textContent, /^Today/);
+    // Friday 14:59:59 UTC is Saturday 03:59:59 in Auckland, just
+    // before the last local Friday UTC event's 90-minute cutoff.
+    // UTC mode is Friday, also before its 15:00 cutoff.
+    utc.click();
+    assert.match(nodes["[data-next-event]"].children[0].textContent, /^Today/);
+    setClock("2026-11-13T15:00:01Z");
+    runDueTimers();
+    assert.match(nodes["[data-next-event]"].children[0].textContent, /^Tomorrow/);
+    assert.match(highlightedLabel(), /Triple Trouble Setup/);
     assert.equal(typeof docListeners.visibilitychange, "function");
 
     // Switch to Auckland local weekdays; capture an old week's Monday button.
@@ -150,7 +171,7 @@ test("Events page refreshes at an event start and reconciles a stale-week click"
     assert.equal(nodes["[data-week-days]"].children[3].dataset.day, "2026-11-30");
     assert.equal(nodes["[data-week-days]"].children[3].getAttribute("aria-pressed"), "true");
     assert.match(nodes["[data-day-title]"].textContent, /Monday/);
-    assert.equal(nodes["[data-seven-day-list]"].children.filter(card => !card.hidden).length, 3);
+    assert.equal(nodes["[data-seven-day-list]"].children.filter(card => !card.hidden).length, 4);
 
     // Browse a shifted window and return directly to today.
     nodes["[data-next-week]"].click();
@@ -162,6 +183,32 @@ test("Events page refreshes at an event start and reconciles a stale-week click"
     nodes["[data-today]"].click();
     assert.equal(nodes["[data-week-days]"].children[3].dataset.day, "2026-11-30");
     assert.equal(nodes["[data-seven-day-toggle]"].getAttribute("aria-expanded"), "false");
+    // Cross midnight in Brisbane during Monday's 90-minute tail.
+    process.env.TZ = "Australia/Brisbane";
+    setClock("2026-11-23T13:45:00Z"); // Mon 23:45 Brisbane
+    local.click();
+    assert.match(nodes["[data-next-event]"].children[0].textContent, /^Today/);
+    assert.match(highlightedLabel(), /Battle for Lion/);
+    setClock("2026-11-23T14:00:00Z"); // Tue 00:00 Brisbane
+    runDueTimers();
+    assert.match(nodes["[data-next-event]"].children[0].textContent, /^Yesterday/);
+    assert.match(highlightedLabel(), /Battle for Lion/);
+    setClock("2026-11-23T14:59:59.999Z"); // Tue 00:59:59.999 Brisbane
+    runDueTimers();
+    assert.match(nodes["[data-next-event]"].children[0].textContent, /^Yesterday/);
+    setClock("2026-11-23T15:00:00.000Z"); // Tue 01:00 exactly
+    runDueTimers();
+    assert.match(nodes["[data-next-event]"].children[0].textContent, /^Today/);
+    assert.match(highlightedLabel(), /Triple Trouble Setup/);
+
+    // Auckland's own 04:00 cutoff must likewise update at the exact instant.
+    process.env.TZ = "Pacific/Auckland";
+    setClock("2026-11-23T14:59:59.999Z");
+    local.click();
+    assert.match(nodes["[data-next-event]"].children[0].textContent, /^Today/);
+    setClock("2026-11-23T15:00:00.000Z");
+    runDueTimers();
+    assert.match(nodes["[data-next-event]"].children[0].textContent, /^Tomorrow/);
   } finally {
     globalThis.Date = realDate;
     if (realDocument === undefined) delete globalThis.document;

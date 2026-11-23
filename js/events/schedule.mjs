@@ -7,7 +7,7 @@ export const DISCORD_URL = "https://discord.gg/A2TQJNvNqa";
 const events = [];
 for (let weekday = 0; weekday < 7; weekday += 1) {
   events.push(
-    { id: `setup-${weekday}`, weekday, minute: 11 * 60 + 30, icon: "📋", label: "Setup", category: "Daily programme", detail: "Prepare the map and squad for Triple Trouble." },
+    { id: `setup-${weekday}`, weekday, minute: 11 * 60 + 30, icon: "📋", label: "Triple Trouble Setup", category: "Daily programme", detail: "Prepare the map and squad for Triple Trouble." },
     { id: `tt-${weekday}`, weekday, minute: 12 * 60, icon: "🐍", label: "Triple Trouble", category: "Daily programme", detail: "Commander, blockers, defence and support." },
     { id: `dbs-${weekday}`, weekday, minute: 13 * 60, icon: "🐉", label: "Death-Branded Shatterer", category: "Daily programme", detail: "Follow-up world boss." },
   );
@@ -70,6 +70,39 @@ export function occurrencesAround(now = new Date(), weeksBefore = 1, weeksAfter 
     }
   }
   return result.sort((a, b) => a.start - b.start || a.id.localeCompare(b.id));
+}
+
+
+// An event day remains visible until 90 minutes after its last scheduled
+// start, even when that period crosses the visitor's local midnight.
+// This is a display cutoff, not a claim about individual event durations.
+export const UPCOMING_DAY_GRACE_MS = 90 * 60 * 1000;
+
+export function upcomingDayProgramme(now = new Date(), mode = "local") {
+  const dates = calendarDates(now, mode, -1, 3); // yesterday, today, tomorrow
+  const all = occurrencesAround(now, 1, 2);
+  const days = dates.map((day, index) => {
+    const dayKey = calendarKey(day, mode);
+    const events = all.filter(event => calendarKey(event.start, mode) === dayKey);
+    const last = events.at(-1);
+    const cutoff = last ? new Date(last.start.getTime() + UPCOMING_DAY_GRACE_MS) : null;
+    return { day, dayKey, dayOffset: index - 1, events, cutoff };
+  });
+
+  // Check yesterday first to preserve an unfinished grace window across
+  // midnight; otherwise use today until its cutoff, then tomorrow.
+  const yesterday = days[0];
+  const today = days[1];
+  const chosen = yesterday.cutoff && now < yesterday.cutoff
+    ? yesterday
+    : today.cutoff && now < today.cutoff ? today : days[2];
+  const nextIndex = chosen.events.findIndex(event => event.start > now);
+  return {
+    ...chosen,
+    nextIndex,
+    highlightedIndex: nextIndex < 0 ? chosen.events.length - 1 : nextIndex,
+    cutoff: chosen.dayOffset === 1 ? null : chosen.cutoff,
+  };
 }
 
 export function nextEvents(now = new Date(), count = 3) {

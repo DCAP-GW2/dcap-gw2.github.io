@@ -88,7 +88,7 @@ function view(root,name,doc,result,privatePreview){
    for(const [key,b] of Object.entries(buttons))b.setAttribute('aria-pressed',String(key===active));
    const note=el('p',active==='current'?doc.season.displayLabel+' — Current Season':'All-Time leaderboard','dcap-v2-leaderboard-label');
    const content=rows.length?
-    table(['Partial rank','Member','Points','Contributions'],rows.map(r=>[r.rank,link(r.member.displayName,'/points/members/profile/',r.member.id,privatePreview),fmt(r.points),fmt(r.count)])):
+    table(['Rank','Member','Points','Contributions'],rows.map(r=>[r.rank,link(r.member.displayName,'/points/members/profile/',r.member.id,privatePreview),fmt(r.points),fmt(r.count)])):
     el('p','No contributions have been recorded for this view.');
    results.replaceChildren(note,content);
   };
@@ -100,10 +100,10 @@ function view(root,name,doc,result,privatePreview){
  }else if(name==='profile'){
   const selected=new URL(location.href).searchParams.getAll('member');const member=selected.length===1?members.find(m=>m.id===selected[0]):null;
   if(!member){root.append(el('h1','Profile unavailable'),el('p','No verified public profile exists for this ID.'));return}
-  intro(root,member.displayName,doc,result);root.append(el('p',`${fmt(member.candidatePoints)} points from ${fmt(member.awardCandidateCount)} contributions.`));
+  intro(root,member.displayName,doc,result);root.append(el('p',`${fmt(member.candidatePoints)} points from ${fmt(member.awardCandidateCount)} ${member.awardCandidateCount === 1 ? "contribution" : "contributions"}.`));
   const personal=awards.filter(a=>a.memberId===member.id).sort((a,b)=>b.eventDate.localeCompare(a.eventDate)||a.id.localeCompare(b.id));
   const area=el('div');root.append(area);const btn=el('button','Show more','button button-secondary');btn.type='button';btn.setAttribute('aria-expanded','false');const id='dcap-v2-profile-history';area.id=id;btn.setAttribute('aria-controls',id);root.append(btn);
-  let expanded=false;const render=()=>{area.replaceChildren(table(['Date','Event','Role','Points','Provenance'],personal.slice(0,expanded?personal.length:5).map(a=>[a.eventDate,doc.events.find(e=>e.id===a.eventId)?.label||a.eventId,a.provenanceType==='OWNER_MANUAL_OTHER_COMMANDER'?'Other Commander':(doc.rules.find(r=>r.id===a.ruleId)?.roleLabel||a.roleId),fmt(a.points),a.provenanceType==='APPROVED_RULE'?'Owner-approved rule':a.provenanceType==='OWNER_MANUAL_OTHER_COMMANDER'?'Owner-assigned Other Commander':'Ratified historical exception'])));btn.hidden=personal.length<=5;btn.textContent=expanded?'Show fewer':'Show more';btn.setAttribute('aria-expanded',String(expanded))};btn.addEventListener('click',()=>{expanded=!expanded;render()});render();
+  let expanded=false;const render=()=>{area.replaceChildren(table(['Date','Event','Role','Points'],personal.slice(0,expanded?personal.length:5).map(a=>[a.eventDate,doc.events.find(e=>e.id===a.eventId)?.label||a.eventId,a.provenanceType==='OWNER_MANUAL_OTHER_COMMANDER'?'Other Commander':(doc.rules.find(r=>r.id===a.ruleId)?.roleLabel||a.roleId),fmt(a.points)])));btn.hidden=personal.length<=5;btn.textContent=expanded?'Show fewer':'Show more';btn.setAttribute('aria-expanded',String(expanded))};btn.addEventListener('click',()=>{expanded=!expanded;render()});render();
  }else if(name==='statistics'){
   intro(root,doc.continuing?'Statistics':'Historical statistics',doc,result);root.append(el('h2','By event'));root.append(table(['Event','Points','Contributions'],doc.aggregates.eventTotals.map(a=>[statLabel(doc.events.find(e=>e.id===a.eventId)?.label||a.eventId,a.candidatePoints,doc.population.candidatePoints),fmt(a.candidatePoints),a.awardCandidateCount])));
   dailyActivity(root,awards);

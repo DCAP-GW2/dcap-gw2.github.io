@@ -1,6 +1,6 @@
 import {
   WEEKDAYS, RAID_CHANNEL_URL, calendarKey, weekDates,
-  occurrencesAround, nextEvents, formatDay, formatTime, formattedTimeZone,
+  occurrencesAround, nextEvents, upcomingDayProgramme, formatDay, formatTime, formattedTimeZone,
   currentWeekSelection, nextDisplayMidnight, overviewDates,
 } from "./schedule.mjs";
 
@@ -40,14 +40,31 @@ function utcReference(event) {
   return `UTC ${WEEKDAYS[event.weekday]} ${hour}:${minute}`;
 }
 
-function renderNext(now) {
-  const event = nextEvents(now, 1)[0];
-  if (!event) return null;
-  const name = element("p", "events-next-name", `${event.icon} ${event.label}`);
-  const time = element("p", "events-next-time", `${formatDay(event.start, mode)} · ${formatTime(event.start, mode)}`);
-  const source = element("p", "events-row-utc", utcReference(event));
-  nextContainer.replaceChildren(name, time, source);
-  return event;
+function renderUpcoming(now) {
+  const programme = upcomingDayProgramme(now, mode);
+  const dayText = programme.dayOffset < 0 ? "Yesterday" : programme.dayOffset === 0 ? "Today" : "Tomorrow";
+  const day = element("p", "events-upcoming-date",
+    `${dayText} · ${formatDay(programme.day, mode)} · ${mode === "utc" ? "UTC" : "Local time"}`);
+  const list = element("ol", "events-upcoming-list");
+  programme.events.forEach((event, index) => {
+    const highlighted = index === programme.highlightedIndex;
+    const started = event.start.getTime() <= now.getTime();
+    const item = element("li", `events-upcoming-item${started && !highlighted ? " is-started" : ""}${highlighted ? " is-highlighted" : ""}`);
+    const time = element("time", "events-upcoming-time", formatTime(event.start, mode));
+    time.dateTime = event.start.toISOString();
+    const icon = element("span", "events-upcoming-icon", event.icon);
+    icon.setAttribute("aria-hidden", "true");
+    const description = element("div", "events-upcoming-description");
+    description.append(element("span", "events-upcoming-name", event.label));
+    if (highlighted) {
+      description.append(element("span", "events-upcoming-tag",
+        programme.nextIndex < 0 ? "Recently started" : "Next"));
+    }
+    item.append(time, icon, description);
+    list.append(item);
+  });
+  nextContainer.replaceChildren(day, list);
+  return programme;
 }
 
 function renderDayContents(now) {
@@ -151,7 +168,7 @@ function renderOverview(now) {
     const matches = events.filter(event => calendarKey(event.start, mode) === key);
     const card = element("article", "events-seven-day-card");
     card.dataset.day = key;
-    card.hidden = !overviewExpanded && index >= 3;
+    card.hidden = !overviewExpanded && index >= 4;
     const heading = element("h3", "", new Intl.DateTimeFormat(undefined, {
       weekday: "long", day: "numeric", month: "short",
       timeZone: mode === "utc" ? "UTC" : undefined,
@@ -201,19 +218,24 @@ function reconcileWeek(now, force = false) {
 
 function refreshClock() {
   const now = new Date();
-  const next = renderNext(now);
+  const programme = renderUpcoming(now);
   reconcileWeek(now);
 
+  // Refresh at event starts and at the exact 90-minute cutoff.
+  // Midnight reconciliation must not truncate a grace window.
   // A delayed timer (e.g. in a background tab) is corrected on visibility/focus.
   window.clearTimeout(activityTimer);
-  if (next) {
+  const next = nextEvents(now, 1)[0];
+  const upcomingChanges = [next?.start, programme.cutoff]
+    .filter(date => date && date.getTime() > now.getTime());
+  if (upcomingChanges.length) {
     activityTimer = window.setTimeout(
-      refreshClock, Math.max(50, next.start.getTime() - now.getTime() + 100)
+      refreshClock, Math.max(1, Math.min(...upcomingChanges.map(date => date.getTime())) - now.getTime())
     );
   }
   window.clearTimeout(midnightTimer);
   midnightTimer = window.setTimeout(
-    refreshClock, Math.max(50, nextDisplayMidnight(now, mode).getTime() - now.getTime() + 100)
+    refreshClock, Math.max(1, nextDisplayMidnight(now, mode).getTime() - now.getTime())
   );
 }
 
