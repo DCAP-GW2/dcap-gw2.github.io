@@ -1,6 +1,6 @@
 import {
   WEEKDAYS, RAID_CHANNEL_URL, calendarKey, weekDates,
-  occurrencesAround, nextEvents, upcomingDayProgramme, formatDay, formatTime, formattedTimeZone,
+  occurrencesAround, nextEvents, upcomingDayProgramme, formatDay, formattedTimeZone,
   currentWeekSelection, nextDisplayMidnight, overviewDates, programmeDayKey, formatProgrammeTime,
 } from "./schedule.mjs";
 
@@ -79,7 +79,7 @@ function renderDayContents(now) {
   }).format(dayDate);
   dayTitle.textContent = formatted;
 
-  // Resolve programme dates from each session\u0027s local starting day, not individual event dates.
+  // Resolve programme dates from each session's local starting day, not individual event dates.
   const matches = occurrencesAround(dayDate, 1, 2).filter(event => programmeDayKey(event, mode) === selectedDateKey);
   dayCount.textContent = `${matches.length} planned ${matches.length === 1 ? "activity" : "activities"}`;
 
