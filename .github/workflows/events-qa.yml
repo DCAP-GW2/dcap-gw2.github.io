@@ -1,0 +1,40 @@
+name: Events weekly schedule QA
+
+on:
+  pull_request:
+    paths:
+      - 'events/**'
+      - 'js/events/**'
+      - 'css/events.css'
+      - 'css/style.css'
+      - 'index.html'
+      - 'tests/events*.test.js'
+      - '.github/workflows/events-qa.yml'
+  push:
+    branches:
+      - 'feature/events-weekly-local-time-20261122'
+    paths:
+      - 'events/**'
+      - 'js/events/**'
+      - 'css/events.css'
+      - 'css/style.css'
+      - 'index.html'
+      - 'tests/events*.test.js'
+      - '.github/workflows/events-qa.yml'
+permissions:
+  contents: read
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify repository tests
+        run: npm test
+      - name: Verify Events modules parse
+        run: |
+          node --check js/events/schedule.mjs
+          node --check js/events/page.mjs
+          node --check js/events/home.mjs

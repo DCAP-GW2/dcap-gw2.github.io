@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Events | DCAP Guild Wars 2 Community</title>
+  <meta name="description" content="Explore DCAP's weekly Guild Wars 2 events schedule, automatically displayed in your local time zone.">
+  <meta name="theme-color" content="#0B1020">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="DCAP Events | Weekly Guild Wars 2 Schedule">
+  <meta property="og:description" content="Plan Triple Trouble, world bosses, meta trains and community activities with local-time scheduling.">
+  <meta property="og:url" content="https://dcap-gw2.github.io/events/">
+  <meta property="og:image" content="https://dcap-gw2.github.io/assets/images/dcap-hero.webp">
+  <link rel="canonical" href="https://dcap-gw2.github.io/events/">
+  <link rel="icon" type="image/png" href="../assets/brand/dcap-emblem.png">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/events.css">
+  <script src="../js/main.js" defer></script>
+  <script src="../js/events/page.mjs" type="module"></script>
+</head>
+<body class="events-page">
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <header class="site-header" data-header>
+    <div class="container header-inner">
+      <a class="brand" href="../" aria-label="DCAP home">
+        <img src="../assets/brand/dcap-logo-horizontal.png" width="2172" height="724" alt="DCAP — Guild Wars 2 Community">
+      </a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">
+        <span class="sr-only">Open navigation</span>
+        <span class="menu-line" aria-hidden="true"></span><span class="menu-line" aria-hidden="true"></span><span class="menu-line" aria-hidden="true"></span>
+      </button>
+      <nav class="primary-nav" id="primary-navigation" aria-label="Primary navigation">
+        <ul>
+          <li><a href="../">Home</a></li>
+          <li><a class="is-active" aria-current="page" href="./">Events</a></li>
+          <li><a href="../points/">Points</a></li>
+          <li><a href="../#resources">Resources</a></li>
+          <li><a href="../#about">About</a></li>
+        </ul>
+        <a class="button button-small button-secondary" href="https://discord.gg/A2TQJNvNqa" target="_blank" rel="noopener noreferrer">Join Discord<span class="sr-only"> (opens in a new tab)</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" tabindex="-1">
+    <section class="events-hero">
+      <div class="container events-hero-inner">
+        <div>
+          <p class="eyebrow">DCAP community calendar</p>
+          <h1>Play <span>Together</span></h1>
+          <p class="events-subtitle">Your weekly Guild Wars 2 events, in your time zone.</p>
+          <p class="events-intro">Join our recurring Triple Trouble runs, world bosses, weekly metas and community activities. Times update automatically for your device's time zone.</p>
+          <div class="events-hero-actions">
+            <a class="button button-gold" href="#weekly-schedule">View Weekly Schedule <span aria-hidden="true">↓</span></a>
+            <a class="button button-secondary" href="https://discord.gg/A2TQJNvNqa" target="_blank" rel="noopener noreferrer">Join the Community<span class="sr-only"> (opens in a new tab)</span></a>
+          </div>
+        </div>
+        <aside class="events-next glass-panel" aria-labelledby="next-title">
+          <p class="eyebrow">Up next</p>
+          <h2 id="next-title">Next scheduled activity</h2>
+          <div data-next-event>
+            <p class="events-next-name">Check the weekly programme below</p>
+            <p class="events-next-time">Times are automatically converted in your browser.</p>
+          </div>
+          <p class="events-next-note">Planned, not live availability. Check Discord for changes.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="events-section-main" id="weekly-schedule" aria-labelledby="schedule-title">
+      <div class="container">
+        <div class="events-section-heading">
+          <div>
+            <p class="eyebrow">A week of activities</p>
+            <h2 id="schedule-title">Weekly Schedule</h2>
+            <p>Choose a day to see its activities in the selected time zone.</p>
+          </div>
+          <div class="events-zone-control">
+            <fieldset class="events-zone-buttons">
+              <legend>Display times</legend>
+              <button type="button" data-zone="local" aria-pressed="true" class="is-selected">My local time</button>
+              <button type="button" data-zone="utc" aria-pressed="false">UTC</button>
+            </fieldset>
+            <p class="events-zone-label" data-zone-label>Using your browser's time zone</p>
+          </div>
+        </div>
+        <div class="events-schedule-panel glass-panel">
+          <div class="events-week-toolbar" aria-label="Browse dates">
+            <button type="button" data-prev-week aria-label="Previous seven days">← Previous</button>
+            <button type="button" data-today>Today</button>
+            <button type="button" data-next-week aria-label="Next seven days">Next →</button>
+          </div>
+          <div class="events-week-tabs" data-week-days role="group" aria-label="Choose a date"></div>
+          <div class="events-day-heading">
+            <div>
+              <p class="eyebrow">Planned activities</p>
+              <h3 data-day-title>Loading schedule…</h3>
+            </div>
+            <p data-day-count class="events-count"></p>
+          </div>
+          <div data-day-events class="events-timeline" aria-live="polite">
+            <p class="events-state-message">Loading the weekly programme…</p>
+          </div>
+          <noscript>
+            <p class="events-noscript">Enable JavaScript to see the full schedule and local-time conversion. The recurring UTC programme starts daily at 11:30 (Setup), 12:00 (Triple Trouble) and 13:00 (Death-Branded Shatterer), with further events at 13:30 UTC. Gyala Delve is Friday 07:00 UTC. See Discord for updates.</p>
+          </noscript>
+        </div>
+        <section class="events-seven-day" aria-labelledby="seven-day-title">
+          <div class="events-seven-day-heading">
+            <div>
+              <p class="eyebrow">The week ahead</p>
+              <h2 id="seven-day-title">7-Day Schedule</h2>
+              <p data-seven-day-zone>Today and the next six calendar days, in your local time.</p>
+            </div>
+          </div>
+          <div id="events-seven-day-list" class="events-seven-day-list" data-seven-day-list></div>
+          <button type="button" class="events-seven-day-toggle" data-seven-day-toggle aria-expanded="false" aria-controls="events-seven-day-list" hidden>Show all 7 days ↓</button>
+          <noscript><p class="events-noscript">Enable JavaScript to view the seven-day schedule in your local time.</p></noscript>
+        </section>
+        <div class="events-info-grid">
+          <article class="events-info-card">
+            <h3>📅 About the schedule</h3>
+            <p>All events are fixed to their UTC weekday and start time. Local dates may differ, including crossing midnight. Clock times can shift during daylight saving changes.</p>
+          </article>
+          <article class="events-info-card">
+            <h3>🤝 Volunteer to lead</h3>
+            <p>Events may change or be cancelled depending on commander availability. Want to command, taxi, block or help set up? Tell us on Discord!</p>
+          </article>
+          <article class="events-info-card">
+            <h3>⚔️ Raids and alternatives</h3>
+            <p>Activities joined by “or” are options, not simultaneous confirmed events. Activities joined by “→” are intended to follow one another.</p>
+            <a href="https://discord.com/channels/730056553197207596/746527916824854659" target="_blank" rel="noopener noreferrer">Visit the Raids channel<span class="sr-only"> (opens in a new tab)</span> <span aria-hidden="true">↗</span></a>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand"><img src="../assets/brand/dcap-logo-horizontal.png" width="2172" height="724" alt="DCAP — Guild Wars 2 Community" loading="lazy"><p>Play together. Learn together.<br>Build the community together.</p></div>
+      <nav class="footer-nav" aria-label="Footer navigation"><h2>Navigate</h2><ul><li><a href="../">Home</a></li><li><a href="./" aria-current="page">Events</a></li><li><a href="../points/">Points</a></li><li><a href="https://discord.gg/A2TQJNvNqa" target="_blank" rel="noopener noreferrer">Discord<span class="sr-only"> (opens in a new tab)</span></a></li></ul></nav>
+      <div class="footer-note"><h2>Community first</h2><p>DCAP is a player-run Guild Wars 2 community and is not affiliated with ArenaNet or NCSOFT.</p></div>
+    </div>
+    <div class="container footer-bottom"><p>© DCAP Community</p><a href="../">Back to home <span aria-hidden="true">↑</span></a></div>
+  </footer>
+</body>
+</html>
