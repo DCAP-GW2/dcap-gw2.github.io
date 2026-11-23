@@ -13,7 +13,7 @@ function element(tag, className, text) {
   return node;
 }
 
-const board = document.querySelector("[data-home-events]");
+const board = typeof document === "undefined" ? null : document.querySelector("[data-home-events]");
 let refreshTimer = null;
 
 function renderHomepageEvents() {
