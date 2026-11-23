@@ -1,6 +1,6 @@
 import {
   WEEKDAYS, RAID_CHANNEL_URL, calendarKey, weekDates,
-  occurrencesAround, nextEvents, formatDay, formatTime, formattedTimeZone,
+  occurrencesAround, nextEvents, upcomingDayProgramme, formatDay, formatTime, formattedTimeZone,
   currentWeekSelection, nextDisplayMidnight, overviewDates,
 } from "./schedule.mjs";
 
@@ -40,14 +40,31 @@ function utcReference(event) {
   return `UTC ${WEEKDAYS[event.weekday]} ${hour}:${minute}`;
 }
 
-function renderNext(now) {
-  const event = nextEvents(now, 1)[0];
-  if (!event) return null;
-  const name = element("p", "events-next-name", `${event.icon} ${event.label}`);
-  const time = element("p", "events-next-time", `${formatDay(event.start, mode)} · ${formatTime(event.start, mode)}`);
-  const source = element("p", "events-row-utc", utcReference(event));
-  nextContainer.replaceChildren(name, time, source);
-  return event;
+function renderUpcoming(now) {
+  const programme = upcomingDayProgramme(now, mode);
+  const dayText = programme.dayOffset === 0 ? "Today" : "Tomorrow";
+  const day = element("p", "events-upcoming-date",
+    `${dayText} · ${formatDay(programme.day, mode)} · ${mode === "utc" ? "UTC" : "Local time"}`);
+  const list = element("ol", "events-upcoming-list");
+  programme.events.forEach((event, index) => {
+    const highlighted = index === programme.highlightedIndex;
+    const started = event.start.getTime() <= now.getTime();
+    const item = element("li", `events-upcoming-item${started && !highlighted ? " is-started" : ""}${highlighted ? " is-highlighted" : ""}`);
+    const time = element("time", "events-upcoming-time", formatTime(event.start, mode));
+    time.dateTime = event.start.toISOString();
+    const icon = element("span", "events-upcoming-icon", event.icon);
+    icon.setAttribute("aria-hidden", "true");
+    const description = element("div", "events-upcoming-description");
+    description.append(element("span", "events-upcoming-name", event.label));
+    if (highlighted) {
+      description.append(element("span", "events-upcoming-tag",
+        programme.nextIndex < 0 ? "Recently started" : "Next"));
+    }
+    item.append(time, icon, description);
+    list.append(item);
+  });
+  nextContainer.replaceChildren(day, list);
+  return programme;
 }
 
 function renderDayContents(now) {
@@ -201,14 +218,19 @@ function reconcileWeek(now, force = false) {
 
 function refreshClock() {
   const now = new Date();
-  const next = renderNext(now);
+  const programme = renderUpcoming(now);
   reconcileWeek(now);
 
+  // Refresh when an event starts or the day's last-start + 90-minute cutoff
+  // is reached; separate midnight refresh handles date and DST rollover.
   // A delayed timer (e.g. in a background tab) is corrected on visibility/focus.
   window.clearTimeout(activityTimer);
-  if (next) {
+  const next = nextEvents(now, 1)[0];
+  const upcomingChanges = [next?.start, programme.cutoff]
+    .filter(date => date && date.getTime() > now.getTime());
+  if (upcomingChanges.length) {
     activityTimer = window.setTimeout(
-      refreshClock, Math.max(50, next.start.getTime() - now.getTime() + 100)
+      refreshClock, Math.max(50, Math.min(...upcomingChanges.map(date => date.getTime())) - now.getTime() + 100)
     );
   }
   window.clearTimeout(midnightTimer);

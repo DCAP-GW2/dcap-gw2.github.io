@@ -72,6 +72,37 @@ export function occurrencesAround(now = new Date(), weeksBefore = 1, weeksAfter 
   return result.sort((a, b) => a.start - b.start || a.id.localeCompare(b.id));
 }
 
+
+// A visitor sees the complete local calendar day's programme until 90 minutes
+// after its last scheduled start, then sees the next day's programme.
+// The grace period is a display cutoff, not a claim about event duration.
+export const UPCOMING_DAY_GRACE_MS = 90 * 60 * 1000;
+
+export function upcomingDayProgramme(now = new Date(), mode = "local") {
+  const dates = calendarDates(now, mode, 0, 2);
+  const all = occurrencesAround(now, 1, 2);
+  const todayKey = calendarKey(dates[0], mode);
+  const today = all.filter(event => calendarKey(event.start, mode) === todayKey);
+  const last = today.at(-1);
+  const cutoff = last ? new Date(last.start.getTime() + UPCOMING_DAY_GRACE_MS) : null;
+  const tomorrow = !cutoff || now.getTime() >= cutoff.getTime();
+  const day = dates[tomorrow ? 1 : 0];
+  const dayKey = calendarKey(day, mode);
+  const events = tomorrow
+    ? all.filter(event => calendarKey(event.start, mode) === dayKey)
+    : today;
+  const nextIndex = events.findIndex(event => event.start.getTime() > now.getTime());
+  return {
+    day,
+    dayKey,
+    dayOffset: tomorrow ? 1 : 0,
+    events,
+    nextIndex,
+    highlightedIndex: nextIndex < 0 ? events.length - 1 : nextIndex,
+    cutoff: tomorrow ? null : cutoff,
+  };
+}
+
 export function nextEvents(now = new Date(), count = 3) {
   return occurrencesAround(now, 0, 2).filter(event => event.start > now).slice(0, count);
 }
