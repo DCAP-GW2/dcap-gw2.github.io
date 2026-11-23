@@ -83,7 +83,7 @@ export function programmeDayKey(event, mode = "local") {
   return calendarKey(event.sessionStart, mode);
 }
 
-// Only annotate the weekday when an event falls after the session\u0027s local midnight.
+// Only annotate the weekday when an event falls after the session's local midnight.
 // The newline keeps narrow screens readable without widening the time column.
 export function formatProgrammeTime(event, mode = "local") {
   const clock = formatTime(event.start, mode);
