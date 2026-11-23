@@ -87,7 +87,7 @@
 .events-week-toolbar button { min-height: 38px; padding: 7px 13px; border: 1px solid rgba(125,211,252,.25); border-radius: 9px; color: #d9edfd; background: rgba(125,211,252,.07); cursor: pointer; font-size: .81rem; font-weight: 700; }
 .events-week-toolbar button:hover, .events-week-toolbar button:focus-visible { border-color: var(--cyan); background: rgba(125,211,252,.15); }
 .events-week-toolbar [data-today] { color: #111827; background: var(--cyan); }
-.events-week-toolbar [data-today]:hover { color: #07101c; background: #b2e9ff; }
+.events-week-toolbar [data-today]:hover, .events-week-toolbar [data-today]:focus-visible { color: #07101c; background: #b2e9ff; }
 .events-week-tabs button:has(.events-today) { border-color: rgba(245,158,11,.55); }
 .events-week-tabs button:has(.events-today)[aria-pressed="true"] { border-color: var(--cyan); }
 .events-seven-day { padding-top: clamp(38px, 5vw, 60px); }
