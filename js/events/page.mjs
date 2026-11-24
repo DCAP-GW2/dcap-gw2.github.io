@@ -10,6 +10,7 @@ const dayTitle = document.querySelector("[data-day-title]");
 const dayCount = document.querySelector("[data-day-count]");
 const nextContainer = document.querySelector("[data-next-event]");
 const zoneLabel = document.querySelector("[data-zone-label]");
+const scheduleIntro = document.querySelector("[data-schedule-intro]");
 const zoneButtons = [...document.querySelectorAll("[data-zone]")];
 const overviewList = document.querySelector("[data-seven-day-list]");
 const overviewToggle = document.querySelector("[data-seven-day-toggle]");
@@ -189,7 +190,7 @@ function renderOverview(now) {
     return card;
   });
   overviewList.replaceChildren(...cards);
-  overviewZone.textContent = `Next 7 programme dates · ${formatDay(dates[0], mode)}–${formatDay(dates[6], mode)} · ${mode === "utc" ? "UTC" : formattedTimeZone()}`;
+  overviewZone.textContent = `${formatDay(dates[0], mode)}–${formatDay(dates[6], mode)} · ${mode === "utc" ? "UTC" : formattedTimeZone()}`;
   overviewToggle.hidden = false;
   overviewToggle.setAttribute("aria-expanded", String(overviewExpanded));
   overviewToggle.textContent = overviewExpanded ? "Show fewer days ↑" : "Show all 7 days ↓";
@@ -245,6 +246,11 @@ function render() {
     button.setAttribute("aria-pressed", String(active));
     button.classList.toggle("is-selected", active);
   });
+  if (scheduleIntro) {
+    scheduleIntro.textContent = mode === "utc"
+      ? "Choose a date to see what's on in UTC."
+      : "Choose a date to see what's on in your local time.";
+  }
   zoneLabel.textContent = mode === "utc"
     ? "Showing UTC weekdays and clock times"
     : `Showing local dates and times (${formattedTimeZone()})`;
