@@ -5,8 +5,8 @@ import { upcomingHomepageEvents } from "../js/events/home.mjs";
 
 const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
 
-test("homepage Upcoming Events copy stays distinct from Programme Highlights", () => {
-  assert.match(html, /<h2 id="week-title">Programme Highlights<\/h2>/);
+test("homepage Upcoming Events copy stays distinct from Activity Highlights", () => {
+  assert.match(html, /<h2 id="week-title">Activity Highlights<\/h2>/);
   assert.match(html, /<h2 id="events-title">Upcoming Events<\/h2>/);
   assert.match(html, /See what's coming up next at DCAP\. All times are shown in your local time zone\./);
   assert.doesNotMatch(html, /Happening at DCAP|Join the action/);
