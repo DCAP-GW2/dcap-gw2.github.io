@@ -32,3 +32,21 @@ test("v2 public leaderboard and profile history are simplified", () => {
   assert.doesNotMatch(source, /Partial rank|['"]Provenance['"]/);
   assert.ok(source.includes('member.awardCandidateCount === 1 ? "contribution" : "contributions"'));
 });
+
+test("time-zone explanation precedes the selector, with copy for both display modes", () => {
+  const html = read("events/index.html");
+  const css = read("css/events.css");
+  const script = read("js/events/page.mjs");
+  const info = html.indexOf('<div class="events-zone-info">');
+  const label = html.indexOf('data-zone-label', info);
+  const note = html.indexOf('data-zone-note', label);
+  const selector = html.indexOf('<fieldset class="events-zone-buttons">', note);
+  assert.ok(info >= 0 && label > info && note > label && selector > note);
+  assert.ok(html.includes("All times are shown in your local time zone, including daylight saving changes."));
+  assert.ok(script.includes('zoneNote.textContent = mode === "utc"'));
+  assert.ok(script.includes("All times are shown in UTC, without daylight saving changes."));
+  assert.ok(script.includes("All times are shown in your local time zone, including daylight saving changes."));
+  assert.ok(css.includes(".events-zone-control { display: grid; grid-template-columns: minmax(0,1fr) max-content; align-items: center;"));
+  assert.ok(css.includes(".events-zone-control { grid-template-columns: minmax(0,1fr); justify-items: start; align-self: flex-start; gap: 8px; text-align: left; }"));
+  assert.ok(!css.includes(".events-zone-note { display: none;"));
+});
