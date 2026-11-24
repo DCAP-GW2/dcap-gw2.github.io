@@ -10,6 +10,7 @@ const dayTitle = document.querySelector("[data-day-title]");
 const dayCount = document.querySelector("[data-day-count]");
 const nextContainer = document.querySelector("[data-next-event]");
 const zoneLabel = document.querySelector("[data-zone-label]");
+const zoneNote = document.querySelector("[data-zone-note]");
 const scheduleIntro = document.querySelector("[data-schedule-intro]");
 const zoneButtons = [...document.querySelectorAll("[data-zone]")];
 const overviewList = document.querySelector("[data-seven-day-list]");
@@ -254,6 +255,11 @@ function render() {
   zoneLabel.textContent = mode === "utc"
     ? "Showing UTC weekdays and clock times"
     : `Showing local dates and times (${formattedTimeZone()})`;
+  if (zoneNote) {
+    zoneNote.textContent = mode === "utc"
+      ? "All times are shown in UTC, without daylight saving changes."
+      : "All times are shown in your local time zone, including daylight saving changes.";
+  }
   reconcileWeek(new Date(), true);
   refreshClock();
 }
