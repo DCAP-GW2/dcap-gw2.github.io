@@ -32,14 +32,14 @@
 .events-section-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 28px; }
 .events-section-heading h2 { font-size: clamp(2rem, 4vw, 3rem); }
 .events-section-heading p:not(.eyebrow) { margin: 12px 0 0; color: var(--muted); }
-.events-zone-control { text-align: right; }
-.events-zone-buttons { display: inline-flex; gap: 5px; margin: 0; padding: 5px; border: 1px solid var(--border); border-radius: 12px; }
+.events-zone-control { display: grid; grid-template-columns: minmax(0,1fr) max-content; align-items: center; gap: 16px; width: min(100%, 32rem); min-width: 0; text-align: right; }
+.events-zone-info { display: flex; flex-direction: column; justify-content: center; gap: 5px; min-width: 0; min-height: 5rem; overflow-wrap: anywhere; }
+.events-zone-buttons { display: inline-flex; gap: 5px; min-width: 0; margin: 0; padding: 5px; border: 1px solid var(--border); border-radius: 12px; }
 .events-zone-buttons legend { padding: 0 4px; color: var(--muted); font-size: .72rem; }
 .events-zone-buttons button { min-height: 38px; padding: 6px 13px; border: 0; border-radius: 8px; color: var(--muted); background: transparent; cursor: pointer; font-size: .83rem; font-weight: 700; }
 .events-zone-buttons button[aria-pressed="true"] { color: #07101c; background: var(--cyan); }
-.events-zone-label { margin: 6px 0 0 !important; font-size: .74rem; color: var(--muted); }
-.events-zone-note { display: none; max-width: 32ch; margin-inline-start: auto !important; }
-.events-zone-control:has([data-zone="local"][aria-pressed="true"]) .events-zone-note { display: block; }
+.events-zone-label { margin: 0 !important; font-size: .74rem; color: var(--muted); }
+.events-zone-note { font-size: .72rem; }
 .events-schedule-panel { overflow: hidden; padding: clamp(18px, 3vw, 32px); border-radius: var(--radius); }
 .events-week-tabs { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; padding-bottom: 28px; border-bottom: 1px solid var(--border); }
 .events-week-tabs button { min-width: 0; min-height: 76px; padding: 12px 6px; border: 1px solid var(--border); border-radius: 12px; color: var(--text); background: rgba(255,255,255,.035); cursor: pointer; transition: background .2s, border-color .2s; }
@@ -73,14 +73,16 @@
 @media (max-width: 960px) {
   .events-hero-inner { grid-template-columns: 1fr; }
   .events-next { max-width: 690px; }
+  .events-section-heading { align-items: stretch; flex-direction: column; }
+  .events-zone-control { align-self: flex-end; }
 }
 @media (max-width: 640px) {
   .events-hero { padding: calc(var(--header-height) + 56px) 0 55px; }
   .events-hero-actions { display: grid; }
   .events-next { padding: 22px; }
   .events-section-heading { align-items: start; flex-direction: column; }
-  .events-zone-control { text-align: left; }
-  .events-zone-note { margin-inline-start: 0 !important; }
+  .events-zone-control { grid-template-columns: minmax(0,1fr); justify-items: start; align-self: flex-start; gap: 8px; text-align: left; }
+  .events-zone-info { min-height: 4rem; }
   .events-week-tabs { grid-template-columns: repeat(4, minmax(0,1fr)); gap: 7px; padding-bottom: 20px; }
   .events-week-tabs button { min-height: 65px; }
   .events-row { grid-template-columns: 74px 32px minmax(0,1fr); gap: 10px; }
