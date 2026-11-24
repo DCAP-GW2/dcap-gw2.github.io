@@ -3,10 +3,10 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 const read = path => readFileSync(new URL("../" + path, import.meta.url), "utf8");
 
-test("homepage uses stable, approved programme highlights", () => {
+test("homepage uses stable, approved activity highlights", () => {
   const html = read("index.html");
   const script = read("js/events/home.mjs");
-  assert.ok(html.includes('<h2 id="week-title">Programme Highlights</h2>'));
+  assert.ok(html.includes('<h2 id="week-title">Activity Highlights</h2>'));
   for (const label of ["Daily Triple Trouble &amp; Death-Branded Shatterer", "Daily Meta Events", "WvW &amp; Raid Training"]) {
     assert.ok(html.includes(label));
   }
